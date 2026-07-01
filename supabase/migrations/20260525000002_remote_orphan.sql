@@ -1,0 +1,2 @@
+-- Stub for remote migration 20260525000002 (applied directly on remote; placeholder to satisfy CLI history).
+-- Real DDL lives in the remote DB; do not re-run.

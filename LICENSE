@@ -1,0 +1,103 @@
+LICENÇA DE USO PROPRIETÁRIA — CRIATIVOS
+Copyright (c) Torriani. Todos os direitos reservados.
+
+Este software ("Criativos", doravante "o Software") é propriedade exclusiva de
+Torriani ("o Licenciante"). O Software é licenciado, NÃO vendido. Ao baixar,
+instalar, copiar, executar ou de qualquer forma utilizar o Software, você ("o
+Licenciado") concorda integralmente com os termos abaixo. Se você não concorda,
+não instale e não utilize o Software.
+
+================================================================================
+1. CONCESSÃO DE LICENÇA (O QUE VOCÊ PODE FAZER)
+================================================================================
+
+O Licenciante concede ao Licenciado uma licença pessoal, intransferível, não
+exclusiva e revogável para:
+
+  a) Instalar o Software em infraestrutura própria (domínio, servidor ou conta
+     de nuvem do próprio Licenciado);
+  b) Utilizar o Software para gerar criativos e atender aos próprios projetos
+     do Licenciado e de seus clientes/alunos diretos;
+  c) Disponibilizar o acesso à interface (tela) do Software a seus alunos ou
+     colaboradores, desde que o uso permaneça sob a conta e responsabilidade do
+     Licenciado.
+
+================================================================================
+2. RESTRIÇÕES (O QUE VOCÊ NÃO PODE FAZER)
+================================================================================
+
+É EXPRESSAMENTE PROIBIDO ao Licenciado, no todo ou em parte:
+
+  a) Vender, sublicenciar, alugar, arrendar, emprestar, distribuir ou
+     comercializar o Software, seu código-fonte ou qualquer derivado;
+  b) Revender o Software como produto, white-label ou OEM;
+  c) Criar, operar ou oferecer qualquer modelo de ASSINATURA, SaaS, mensalidade
+     ou cobrança recorrente de terceiros tendo o Software como base;
+  d) Distribuir o código-fonte, total ou parcialmente, a terceiros;
+  e) Remover, ocultar, alterar ou ofuscar avisos de copyright, marcas de
+     autoria, watermarks, a tela de aceite de licença ou qualquer atribuição de
+     autoria presente no Software (visível ou no código);
+  f) Realizar engenharia reversa com o fim de remover as proteções de autoria
+     ou de redistribuir o Software;
+  g) Apresentar o Software, ou qualquer derivado, como sendo de autoria própria
+     ou de terceiros que não o Licenciante.
+
+================================================================================
+3. PROPRIEDADE INTELECTUAL E AUTORIA
+================================================================================
+
+O Software, incluindo todo o código-fonte, arquitetura, design, prompts, fluxos
+e documentação, é e permanece propriedade exclusiva do Licenciante. Esta licença
+não transfere qualquer direito de propriedade. Todas as marcas de autoria,
+avisos de copyright e watermarks incorporados ao Software fazem parte integrante
+do mesmo e sua remoção constitui violação desta licença e da legislação de
+direitos autorais aplicável.
+
+================================================================================
+4. CONFIDENCIALIDADE (NDA)
+================================================================================
+
+O código-fonte do Software é informação confidencial do Licenciante. O Licenciado
+compromete-se a não divulgar, publicar, espelhar em repositório público nem
+compartilhar o código-fonte com terceiros, exceto colaboradores diretos sob igual
+dever de confidencialidade e estritamente para a operação autorizada na cláusula 1.
+
+================================================================================
+5. RESCISÃO
+================================================================================
+
+Esta licença é revogável e termina automaticamente, sem aviso prévio, caso o
+Licenciado viole qualquer de seus termos. Em caso de rescisão, o Licenciado deve
+cessar todo uso e destruir todas as cópias do Software em sua posse. As cláusulas
+2, 3, 4 e 6 sobrevivem à rescisão.
+
+================================================================================
+6. ISENÇÃO DE GARANTIAS E LIMITAÇÃO DE RESPONSABILIDADE
+================================================================================
+
+O SOFTWARE É FORNECIDO "COMO ESTÁ", SEM GARANTIAS DE QUALQUER NATUREZA. O
+LICENCIANTE NÃO SE RESPONSABILIZA POR CUSTOS DE APIs DE TERCEIROS (incluindo, mas
+não limitado a, provedores de IA), POR DANOS DIRETOS OU INDIRETOS, PERDA DE DADOS
+OU LUCROS CESSANTES DECORRENTES DO USO OU DA IMPOSSIBILIDADE DE USO DO SOFTWARE.
+
+================================================================================
+7. CUSTOS DE TERCEIROS
+================================================================================
+
+O Software depende de serviços de terceiros (Supabase, provedores de IA de
+imagem e texto). Todos os custos de uso desses serviços são de responsabilidade
+exclusiva do Licenciado, que utiliza suas próprias chaves e contas.
+
+================================================================================
+8. FORO E LEGISLAÇÃO APLICÁVEL
+================================================================================
+
+Esta licença é regida pelas leis da República Federativa do Brasil. Fica eleito
+o foro do domicílio do Licenciante para dirimir quaisquer controvérsias.
+
+================================================================================
+
+Para concessão de direitos além dos previstos nesta licença (incluindo revenda,
+white-label ou parceria comercial), entre em contato diretamente com Torriani.
+
+Torriani — Criativos. Uso autorizado mediante aceite desta licença.

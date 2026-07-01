@@ -1,0 +1,1 @@
+-- Stub remoto (aplicada por outra via).

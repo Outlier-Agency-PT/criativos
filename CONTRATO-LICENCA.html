@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criativos — Contrato de Licença de Uso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#000000; --surface:#0c0c0e; --border:rgba(255,255,255,0.12); --border-subtle:rgba(255,255,255,0.08);
+    --text:#ffffff; --text2:#c9d1d9; --muted:#8b949e; --accent:#2B7DE1; --accent-light:#5a9ef0; --red:#f87171; --green:#34d399; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text2);
+    font-family:"Inter", system-ui, -apple-system, sans-serif; line-height:1.7; font-size:16px; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:780px; margin:0 auto; padding:48px 24px 100px; }
+  .wordmark { display:inline-flex; align-items:baseline; gap:5px; margin-bottom:24px;
+    font-weight:800; font-size:15px; letter-spacing:0.16em; color:#fff; }
+  .wordmark .star { color:var(--accent); font-weight:400; }
+  h1 { font-size:30px; letter-spacing:-0.5px; margin:0 0 4px; color:#fff; font-weight:700; }
+  .sub { color:var(--muted); margin:0 0 28px; }
+  h2 { font-size:18px; color:var(--accent-light); margin:32px 0 10px; border-bottom:1px solid var(--border-subtle); padding-bottom:8px; font-weight:600; }
+  p, li { margin:8px 0; }
+  ul { padding-left:22px; }
+  .can { border-left:3px solid var(--green); background:rgba(52,211,153,.06); padding:14px 18px; border-radius:6px; margin:14px 0; }
+  .cant { border-left:3px solid var(--red); background:rgba(248,113,113,.06); padding:14px 18px; border-radius:6px; margin:14px 0; }
+  .sign { margin-top:48px; border-top:1px solid var(--border-subtle); padding-top:28px; }
+  .sign-row { display:flex; gap:40px; margin-top:36px; flex-wrap:wrap; }
+  .sign-field { flex:1; min-width:240px; }
+  .sign-line { border-bottom:1px solid var(--muted); height:32px; margin-bottom:6px; }
+  .sign-label { font-size:13px; color:var(--muted); }
+  .meta { font-size:13px; color:var(--muted); }
+  strong { color:#fff; }
+  @media print { body { background:#fff; color:#000; } h1,h2,strong,.wordmark { color:#000 !important; -webkit-text-fill-color:#000 !important; } .wordmark .star { color:#000 !important; } .can,.cant { background:#fff; } }
+  .printbtn { position:fixed; top:16px; right:16px; background:linear-gradient(135deg,var(--accent),var(--accent-light)); color:#fff; border:none; border-radius:6px; padding:8px 16px; font-weight:600; cursor:pointer; font-family:inherit; box-shadow:0 4px 14px rgba(43,125,225,0.3); }
+  @media print { .printbtn { display:none; } }
+</style>
+</head>
+<body>
+<button class="printbtn" onclick="window.print()">Imprimir / Salvar PDF</button>
+<div class="wrap">
+  <div class="wordmark">TORRIANI <span class="star">&#10035;</span></div>
+  <h1>Contrato de Licença de Uso</h1>
+  <p class="sub">Criativos — Software proprietário de Torriani</p>
+
+  <p>Este Contrato de Licença de Uso ("Contrato") rege o uso do software <strong>Criativos</strong> ("o Software"), de titularidade exclusiva de <strong>Torriani</strong> ("Licenciante"), pela pessoa física ou jurídica que o recebe ("Licenciado"). O Software é <strong>licenciado, não vendido</strong>.</p>
+
+  <h2>1. O que o Licenciado PODE fazer</h2>
+  <div class="can">
+    <ul>
+      <li>Instalar o Software em infraestrutura própria (domínio, servidor ou conta de nuvem do próprio Licenciado);</li>
+      <li>Usar o Software para gerar criativos para seus próprios projetos e de seus clientes/alunos diretos;</li>
+      <li>Disponibilizar o acesso à interface do Software a seus alunos e colaboradores, sob sua conta e responsabilidade.</li>
+    </ul>
+  </div>
+
+  <h2>2. O que o Licenciado NÃO PODE fazer</h2>
+  <div class="cant">
+    <ul>
+      <li>Vender, sublicenciar, alugar, distribuir ou comercializar o Software ou seu código-fonte;</li>
+      <li>Revender o Software como produto, white-label ou OEM;</li>
+      <li>Criar, operar ou oferecer modelo de <strong>assinatura, SaaS ou cobrança recorrente</strong> de terceiros tendo o Software como base;</li>
+      <li>Distribuir o código-fonte, total ou parcialmente, a terceiros;</li>
+      <li>Remover, ocultar ou alterar avisos de copyright, marcas de autoria, watermarks ou a tela de aceite de licença;</li>
+      <li>Apresentar o Software, ou derivado, como sendo de autoria própria.</li>
+    </ul>
+  </div>
+
+  <h2>3. Propriedade intelectual e autoria</h2>
+  <p>Todo o código-fonte, arquitetura, design, prompts e documentação são e permanecem propriedade exclusiva do Licenciante. Este Contrato não transfere qualquer direito de propriedade. As marcas de autoria e avisos de copyright incorporados ao Software são parte integrante do mesmo; sua remoção constitui violação deste Contrato e da legislação de direitos autorais.</p>
+
+  <h2>4. Confidencialidade (NDA)</h2>
+  <p>O código-fonte é informação confidencial do Licenciante. O Licenciado compromete-se a não divulgar, publicar em repositório público nem compartilhar o código-fonte com terceiros, exceto colaboradores diretos sob igual dever de confidencialidade e estritamente para a operação autorizada na cláusula 1.</p>
+
+  <h2>5. Custos de terceiros</h2>
+  <p>O Software depende de serviços de terceiros (Supabase e provedores de IA). Todos os custos de uso desses serviços são de responsabilidade exclusiva do Licenciado, que utiliza suas próprias contas e chaves.</p>
+
+  <h2>6. Rescisão</h2>
+  <p>Este Contrato termina automaticamente, sem aviso prévio, caso o Licenciado viole qualquer de seus termos. Em caso de rescisão, o Licenciado deve cessar todo uso e destruir todas as cópias do Software. As cláusulas 2, 3, 4 e 7 sobrevivem à rescisão.</p>
+
+  <h2>7. Isenção de garantias e limitação de responsabilidade</h2>
+  <p>O Software é fornecido "como está", sem garantias de qualquer natureza. O Licenciante não se responsabiliza por custos de APIs de terceiros, danos diretos ou indiretos, perda de dados ou lucros cessantes decorrentes do uso ou da impossibilidade de uso do Software.</p>
+
+  <h2>8. Legislação e foro</h2>
+  <p>Este Contrato é regido pelas leis da República Federativa do Brasil. Fica eleito o foro do domicílio do Licenciante para dirimir controvérsias.</p>
+
+  <div class="sign">
+    <p class="meta">Ao assinar abaixo (ou ao aceitar os termos dentro do Software), o Licenciado declara ter lido, compreendido e concordado integralmente com este Contrato.</p>
+    <div class="sign-row">
+      <div class="sign-field">
+        <div class="sign-line"></div>
+        <div class="sign-label">Licenciado (nome e assinatura)</div>
+      </div>
+      <div class="sign-field">
+        <div class="sign-line"></div>
+        <div class="sign-label">Data</div>
+      </div>
+    </div>
+    <div class="sign-row">
+      <div class="sign-field">
+        <div class="sign-line"></div>
+        <div class="sign-label">Licenciante — Torriani</div>
+      </div>
+      <div class="sign-field">
+        <div class="sign-line"></div>
+        <div class="sign-label">Data</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

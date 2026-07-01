@@ -1,0 +1,1 @@
+-- Stub: aplicada no remoto por outra via (placeholder p/ historico CLI).

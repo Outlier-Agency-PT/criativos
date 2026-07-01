@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criativos — Manual de Instalação na Nuvem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===== Design System Torriani ===== */
+  :root {
+    --surface-000: #000000;
+    --surface-050: #060608;
+    --surface-100: #0c0c0e;
+    --surface-150: #141416;
+    --surface-200: #1c1c1e;
+    --text-primary: #ffffff;
+    --text-secondary: #c9d1d9;
+    --text-muted: #8b949e;
+    --border-subtle: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.12);
+    --accent: #2B7DE1;
+    --accent-rgb: 43,125,225;
+    --accent-light: #5a9ef0;
+    --accent-dark: #003A70;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --radius: 6px;
+    --radius-lg: 8px;
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.6);
+    --shadow-xl: 0 20px 25px rgba(0,0,0,0.7);
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--surface-000); color: var(--text-secondary);
+    font-family: var(--font-sans); line-height: 1.65; font-size: 16px;
+    -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px 120px; }
+
+  /* glow de fundo */
+  body::before { content: ""; position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 600px; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at center, rgba(var(--accent-rgb),0.10) 0%, transparent 60%);
+    filter: blur(40px); }
+  .wrap > * { position: relative; z-index: 1; }
+
+  /* ===== Header ===== */
+  header.hero { text-align: center; padding: 56px 0 28px; }
+  .wordmark { display: inline-flex; align-items: baseline; gap: 6px; margin-bottom: 28px;
+    font-weight: 800; font-size: 18px; letter-spacing: 0.16em; color: #fff; }
+  .wordmark .star { color: var(--accent); font-weight: 400; }
+  .hero h1 { font-size: 40px; margin: 0 0 10px; letter-spacing: -1px; font-weight: 700; color: #fff; }
+  .hero p { color: var(--text-muted); font-size: 16px; margin: 4px 0 0; }
+  .hero .tag { display: inline-block; margin-top: 16px; font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent); padding: 5px 14px; border-radius: 99px;
+    background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.2); }
+
+  /* ===== Progresso fixo ===== */
+  .progress-bar-wrap { position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    padding: 14px 0 16px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 32px; }
+  .progress-track { height: 8px; background: var(--surface-200); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent-dark), var(--accent), var(--accent-light));
+    transition: width .35s ease; box-shadow: 0 0 12px rgba(var(--accent-rgb),0.4); }
+  .progress-label { display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; color: var(--text-muted); margin-top: 9px; }
+  .reset-btn { background: none; border: none; color: var(--text-muted); font-size: 12px;
+    cursor: pointer; text-decoration: underline; font-family: inherit; }
+  .reset-btn:hover { color: var(--red); }
+
+  /* ===== Tipografia ===== */
+  h2 { font-size: 24px; margin: 44px 0 14px; display: flex; align-items: center; gap: 14px;
+    color: #fff; font-weight: 700; letter-spacing: -0.4px; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px;
+    border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: #fff; font-weight: 700; font-size: 17px; flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(var(--accent-rgb),0.3); }
+  h3 { font-size: 17px; margin: 24px 0 10px; color: var(--accent-light); font-weight: 600; }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 22px; } li { margin: 6px 0; }
+  a { color: var(--accent-light); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code:not(pre code) { background: var(--surface-200); padding: 2px 7px; border-radius: 4px;
+    font-family: var(--font-mono); font-size: 13.5px; color: var(--accent-light); }
+
+  /* ===== Componentes ===== */
+  .card { background: var(--surface-100); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+    padding: 22px 26px; margin: 18px 0; }
+  .codeblock { position: relative; background: var(--surface-050); border: 1px solid var(--border);
+    border-radius: var(--radius); margin: 14px 0; overflow: hidden; }
+  .codeblock::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb),0.4), transparent); }
+  .codeblock pre { margin: 0; padding: 16px 18px; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 13.5px; line-height: 1.6; color: #d6dae2; white-space: pre-wrap; }
+  .codeblock .copy { position: absolute; top: 8px; right: 8px; background: var(--surface-200); color: var(--text-muted);
+    border: 1px solid var(--border); border-radius: 4px; padding: 4px 11px; font-size: 12px; cursor: pointer;
+    font-family: inherit; transition: all .15s; }
+  .codeblock .copy:hover { color: #fff; border-color: var(--accent); }
+  .codeblock .copy.done { color: #fff; background: var(--accent); border-color: var(--accent); }
+  .note, .warn, .tip { border-radius: var(--radius); padding: 13px 18px; margin: 16px 0; font-size: 15px; border-left: 3px solid; }
+  .note { background: rgba(96,165,250,.07); border-color: #60a5fa; }
+  .warn { background: rgba(248,113,113,.07); border-color: var(--red); }
+  .tip  { background: rgba(var(--accent-rgb),.07); border-color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+  th { color: var(--accent-light); font-weight: 600; }
+
+  /* ===== Checklist ===== */
+  .check-item { display: flex; align-items: flex-start; gap: 13px; background: var(--surface-100);
+    border: 1px solid var(--border-subtle); border-radius: var(--radius); padding: 14px 16px; margin: 10px 0;
+    cursor: pointer; transition: all .15s; user-select: none; }
+  .check-item:hover { border-color: rgba(var(--accent-rgb),0.4); background: var(--surface-150); }
+  .check-item.done { background: rgba(52,211,153,.05); border-color: rgba(52,211,153,.3); }
+  .check-box { flex-shrink: 0; width: 22px; height: 22px; border-radius: 5px; border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: all .15s;
+    font-size: 14px; color: transparent; }
+  .check-item.done .check-box { background: var(--green); border-color: var(--green); color: #042016; }
+  .check-item.done .check-text { color: var(--text-muted); text-decoration: line-through; }
+  .check-text { flex: 1; }
+  .check-text strong { color: #fff; font-weight: 600; }
+  .check-item.done .check-text strong { color: var(--text-muted); }
+
+  .claude-box { background: linear-gradient(135deg, rgba(var(--accent-rgb),.12), rgba(var(--accent-rgb),.03));
+    border: 1px solid rgba(var(--accent-rgb),0.3); }
+  hr { border: none; border-top: 1px solid var(--border-subtle); margin: 44px 0; }
+  footer { text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 56px;
+    padding-top: 22px; border-top: 1px solid var(--border-subtle); }
+  .done-banner { display: none; background: rgba(52,211,153,.1); border: 1px solid var(--green);
+    border-radius: var(--radius-lg); padding: 18px 22px; margin: 24px 0; color: #fff; text-align: center; }
+  .done-banner.show { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="wordmark">TORRIANI <span class="star">&#10035;</span></div>
+    <h1>Criativos</h1>
+    <p>Manual de instalação na nuvem, conduzido pelo Claude Code</p>
+    <div class="tag">Software licenciado · uso restrito</div>
+  </header>
+
+  <!-- Barra de progresso fixa -->
+  <div class="progress-bar-wrap">
+    <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
+    <div class="progress-label">
+      <span id="plabel">0 de 0 etapas concluídas</span>
+      <button class="reset-btn" onclick="resetProgress()">limpar progresso</button>
+    </div>
+  </div>
+
+  <div class="done-banner" id="doneBanner">
+    <strong>Tudo concluído.</strong> Seu Criativos está no ar. Bom trabalho.
+  </div>
+
+  <div class="card claude-box">
+    <h3 style="margin-top:0;">Como este manual funciona</h3>
+    <p style="margin:8px 0;">A instalação inteira é feita com a ajuda do <strong>Claude Code</strong> (o assistente de programação no seu computador). Você não precisa saber programar: o Claude executa os comandos por você e só pede os dados que só você tem (chaves e senhas).</p>
+    <p style="margin:8px 0 0;">Marque o <strong>checkbox</strong> de cada etapa conforme for concluindo. Seu progresso fica salvo neste navegador, então você pode fechar e voltar depois.</p>
+  </div>
+
+  <!-- ETAPA 0 -->
+  <h2><span class="step-num">0</span> Antes de começar</h2>
+  <p>Você vai precisar de 3 contas (todas com plano gratuito para começar) e do Claude Code instalado:</p>
+  <table>
+    <tr><th>O que</th><th>Para quê</th><th>Onde</th></tr>
+    <tr><td><strong>Claude Code</strong></td><td>conduz toda a instalação</td><td><a href="https://claude.com/claude-code" target="_blank">claude.com/claude-code</a></td></tr>
+    <tr><td><strong>Conta Supabase</strong></td><td>banco de dados, login e armazenamento</td><td><a href="https://supabase.com" target="_blank">supabase.com</a></td></tr>
+    <tr><td><strong>Conta Vercel</strong></td><td>hospedar o sistema na nuvem</td><td><a href="https://vercel.com" target="_blank">vercel.com</a></td></tr>
+    <tr><td><strong>Chave de IA</strong></td><td>gerar as imagens (Gemini, WisGate ou OpenRouter)</td><td>conta do provedor</td></tr>
+  </table>
+
+  <div class="check-item" data-id="c0a"><div class="check-box">&#10003;</div><div class="check-text"><strong>Instalei o Claude Code</strong> no meu computador e consigo abri-lo.</div></div>
+  <div class="check-item" data-id="c0b"><div class="check-box">&#10003;</div><div class="check-text"><strong>Criei (ou já tenho) conta no Supabase e na Vercel.</strong></div></div>
+  <div class="check-item" data-id="c0c"><div class="check-box">&#10003;</div><div class="check-text"><strong>Tenho pelo menos uma chave de API de IA</strong> (Gemini, WisGate ou OpenRouter) em mãos.</div></div>
+
+  <!-- ETAPA 1 -->
+  <h2><span class="step-num">1</span> Baixar o código</h2>
+  <p>Você recebeu o acesso a um repositório privado no GitHub. Clone-o no seu computador. Se não souber como, peça ao Claude Code (próxima etapa) que ele faz. Manualmente seria:</p>
+  <div class="codeblock"><button class="copy">copiar</button><pre>git clone https://github.com/torriani/criativos-entrega.git criativos
+cd criativos</pre></div>
+  <div class="warn"><strong>Confidencial:</strong> este código é proprietário e sob NDA. Se você for versioná-lo, use sempre um repositório <strong>privado</strong> seu. Nunca torne público.</div>
+
+  <div class="check-item" data-id="c1"><div class="check-box">&#10003;</div><div class="check-text"><strong>Baixei o código</strong> e ele está numa pasta no meu computador.</div></div>
+
+  <!-- ETAPA 2 -->
+  <h2><span class="step-num">2</span> Deixar o Claude Code conduzir</h2>
+  <p>Abra o <strong>Claude Code dentro da pasta do projeto</strong> e cole o prompt abaixo. Ele vai ler o roteiro de instalação que já vem no projeto (<code>SETUP-CLAUDE.md</code>) e te guiar passo a passo, pedindo os dados quando precisar.</p>
+  <div class="codeblock"><button class="copy">copiar</button><pre>Leia o arquivo SETUP-CLAUDE.md deste projeto e conduza a minha
+instalação do Criativos na nuvem do zero, seguindo os passos na ordem.
+Eu não sou técnico: execute os comandos por mim, me explique cada passo
+em linguagem simples e me peça os valores (chaves, senhas, dados de conta)
+quando você precisar. Vamos um passo de cada vez.</pre></div>
+  <div class="tip"><strong>Dica:</strong> a partir daqui, é só responder o que o Claude perguntar. As próximas etapas deste manual servem para você acompanhar o que ele está fazendo e marcar o progresso.</div>
+
+  <div class="check-item" data-id="c2"><div class="check-box">&#10003;</div><div class="check-text"><strong>Abri o Claude Code na pasta do projeto</strong> e colei o prompt acima.</div></div>
+
+  <!-- ETAPA 3 -->
+  <h2><span class="step-num">3</span> Instalar as dependências</h2>
+  <p>O Claude vai rodar <code>npm install</code> (baixa as bibliotecas do sistema). Leva 1 a 3 minutos.</p>
+  <div class="check-item" data-id="c3"><div class="check-box">&#10003;</div><div class="check-text"><strong>As dependências foram instaladas</strong> sem erro.</div></div>
+
+  <!-- ETAPA 4 -->
+  <h2><span class="step-num">4</span> Criar o banco no Supabase</h2>
+  <p>No <a href="https://supabase.com" target="_blank">Supabase</a>: <strong>New Project</strong>. Anote a senha do banco. Depois, em <strong>Project Settings → API</strong>, o Claude vai te pedir estes valores (copie e cole pra ele quando solicitado):</p>
+  <table>
+    <tr><th>Valor</th><th>Onde achar</th></tr>
+    <tr><td>Project URL</td><td>Settings → API → Project URL</td></tr>
+    <tr><td>anon public</td><td>Settings → API → Project API keys → anon</td></tr>
+    <tr><td>service_role</td><td>Settings → API → service_role (clicar em "Reveal")</td></tr>
+    <tr><td>Project Ref</td><td>está na URL: <code>app.supabase.com/project/<strong>SEU-REF</strong></code></td></tr>
+    <tr><td>Senha do banco</td><td>Settings → Database (ou "Reset database password")</td></tr>
+  </table>
+  <div class="warn"><strong>A chave <code>service_role</code> é secreta</strong> — dá acesso total ao banco. Passe só para o Claude colar no <code>.env.local</code>. Nunca publique.</div>
+
+  <div class="check-item" data-id="c4a"><div class="check-box">&#10003;</div><div class="check-text"><strong>Criei o projeto no Supabase</strong> e anotei a senha do banco.</div></div>
+  <div class="check-item" data-id="c4b"><div class="check-box">&#10003;</div><div class="check-text"><strong>Passei ao Claude os valores da API</strong> (URL, anon, service_role, Ref).</div></div>
+
+  <!-- ETAPA 5 -->
+  <h2><span class="step-num">5</span> Configurar variáveis e chave de criptografia</h2>
+  <p>O Claude vai criar o arquivo <code>.env.local</code> com os valores que você passou e gerar uma <strong>chave de criptografia</strong> (com <code>openssl rand -hex 32</code>) — ela protege as chaves de IA que você cadastrar depois.</p>
+  <div class="warn"><strong>Importante:</strong> essa chave de criptografia é definida <strong>uma única vez</strong>. Se mudar depois, as chaves de IA salvas param de funcionar. O Claude vai te avisar disso.</div>
+
+  <div class="check-item" data-id="c5"><div class="check-box">&#10003;</div><div class="check-text"><strong>O <code>.env.local</code> foi preenchido</strong> e a chave de criptografia foi gerada.</div></div>
+
+  <!-- ETAPA 6 -->
+  <h2><span class="step-num">6</span> Subir o banco de dados</h2>
+  <p>O Claude roda, na ordem: <code>supabase login</code> → <code>supabase link</code> → <code>supabase db push</code>. Isso cria todas as tabelas, as regras de segurança, os buckets de armazenamento e a tabela de aceite de licença. É automático.</p>
+  <div class="check-item" data-id="c6"><div class="check-box">&#10003;</div><div class="check-text"><strong>O <code>supabase db push</code> rodou sem erro</strong> (banco criado).</div></div>
+
+  <!-- ETAPA 7 -->
+  <h2><span class="step-num">7</span> Publicar na nuvem (Vercel)</h2>
+  <p>O Claude vai te orientar a importar o repositório na <a href="https://vercel.com" target="_blank">Vercel</a> e a colar as variáveis de ambiente lá (as mesmas do <code>.env.local</code>). Ao concluir o deploy, o sistema ganha uma URL pública. Você pode apontar seu próprio domínio depois.</p>
+  <div class="check-item" data-id="c7a"><div class="check-box">&#10003;</div><div class="check-text"><strong>Importei o projeto na Vercel</strong> e adicionei as variáveis de ambiente.</div></div>
+  <div class="check-item" data-id="c7b"><div class="check-box">&#10003;</div><div class="check-text"><strong>O deploy concluiu</strong> e o sistema abre na URL da Vercel.</div></div>
+
+  <!-- ETAPA 8 -->
+  <h2><span class="step-num">8</span> Cadastrar as chaves de IA</h2>
+  <p>Com o sistema no ar, crie sua conta, faça login e <strong>aceite o termo de licença</strong> que aparece no primeiro acesso. Depois vá em <strong>/configuracoes</strong> e cadastre pelo menos uma chave de IA. Sem isso, a geração de imagens não funciona.</p>
+  <table>
+    <tr><th>Provedor</th><th>Observação</th></tr>
+    <tr><td>Gemini (Google)</td><td>chave direta da API do Google</td></tr>
+    <tr><td>WisGate</td><td>geralmente mais barato</td></tr>
+    <tr><td>OpenRouter</td><td>acesso a múltiplos modelos</td></tr>
+  </table>
+  <div class="check-item" data-id="c8a"><div class="check-box">&#10003;</div><div class="check-text"><strong>Criei minha conta, fiz login e aceitei o termo de licença.</strong></div></div>
+  <div class="check-item" data-id="c8b"><div class="check-box">&#10003;</div><div class="check-text"><strong>Cadastrei pelo menos uma chave de IA</strong> em /configuracoes.</div></div>
+
+  <!-- ETAPA 9 -->
+  <h2><span class="step-num">9</span> Teste final</h2>
+  <p>Gere um criativo de teste para confirmar que tudo funciona ponta a ponta.</p>
+  <div class="check-item" data-id="c9"><div class="check-box">&#10003;</div><div class="check-text"><strong>Gerei um criativo de teste com sucesso.</strong> Sistema no ar e funcionando.</div></div>
+
+  <hr>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Termos de uso (resumo)</h3>
+    <p style="margin:8px 0;">Este sistema é proprietário de <strong>Torriani</strong>, licenciado e não vendido. Você <strong>pode</strong> instalar no seu domínio, usar para seus projetos e liberar o acesso para seus alunos. Você <strong>não pode</strong> revender o código, distribuí-lo nem criar uma assinatura/SaaS em cima dele. O código é confidencial (NDA). Os termos completos estão no arquivo <code>LICENSE</code> do projeto, e você os aceita na primeira vez que entrar no sistema.</p>
+  </div>
+
+  <h3>Problemas comuns</h3>
+  <table>
+    <tr><th>Sintoma</th><th>Solução</th></tr>
+    <tr><td>Algum comando deu erro</td><td>cole a mensagem de erro no Claude Code — ele resolve com você</td></tr>
+    <tr><td>Login não funciona</td><td>confira as variáveis do Supabase no <code>.env.local</code> / na Vercel</td></tr>
+    <tr><td>"Geração falhou"</td><td>cadastre uma chave de IA em /configuracoes</td></tr>
+    <tr><td>Upload da logo falha</td><td>confirme que o <code>supabase db push</code> rodou completo</td></tr>
+  </table>
+
+  <footer>
+    Criativos · feito por Torriani · uso licenciado e restrito (ver LICENSE)
+  </footer>
+
+</div>
+
+<script>
+  var STORAGE_KEY = "criativos_install_progress_v1";
+  function getState(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){ return {}; } }
+  function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+
+  var items = Array.prototype.slice.call(document.querySelectorAll('.check-item'));
+  function updateProgress(){
+    var total = items.length;
+    var done = items.filter(function(i){ return i.classList.contains('done'); }).length;
+    var pct = total ? Math.round(done/total*100) : 0;
+    document.getElementById('pfill').style.width = pct + '%';
+    document.getElementById('plabel').textContent = done + ' de ' + total + ' etapas concluídas (' + pct + '%)';
+    document.getElementById('doneBanner').classList.toggle('show', done === total && total > 0);
+  }
+  function applyState(){
+    var s = getState();
+    items.forEach(function(i){ if (s[i.dataset.id]) i.classList.add('done'); });
+    updateProgress();
+  }
+  items.forEach(function(i){
+    i.addEventListener('click', function(){
+      i.classList.toggle('done');
+      var s = getState(); s[i.dataset.id] = i.classList.contains('done'); saveState(s);
+      updateProgress();
+    });
+  });
+  function resetProgress(){
+    if (!confirm('Limpar todo o progresso marcado?')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    items.forEach(function(i){ i.classList.remove('done'); });
+    updateProgress();
+  }
+  applyState();
+
+  document.querySelectorAll('.codeblock .copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var code = btn.parentElement.querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(function(){
+        var old = btn.textContent; btn.textContent = 'copiado!'; btn.classList.add('done');
+        setTimeout(function(){ btn.textContent = old; btn.classList.remove('done'); }, 1400);
+      });
+    });
+  });
+</script>
+</body>
+</html>
