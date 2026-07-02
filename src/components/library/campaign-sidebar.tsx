@@ -160,7 +160,7 @@ export function CampaignSidebar({ campaigns, selected, onSelect, orgId, onCampai
                     onClick={() => handleDelete(c.id)}
                     disabled={deleting === c.id || c.copy_count > 0}
                     className="p-0.5 text-text-muted hover:text-accent-red disabled:opacity-30"
-                    title={c.copy_count > 0 ? "Remova as copies primeiro" : "Excluir campanha"}
+                    title={c.copy_count > 0 ? "Remova as copies primeiro" : "eliminar campanha"}
                   >
                     {deleting === c.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
                   </button>

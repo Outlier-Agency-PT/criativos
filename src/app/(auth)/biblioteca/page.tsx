@@ -255,7 +255,7 @@ export default function BibliotecaPage() {
 
   async function handleDeleteCampaign(id: string) {
     if (!orgId) return;
-    if (!confirm("Excluir esta campanha? As copies dentro nao serao apagadas.")) return;
+    if (!confirm("eliminar esta campanha? As copies dentro nao serao apagadas.")) return;
     try {
       const res = await fetch(`/api/copy-campaigns/${id}`, {
         method: "DELETE",
@@ -426,7 +426,7 @@ export default function BibliotecaPage() {
                               className="w-full flex items-center gap-2 px-3 py-2 text-xs text-accent-red hover:bg-surface-100 disabled:opacity-30 disabled:cursor-not-allowed"
                               title={c.copy_count > 0 ? "Remova as copies primeiro" : ""}
                             >
-                              <Trash2 className="w-3 h-3" /> Excluir
+                              <Trash2 className="w-3 h-3" /> eliminar
                             </button>
                           </div>
                         )}

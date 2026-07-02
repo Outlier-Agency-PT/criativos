@@ -127,7 +127,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
         let file = raw;
         try {
           file = await optimizeImageForUpload(raw, { maxBytes: MAX_REF_IMAGE_SIZE, maxDimension: 1600 });
-        } catch { /* segue com o arquivo original se a otimizaÃ§Ã£o falhar */ }
+        } catch { /* segue com o ficheiro original se a otimizaÃ§Ã£o falhar */ }
 
         const formData = new FormData();
         formData.append("file", file);

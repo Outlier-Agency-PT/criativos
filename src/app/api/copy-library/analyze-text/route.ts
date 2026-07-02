@@ -88,7 +88,7 @@ TEXTO:
 /**
  * POST /api/copy-library/analyze-text
  * Recebe texto colado pelo usuario e usa IA para organizar em copies estruturadas.
- * A IA NAO cria conteudo novo â€” apenas organiza o que ja existe.
+ * A IA NAO cria conteúdo novo â€” apenas organiza o que ja existe.
  */
 export async function POST(request: NextRequest) {
   try {

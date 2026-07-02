@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
     if (actorLimits?.is_super_admin !== true) {
       // Cliente comum (nao Super Admin) nunca enxerga a visao cross-org.
       return NextResponse.json(
-        { error: "Apenas Super Admin pode acessar a visao cross-org." },
+        { error: "Apenas Super Admin pode aceder a visao cross-org." },
         { status: 403 },
       );
     }

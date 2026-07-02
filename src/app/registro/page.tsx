@@ -28,11 +28,11 @@ export default function RegistroPage() {
 
         <div className="space-y-3 rounded-lg border border-border-subtle bg-surface-100 p-5 text-left">
           <p className="text-text-primary">
-            O cadastro aberto foi desativado. O acesso ao Criativos agora e feito por convite.
+            O registo aberto foi desativado. O acesso ao Criativos agora é feito por convite.
           </p>
           <p className="text-text-secondary text-sm">
-            Se voce recebeu um convite por email, clique no link da mensagem para definir sua senha
-            e entrar na sua organizacao. Se ainda nao tem convite, fale com o seu administrador.
+            Se você recebeu um convite por email, clique no link da mensagem para definir sua palavra-passe
+            e entrar na sua organização. Se ainda não tem convite, fale com o seu administrador.
           </p>
         </div>
 

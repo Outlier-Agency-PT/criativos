@@ -111,8 +111,10 @@ export async function POST(request: NextRequest) {
 
     const email =
       typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json({ error: "Email invalido." }, { status: 400 });
+    // Validação mais rigorosa de email (RFC 5322 simplificado)
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+      console.error("[admin/invite POST] Invalid email:", { email, bodyEmail: body.email });
+      return NextResponse.json({ error: "Email inválido." }, { status: 400 });
     }
 
     const targetOrgId =
@@ -188,12 +190,17 @@ export async function POST(request: NextRequest) {
     );
 
     if (inviteError) {
-      // Email ja existe como usuario: inviteUserByEmail falha de proposito (nao reenviamos magic link
-      // pra conta existente, pra nao tocar/expor a credencial dela). Sinalizamos sem vazar detalhe.
+      // Email já existe como usuário: inviteUserByEmail falha de propósito (não reenviamos magic link
+      // pra conta existente, pra não tocar/expor a credencial dela). Sinalizamos sem vazar detalhe.
+      console.error("[admin/invite POST] inviteUserByEmail error:", {
+        email,
+        error: inviteError.message,
+        code: (inviteError as any).code,
+      });
       return NextResponse.json(
         {
           error:
-            "Nao foi possivel convidar este email. Verifique se ja existe uma conta com ele.",
+            "Não foi possível convidar este email. Verifique se já existe uma conta com ele.",
           detail: inviteError.message,
         },
         { status: 409 }
@@ -218,9 +225,19 @@ export async function POST(request: NextRequest) {
       .select("id, email, org_id, role, status, expires_at, created_at")
       .single();
 
-    if (insertError) {
+    if (insertError || !invite) {
+      const errorMsg = insertError?.message || "Nenhuma linha retornada após insert";
+      console.error("[admin/invite POST] Insert error:", {
+        email,
+        org_id: targetOrgId,
+        error: errorMsg,
+        code: insertError?.code,
+      });
       return NextResponse.json(
-        { error: "Convite enviado, mas falha ao registrar.", detail: insertError.message },
+        {
+          error: "Convite enviado, mas falha ao registrar.",
+          detail: errorMsg,
+        },
         { status: 500 }
       );
     }
@@ -248,6 +265,13 @@ export async function POST(request: NextRequest) {
         .upsert(upsertPayload, { onConflict: "org_id" });
 
       if (provError) {
+        console.error("[admin/invite POST] Provisioning error:", {
+          org_id: targetOrgId,
+          planLabel,
+          creditBalance,
+          error: provError.message,
+          code: provError.code,
+        });
         return NextResponse.json(
           {
             error: "Convite criado, mas falha no provisionamento de saldo/plano.",
@@ -267,6 +291,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ invite, provisioned }, { status: 201 });
   } catch (err) {
+    console.error("[admin/invite POST] Unexpected error:", {
+      message: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+    });
     return handleAuthError(err);
   }
 }

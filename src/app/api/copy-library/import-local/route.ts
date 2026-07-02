@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
 
     if (files.length === 0) {
       return NextResponse.json(
-        { error: "Nenhum arquivo .txt ou .md encontrado no diretorio ou subpastas" },
+        { error: "Nenhum ficheiro .txt ou .md encontrado no diretorio ou subpastas" },
         { status: 400 }
       );
     }

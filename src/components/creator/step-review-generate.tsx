@@ -713,7 +713,7 @@ export function StepReviewGenerate() {
     { label: "Templates", value: `${selectedTemplates.length}`, ok: selectedTemplates.length > 0 },
     { label: "Copies", value: `${copies.length}`, ok: copies.length > 0 },
     { label: "Fotos do expert", value: `${selectedPhotos.length}`, ok: true },
-    { label: "Logo", value: showLogo ? (brandKitDetails.logoUrl ? "Sim, vinculado" : "Ligado mas sem arquivo") : "NÃ£o", ok: !showLogo || !!brandKitDetails.logoUrl },
+    { label: "Logo", value: showLogo ? (brandKitDetails.logoUrl ? "Sim, vinculado" : "Ligado mas sem ficheiro") : "NÃ£o", ok: !showLogo || !!brandKitDetails.logoUrl },
   ];
 
   return (

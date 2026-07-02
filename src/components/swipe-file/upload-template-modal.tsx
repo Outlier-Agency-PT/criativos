@@ -74,7 +74,7 @@ export function UploadTemplateModal({ onClose, onUploaded, orgId }: UploadTempla
       return;
     }
     if (f.size > 10 * 1024 * 1024) {
-      setError("Arquivo muito grande (max 10MB)");
+      setError("Ficheiro muito grande (max 10MB)");
       return;
     }
     setFile(f);

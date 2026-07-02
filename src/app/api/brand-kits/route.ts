@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     // Resolve a URL assinada do logo de cada brand kit DIRETO do storage.
     // Antes, os consumidores tentavam casar logo_path com a tabela criativos_logos
-    // (que pode estar vazia) e davam "logo sem arquivo" mesmo o arquivo existindo.
+    // (que pode estar vazia) e davam "logo sem ficheiro" mesmo o ficheiro existindo.
     // O logo do brand kit fica no bucket "logos" (fallback legado "brand-assets").
     const kits = data ?? [];
     const logoPaths = [

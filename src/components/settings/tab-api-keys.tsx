@@ -218,7 +218,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
       setDeleteConfirm(null);
       await fetchKeys();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao excluir key");
+      setError(err instanceof Error ? err.message : "Erro ao eliminar key");
     }
   }
 
@@ -714,7 +714,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                       <button
                         onClick={() => setDeleteConfirm(k.id)}
                         className="p-1.5 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                        title="Excluir"
+                        title="eliminar"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

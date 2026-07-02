@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Inserir as imagens de referÃªncia no rodÃ­zio (criativos_project_backgrounds).
-    // O /api/generate/one baixa esses arquivos do bucket expert-photos quando
+    // O /api/generate/one baixa esses ficheiros do bucket expert-photos quando
     // use_custom_background=true e passa um por criativo (rodÃ­zio) ao modelo.
     if (hasRefImages) {
       const bgRows = refImageRows.map((r) => ({

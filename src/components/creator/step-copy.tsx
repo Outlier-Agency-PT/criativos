@@ -207,7 +207,7 @@ export function StepCopy() {
     const copySource = list === "ai" ? "ai_generated" : list === "manual-file" ? "upload" : "manual";
 
     // Mapeia SEMPRE pro padrÃ£o ativo (estatico â†’ headline/subheadline/ponte/cta).
-    // Os modos paste/arquivo jÃ¡ mapeiam antes, mas o "gerar com IA" criava os campos
+    // Os modos paste/ficheiro jÃ¡ mapeiam antes, mas o "gerar com IA" criava os campos
     // crus (headline/mini_copy/list_items/cta) â€” sem isto, a copy gerada por IA nÃ£o
     // respeitava o padrÃ£o EstÃ¡tico selecionado.
     const newCopies: CopyItem[] = approved.map((c) => ({
@@ -297,7 +297,7 @@ export function StepCopy() {
     try {
       // Read the file content and send to analyze-text endpoint (organize mode)
       const content = await file.text();
-      if (!content.trim()) throw new Error("Arquivo vazio");
+      if (!content.trim()) throw new Error("Ficheiro vazio");
 
       const res = await fetch("/api/copy-library/analyze-text", {
         method: "POST",
@@ -316,7 +316,7 @@ export function StepCopy() {
       );
       setManualFileCopies(aiCopies);
     } catch (err) {
-      setManualFileError(err instanceof Error ? err.message : "Erro ao analisar arquivo");
+      setManualFileError(err instanceof Error ? err.message : "Erro ao analisar ficheiro");
       setManualFileCopies([]);
     } finally {
       setManualFileLoading(false);
@@ -541,7 +541,7 @@ export function StepCopy() {
               )}
             >
               <Upload className="w-3.5 h-3.5" />
-              Enviar arquivo
+              Enviar ficheiro
             </button>
           </div>
 
@@ -549,7 +549,7 @@ export function StepCopy() {
           {manualSubMode === "paste" && (
             <div className="bg-surface-050 rounded-xl border border-border-subtle p-4 space-y-4">
               <p className="text-xs text-text-muted">
-                Cole sua copy abaixo. A IA vai organizar automaticamente em headline, descricao e CTA, sem criar conteudo novo.
+                Cole sua copy abaixo. A IA vai organizar automaticamente em headline, descricao e CTA, sem criar conteúdo novo.
               </p>
 
               <textarea
@@ -622,11 +622,11 @@ export function StepCopy() {
             </div>
           )}
 
-          {/* Sub-mode: Enviar arquivo */}
+          {/* Sub-mode: Enviar ficheiro */}
           {manualSubMode === "file" && (
             <div className="bg-surface-050 rounded-xl border border-border-subtle p-4 space-y-4">
               <p className="text-xs text-text-muted">
-                Envie um arquivo de texto (.txt, .md) com sua copy. A IA vai organizar em headline, descricao e CTA, sem criar conteudo novo.
+                Envie um ficheiro de texto (.txt, .md) com sua copy. A IA vai organizar em headline, descricao e CTA, sem criar conteúdo novo.
               </p>
 
               <input
@@ -1205,7 +1205,7 @@ export function StepCopy() {
 }
 
 /**
- * Card de uma copy organizada pela IA (modos "Colar texto" e "Enviar arquivo").
+ * Card de uma copy organizada pela IA (modos "Colar texto" e "Enviar ficheiro").
  * Os campos editÃ¡veis e exibidos derivam do PADRÃƒO ativo (patternFields), pra
  * todos os 4 campos aparecerem consistentemente em qualquer modo.
  */

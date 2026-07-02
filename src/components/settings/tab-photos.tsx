@@ -122,7 +122,7 @@ export function TabPhotos({ orgId }: TabPhotosProps) {
       }
       await fetchPhotos();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao excluir foto");
+      setError(err instanceof Error ? err.message : "Erro ao eliminar foto");
     }
   }
 
@@ -209,7 +209,7 @@ export function TabPhotos({ orgId }: TabPhotosProps) {
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDelete(photo.id); }}
                   className="p-1.5 rounded-full bg-black/60 text-white hover:bg-red-500/80"
-                  title="Excluir"
+                  title="eliminar"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>

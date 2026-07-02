@@ -14,7 +14,6 @@ export function TabAbout() {
         </div>
         <div className="space-y-1">
           <p className="text-base font-semibold text-text-primary">Criativos</p>
-          <p className="text-sm text-text-secondary">Desenvolvido por Torriani</p>
           <p className="text-xs text-text-muted">
             Software proprietário licenciado — uso restrito.
           </p>

@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     // Validar tamanho
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: `Arquivo muito grande: ${(file.size / 1024 / 1024).toFixed(1)}MB. MÃ¡ximo: 10MB` },
+        { error: `Ficheiro muito grande: ${(file.size / 1024 / 1024).toFixed(1)}MB. MÃ¡ximo: 10MB` },
         { status: 400 }
       );
     }
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Falha no upload: ${uploadError.message}` }, { status: 500 });
     }
 
-    // Se replaceFile foi informado, deletar o arquivo antigo do storage
+    // Se replaceFile foi informado, deletar o ficheiro antigo do storage
     if (replaceFile && bucket) {
       await supabase.storage.from(bucket).remove([replaceFile]);
     }

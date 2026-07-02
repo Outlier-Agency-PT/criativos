@@ -3,7 +3,7 @@ import { requireAuth, handleAuthError } from "@/lib/api-auth";
 
 /**
  * DELETE /api/creatives/[creativeId]
- * Exclui um criativo individual: arquivo no storage + registro no banco.
+ * Exclui um criativo individual: ficheiro no storage + registro no banco.
  */
 export async function DELETE(
   _request: NextRequest,
@@ -37,12 +37,12 @@ export async function DELETE(
 
     if (!project) {
       return NextResponse.json(
-        { error: "Sem permissao para excluir este criativo" },
+        { error: "Sem permissao para eliminar este criativo" },
         { status: 403 }
       );
     }
 
-    // 2. Deletar arquivo do storage
+    // 2. Deletar ficheiro do storage
     if (creative.file_path) {
       await supabase.storage
         .from("criativos_creatives")
@@ -57,7 +57,7 @@ export async function DELETE(
 
     if (deleteError) {
       return NextResponse.json(
-        { error: `Erro ao excluir criativo: ${deleteError.message}` },
+        { error: `Erro ao eliminar criativo: ${deleteError.message}` },
         { status: 500 }
       );
     }

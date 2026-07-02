@@ -7,7 +7,7 @@ export const maxDuration = 120;
 /**
  * GET /api/generate/download?projectId=xxx
  * Baixa todos os criativos do projeto (status completed ou approved)
- * empacotados em ZIP. Cada arquivo no ZIP tem nome legivel baseado
+ * empacotados em ZIP. Cada ficheiro no ZIP tem nome legivel baseado
  * no template ou indice sequencial.
  */
 export async function GET(request: NextRequest) {
@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
     );
 
     if (added === 0) {
-      return NextResponse.json({ error: "Nao foi possivel baixar os arquivos do storage" }, { status: 500 });
+      return NextResponse.json({ error: "Nao foi possivel baixar os ficheiros do storage" }, { status: 500 });
     }
 
     const zipBuffer = await zip.generateAsync({ type: "arraybuffer", compression: "DEFLATE", compressionOptions: { level: 6 } });

@@ -288,7 +288,7 @@ export function StepSetup() {
               <ol className="space-y-1.5 text-xs text-text-secondary list-decimal list-inside">
                 <li>
                   <strong className="text-text-primary">Escolha os templates</strong>: a biblioteca tem modelos
-                  prontos (incluindo o swipe file padrao). Cada template empresta o layout; o conteudo vem da sua marca.
+                  prontos (incluindo o swipe file padrao). Cada template empresta o layout; o conteúdo vem da sua marca.
                 </li>
                 <li>
                   <strong className="text-text-primary">Monte a copy</strong>: nos proximos passos voce escreve ou usa

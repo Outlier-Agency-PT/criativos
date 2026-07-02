@@ -255,7 +255,7 @@ export async function GET(
     }
 
     // PERF: gera todas as signed URLs dos criativos em UMA chamada (createSignedUrls
-    // plural) em vez de uma por arquivo. Antes: N chamadas × ~700ms. Agora: 1 chamada.
+    // plural) em vez de uma por ficheiro. Antes: N chamadas × ~700ms. Agora: 1 chamada.
     const creativePaths = (creativeRows ?? [])
       .map((c) => c.file_path)
       .filter((p): p is string => !!p);

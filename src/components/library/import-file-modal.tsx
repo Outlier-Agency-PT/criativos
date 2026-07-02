@@ -55,7 +55,7 @@ export function ImportFileModal({ orgId, campaigns, onClose, onImported }: Impor
       setCopies(data.copies || []);
       setSelected(new Set((data.copies || []).map((_: AnalyzedCopy, i: number) => i)));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao analisar arquivo");
+      setError(err instanceof Error ? err.message : "Erro ao analisar ficheiro");
     } finally {
       setAnalyzing(false);
     }
@@ -156,12 +156,12 @@ export function ImportFileModal({ orgId, campaigns, onClose, onImported }: Impor
                   <>
                     <Sparkles className="w-6 h-6 animate-pulse text-accent-champagne" />
                     <p className="text-sm text-text-secondary">Analisando com IA...</p>
-                    <p className="text-xs text-text-muted">Extraindo copies do arquivo</p>
+                    <p className="text-xs text-text-muted">Extraindo copies do ficheiro</p>
                   </>
                 ) : (
                   <>
                     <Upload className="w-6 h-6 text-text-muted" />
-                    <p className="text-sm text-text-secondary">Selecione um arquivo .txt ou .md</p>
+                    <p className="text-sm text-text-secondary">Selecione um ficheiro .txt ou .md</p>
                     <p className="text-xs text-text-muted">A IA vai extrair todas as copies automaticamente</p>
                   </>
                 )}

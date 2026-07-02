@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!creatives || creatives.length === 0) {
-      return NextResponse.json({ error: "Nenhum criativo encontrado com arquivo" }, { status: 404 });
+      return NextResponse.json({ error: "Nenhum criativo encontrado com ficheiro" }, { status: 404 });
     }
 
     // Verificar ownership: todos os projetos devem pertencer Ã  org do usuÃ¡rio
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     const allowedCreatives = creatives.filter(c => allowedProjectIds.has(c.project_id));
 
     if (allowedCreatives.length === 0) {
-      return NextResponse.json({ error: "Nenhum criativo encontrado com arquivo" }, { status: 404 });
+      return NextResponse.json({ error: "Nenhum criativo encontrado com ficheiro" }, { status: 404 });
     }
 
     // Gerar signed URLs EM LOTE (1 round-trip) ao invÃ©s de N chamadas.

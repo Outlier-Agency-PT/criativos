@@ -9,10 +9,10 @@ interface LicenseGateProps {
 }
 
 /**
- * Tela de aceite bloqueante do Termo de LicenÃ§a e Confidencialidade.
- * Ao montar, checa GET /api/license. Se o usuÃ¡rio ainda nÃ£o aceitou,
+ * Tela de aceite bloqueante do Termo de Licença e Confidencialidade.
+ * Ao montar, checa GET /api/license. Se o utilizador ainda não aceitou,
  * renderiza um overlay fullscreen bloqueante exigindo o aceite antes de
- * liberar a Ã¡rea logada. Aceite registrado uma Ãºnica vez por usuÃ¡rio.
+ * liberar a área logada. Aceite registrado uma única vez por utilizador.
  */
 export function LicenseGate({ children }: LicenseGateProps) {
   const [accepted, setAccepted] = useState<boolean | null>(null);
@@ -25,12 +25,12 @@ export function LicenseGate({ children }: LicenseGateProps) {
     setCheckFailed(false);
     try {
       const res = await fetch("/api/license", { cache: "no-store" });
-      if (!res.ok) throw new Error("Falha ao verificar licenÃ§a");
+      if (!res.ok) throw new Error("Falha ao verificar licença");
       const data = await res.json();
       setAccepted(Boolean(data.accepted));
     } catch {
-      // Fail-closed: se nÃ£o dÃ¡ pra confirmar o aceite, NÃƒO libera o conteÃºdo.
-      // Mostra estado de erro com opÃ§Ã£o de tentar de novo.
+      // Fail-closed: se não dá pra confirmar o aceite, NÃO libera o conteúdo.
+      // Mostra estado de erro com opção de tentar de novo.
       setAccepted(false);
       setCheckFailed(true);
     }
@@ -46,16 +46,16 @@ export function LicenseGate({ children }: LicenseGateProps) {
     setError(null);
     try {
       const res = await fetch("/api/license", { method: "POST" });
-      if (!res.ok) throw new Error("NÃ£o foi possÃ­vel registrar o aceite");
+      if (!res.ok) throw new Error("Não foi possível registar o aceite");
       setAccepted(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao registrar o aceite");
+      setError(err instanceof Error ? err.message : "Erro ao registar o aceite");
     } finally {
       setSubmitting(false);
     }
   }
 
-  // Enquanto carrega, nÃ£o mostra nada (loader sutil).
+  // Enquanto carrega, não mostra nada (loader sutil).
   if (accepted === null) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
@@ -64,12 +64,12 @@ export function LicenseGate({ children }: LicenseGateProps) {
     );
   }
 
-  // JÃ¡ aceitou: libera a Ã¡rea logada normalmente.
+  // Já aceitou: libera a área logada normalmente.
   if (accepted) {
     return <>{children}</>;
   }
 
-  // NÃ£o aceitou: overlay bloqueante fullscreen.
+  // Não aceitou: overlay bloqueante fullscreen.
   return (
     <>
       <div
@@ -105,42 +105,42 @@ export function LicenseGate({ children }: LicenseGateProps) {
               id="license-gate-title"
               className="text-lg font-semibold text-[var(--text-primary)]"
             >
-              Termo de LicenÃ§a e Confidencialidade
+              Termo de Licença e Confidencialidade
             </h2>
           </div>
 
           <div className="space-y-3 text-sm leading-relaxed text-[var(--text-secondary)] max-h-[45vh] overflow-y-auto pr-1">
             <p>
-              O Criativos Ã© um software proprietÃ¡rio de Torriani, licenciado e
-              nÃ£o vendido. O acesso Ã© concedido a vocÃª de forma pessoal,
-              intransferÃ­vel e revogÃ¡vel, exclusivamente para uso restrito nos
-              seus prÃ³prios projetos.
+              O Criativos é um software proprietário, licenciado e
+              não vendido. O acesso é concedido a si de forma pessoal,
+              intransferível e revogável, exclusivamente para uso restrito nos
+              seus próprios projetos.
             </p>
             <p>
-              Ã‰ expressamente proibido revender, sublicenciar, alugar ou
+              É expressamente proibido revender, sublicenciar, alugar ou
               distribuir o software; disponibilizar ou distribuir o
-              cÃ³digo-fonte a terceiros; e criar, operar ou oferecer qualquer
-              modelo de assinatura, SaaS ou cobranÃ§a recorrente tendo o
+              código-fonte a terceiros; e criar, operar ou oferecer qualquer
+              modelo de assinatura, SaaS ou cobrança recorrente tendo o
               software como base.
             </p>
             <p>
-              O cÃ³digo-fonte Ã© informaÃ§Ã£o confidencial (NDA). VocÃª se
-              compromete a nÃ£o divulgÃ¡-lo, publicÃ¡-lo nem espelhÃ¡-lo em
-              repositÃ³rio pÃºblico, e a preservar todas as marcas de autoria e
+              O código-fonte é informação confidencial (NDA). Você se
+              compromete a não divulgá-lo, publicá-lo nem espelhá-lo em
+              repositório público, e a preservar todas as marcas de autoria e
               avisos de copyright presentes no software.
             </p>
             <p className="text-[var(--text-muted)]">
-              Ao continuar, vocÃª declara que leu e aceita integralmente estes
-              termos. O texto completo estÃ¡ disponÃ­vel em{" "}
+              Ao continuar, você declara que leu e aceita integralmente estes
+              termos. O texto completo está disponível em{" "}
               <a
                 href="/LICENSE.txt"
                 target="_blank"
                 rel="noreferrer"
                 className="text-[var(--accent)] hover:underline"
               >
-                ver licenÃ§a completa
+                ver licença completa
               </a>{" "}
-              (arquivo LICENSE no repositÃ³rio).
+              (ficheiro LICENSE no repositório).
             </p>
           </div>
 
@@ -152,13 +152,13 @@ export function LicenseGate({ children }: LicenseGateProps) {
               className="mt-0.5 w-4 h-4 accent-[var(--accent)] cursor-pointer flex-shrink-0"
             />
             <span className="text-sm text-[var(--text-secondary)]">
-              Li e aceito os termos de licenÃ§a e confidencialidade
+              Li e aceito os termos de licença e confidencialidade
             </span>
           </label>
 
           {checkFailed && (
             <p className="text-sm text-[var(--accent-red)] mt-3">
-              NÃ£o foi possÃ­vel verificar seu aceite.{" "}
+              Não foi possível verificar o seu aceite.{" "}
               <button onClick={check} className="underline hover:no-underline">
                 Tentar novamente
               </button>
@@ -183,8 +183,8 @@ export function LicenseGate({ children }: LicenseGateProps) {
           </button>
         </div>
       </div>
-      {/* A Ã¡rea logada NÃƒO Ã© renderizada atÃ© o aceite (fail-closed): evita
-          carregar dados/telas por trÃ¡s do overlay antes do consentimento. */}
+      {/* A área logada NÃO é renderizada até o aceite (fail-closed): evita
+          carregar dados/telas por trás do overlay antes do consentimento. */}
     </>
   );
 }

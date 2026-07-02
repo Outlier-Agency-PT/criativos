@@ -39,7 +39,7 @@ export async function POST(
       return NextResponse.json({ error: "Projeto nao encontrado" }, { status: 404 });
     }
 
-    // 2. Buscar e deletar arquivos do storage
+    // 2. Buscar e deletar ficheiros do storage
     const { data: creatives } = await supabase
       .from("criativos_creatives")
       .select("file_path")

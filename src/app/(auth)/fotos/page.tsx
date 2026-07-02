@@ -189,7 +189,7 @@ export default function FotosPage() {
       showToast("Foto excluida");
       await fetchPhotos();
     } catch (err) {
-      showToast(err instanceof Error ? err.message : "Erro ao excluir", "error");
+      showToast(err instanceof Error ? err.message : "Erro ao eliminar", "error");
     }
   }
 
@@ -331,7 +331,7 @@ export default function FotosPage() {
                   <button
                     onClick={() => setDeleteConfirm(photo.id)}
                     className="p-1.5 rounded-lg bg-black/50 text-white hover:bg-red-600 transition-colors"
-                    title="Excluir"
+                    title="eliminar"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -399,7 +399,7 @@ export default function FotosPage() {
                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-600/20 text-red-400 text-xs hover:bg-red-600/30 transition-colors"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                Excluir
+                eliminar
               </button>
             </div>
           </div>

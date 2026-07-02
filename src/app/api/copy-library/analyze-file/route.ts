@@ -6,9 +6,9 @@ const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 const ALLOWED_EXTENSIONS = [".txt", ".md"];
 
 // PadrÃ£o "mini_copy": headline / mini_copy / list_items / cta (+ body)
-const PROMPT_MINI_COPY = `VocÃª Ã© um especialista em extrair anÃºncios e copies de arquivos de trabalho de copywriting.
+const PROMPT_MINI_COPY = `VocÃª Ã© um especialista em extrair anÃºncios e copies de ficheiros de trabalho de copywriting.
 
-Leia o conteÃºdo completo do arquivo e extraia CADA ANÃšNCIO/CRIATIVO como um objeto separado. Ignore metadados.
+Leia o conteÃºdo completo do ficheiro e extraia CADA ANÃšNCIO/CRIATIVO como um objeto separado. Ignore metadados.
 
 CADA COPY TEM 5 CAMPOS:
 - **headline**: frase principal de impacto
@@ -53,13 +53,13 @@ Formato:
   { "headline": "...", "mini_copy": "...", "list_items": "...", "cta": "...", "body": "..." }
 ]
 
-CONTEÃšDO DO ARQUIVO:
+CONTEÃšDO DO ficheiro:
 `;
 
 // PadrÃ£o "estatico" (anÃºncio estÃ¡tico): headline / subheadline / ponte / cta (+ body)
-const PROMPT_ESTATICO = `VocÃª Ã© um especialista em extrair anÃºncios e copies de arquivos de trabalho de copywriting.
+const PROMPT_ESTATICO = `VocÃª Ã© um especialista em extrair anÃºncios e copies de ficheiros de trabalho de copywriting.
 
-Leia o conteÃºdo completo do arquivo e extraia CADA ANÃšNCIO/CRIATIVO como um objeto separado. Ignore metadados.
+Leia o conteÃºdo completo do ficheiro e extraia CADA ANÃšNCIO/CRIATIVO como um objeto separado. Ignore metadados.
 
 CADA COPY TEM 5 CAMPOS:
 - **headline**: frase principal de impacto (chamada principal)
@@ -99,13 +99,13 @@ Formato:
   { "headline": "...", "subheadline": "...", "ponte": "...", "cta": "...", "body": "..." }
 ]
 
-CONTEÃšDO DO ARQUIVO:
+CONTEÃšDO DO ficheiro:
 `;
 
 /**
  * POST /api/copy-library/analyze-file
- * Recebe um arquivo (.txt, .md) e usa IA para extrair copies estruturadas.
- * A IA lÃª o arquivo inteiro e gera quantas copies forem necessÃ¡rias.
+ * Recebe um ficheiro (.txt, .md) e usa IA para extrair copies estruturadas.
+ * A IA lÃª o ficheiro inteiro e gera quantas copies forem necessÃ¡rias.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
 
     if (!contentType.includes("multipart/form-data")) {
       return NextResponse.json(
-        { error: "Esperado multipart/form-data com arquivo" },
+        { error: "Esperado multipart/form-data com ficheiro" },
         { status: 400 }
       );
     }
@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
     // Validar tamanho
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: "Arquivo muito grande. MÃ¡ximo: 1MB" },
+        { error: "Ficheiro muito grande. MÃ¡ximo: 1MB" },
         { status: 400 }
       );
     }
@@ -155,12 +155,12 @@ export async function POST(request: NextRequest) {
 
     if (!content.trim()) {
       return NextResponse.json(
-        { error: "Arquivo vazio" },
+        { error: "Ficheiro vazio" },
         { status: 400 }
       );
     }
 
-    // Montar prompt com conteÃºdo do arquivo (padrÃ£o ativo define os campos)
+    // Montar prompt com conteÃºdo do ficheiro (padrÃ£o ativo define os campos)
     const fullPrompt = (pattern === "estatico" ? PROMPT_ESTATICO : PROMPT_MINI_COPY) + content;
 
     // Chamar IA via key rotation
@@ -196,14 +196,14 @@ export async function POST(request: NextRequest) {
       const lines = content.split("\n").filter((l) => l.trim().length > 0);
       copies = pattern === "estatico"
         ? [{
-            headline: lines[0] || "Copy extraÃ­da do arquivo",
+            headline: lines[0] || "Copy extraÃ­da do ficheiro",
             subheadline: lines[1] || "",
             ponte: lines.slice(2, 5).join("\n"),
             cta: "Saiba mais",
             body: "",
           }]
         : [{
-            headline: lines[0] || "Copy extraÃ­da do arquivo",
+            headline: lines[0] || "Copy extraÃ­da do ficheiro",
             mini_copy: lines[1] || "",
             list_items: lines.slice(2, 5).join("\n"),
             cta: "Saiba mais",

@@ -61,13 +61,13 @@ export function LocalDirectoryImport({
         body: JSON.stringify({ directoryPath: directoryPath.trim(), orgId }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Erro ao buscar arquivos");
+      if (!res.ok) throw new Error(data.error || "Erro ao buscar ficheiros");
 
       setFiles(data.files || []);
       // Select all by default
       setSelected(new Set((data.files || []).map((_: LocalFile, i: number) => i)));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao buscar arquivos");
+      setError(err instanceof Error ? err.message : "Erro ao buscar ficheiros");
     } finally {
       setFetching(false);
     }
@@ -164,7 +164,7 @@ export function LocalDirectoryImport({
     }
 
     if (errors > 0 && imported === 0) {
-      setError("Nenhuma copy foi importada. Verifique o conteudo dos arquivos.");
+      setError("Nenhuma copy foi importada. Verifique o conteúdo dos ficheiros.");
     }
   }
 
@@ -205,7 +205,7 @@ export function LocalDirectoryImport({
             ) : (
               <FolderSearch className="w-4 h-4" />
             )}
-            Buscar arquivos
+            Buscar ficheiros
           </button>
         </div>
 
@@ -234,7 +234,7 @@ export function LocalDirectoryImport({
             <div className="flex items-center justify-between text-xs text-text-muted">
               <span className="flex items-center gap-2">
                 <Loader2 className="w-3 h-3 animate-spin" />
-                Processando arquivos com IA...
+                Processando ficheiros com IA...
               </span>
               <span>
                 {progress.current} de {progress.total}
@@ -281,7 +281,7 @@ export function LocalDirectoryImport({
                   : "Selecionar todos"}
               </button>
               <span className="ml-auto text-xs text-text-muted">
-                {files.length} arquivo{files.length !== 1 ? "s" : ""} encontrado
+                {files.length} ficheiro{files.length !== 1 ? "s" : ""} encontrado
                 {files.length !== 1 ? "s" : ""}
               </span>
             </div>

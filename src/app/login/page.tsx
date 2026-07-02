@@ -40,7 +40,7 @@ function LoginForm() {
     });
 
     if (authError) {
-      setError(authError.message || "Email ou senha invalidos");
+      setError(authError.message || "Email ou palavra-passe inválidos");
       setLoading(false);
       return;
     }
@@ -205,7 +205,7 @@ function LoginForm() {
             <div className="text-center space-y-2 mb-8">
               <h1 className="text-2xl font-semibold text-[var(--text-accent)]">Criativos</h1>
               <p className="text-sm text-[var(--text-muted)]">
-                Faca login para acessar
+                Faça login para aceder
               </p>
             </div>
 
@@ -227,14 +227,14 @@ function LoginForm() {
 
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-[var(--text-muted)]" htmlFor="password">
-                  Senha
+                  Palavra-passe
                 </label>
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="••••••••"
                   required
                   className="w-full px-4 py-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.1)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:shadow-[0_0_0_2px_rgba(var(--accent-rgb),0.08)] transition-all text-sm"
                 />
@@ -260,7 +260,7 @@ function LoginForm() {
 
             <div className="text-center text-sm mt-6">
               <p className="text-[var(--text-muted)]">
-                Nao tem conta?{" "}
+                Não tem conta?{" "}
                 <Link href="/registro" className="text-[var(--text-accent)] hover:underline">
                   Criar conta
                 </Link>
@@ -268,10 +268,6 @@ function LoginForm() {
             </div>
           </div>
 
-          {/* Marca de autoria discreta */}
-          <p className="text-center text-xs text-[var(--text-muted)] mt-6">
-            Criativos Â· feito por Torriani
-          </p>
         </div>
       </div>
     </div>

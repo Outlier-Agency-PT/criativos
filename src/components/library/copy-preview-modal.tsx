@@ -32,7 +32,7 @@ export function CopyPreviewModal({ copy, onClose, onEdit }: CopyPreviewModalProp
     copy.source === "ai_generated"
       ? "IA"
       : copy.source === "upload"
-        ? "Arquivo"
+        ? "Ficheiro"
         : copy.source === "local-import"
           ? "Local"
           : "Manual";

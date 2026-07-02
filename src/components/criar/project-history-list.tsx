@@ -254,7 +254,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
     if (deletingId) return;
 
     const confirmed = window.confirm(
-      "Tem certeza que deseja excluir este projeto? Todos os criativos gerados serao perdidos."
+      "Tem a certeza que deseja eliminar este projeto? Todos os criativos gerados serao perdidos."
     );
     if (!confirmed) return;
 
@@ -268,7 +268,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
       const res = await fetch(`/api/projects/${projectId}`, {
         method: "DELETE",
       });
-      if (!res.ok) throw new Error("Falha ao excluir");
+      if (!res.ok) throw new Error("Falha ao eliminar");
     } catch {
       // Falhou: restaura a lista anterior (rollback do optimistic update).
       setProjects(snapshot);
@@ -487,14 +487,14 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
                   onClick={(e) => handleDelete(e, project.id)}
                   disabled={deletingId === project.id}
                   className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-text-muted hover:text-accent-red hover:bg-accent-red/10 disabled:opacity-50 transition-colors"
-                  title="Excluir"
+                  title="eliminar"
                 >
                   {deletingId === project.id ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   ) : (
                     <Trash2 className="w-3.5 h-3.5" />
                   )}
-                  <span className="hidden sm:inline">Excluir</span>
+                  <span className="hidden sm:inline">eliminar</span>
                 </button>
               </div>
 

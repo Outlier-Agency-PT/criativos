@@ -49,14 +49,14 @@ function parseBlocks(content: string): ParsedBlock[] {
 
 /**
  * POST /api/copy-library/import-file
- * Parse: recebe arquivo, retorna blocos parseados.
+ * Parse: recebe ficheiro, retorna blocos parseados.
  * Import: recebe blocos selecionados + orgId, cria copies em batch.
  */
 export async function POST(request: NextRequest) {
   try {
     const contentType = request.headers.get("content-type") || "";
 
-    // Modo 1: Upload de arquivo (FormData) â€” retorna blocos parseados
+    // Modo 1: Upload de ficheiro (FormData) â€” retorna blocos parseados
     if (contentType.includes("multipart/form-data")) {
       const formData = await request.formData();
       const file = formData.get("file") as File | null;
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
 
       // Validar tamanho
       if (file.size > MAX_FILE_SIZE) {
-        return NextResponse.json({ error: "Arquivo muito grande. MÃ¡ximo: 1MB" }, { status: 400 });
+        return NextResponse.json({ error: "Ficheiro muito grande. MÃ¡ximo: 1MB" }, { status: 400 });
       }
 
       const content = await file.text();

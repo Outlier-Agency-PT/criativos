@@ -4,7 +4,7 @@ import { requireAuth, handleAuthError } from "@/lib/api-auth";
 /**
  * DELETE /api/projects/[projectId]
  * Exclui um projeto e todos os dados associados:
- * criativos (arquivos + registros), copies, templates, photos.
+ * criativos (ficheiros + registros), copies, templates, photos.
  */
 export async function DELETE(
   _request: NextRequest,
@@ -35,7 +35,7 @@ export async function DELETE(
       .select("file_path")
       .eq("project_id", projectId);
 
-    // 3. Deletar arquivos do storage bucket
+    // 3. Deletar ficheiros do storage bucket
     if (creatives?.length) {
       const filePaths = creatives
         .map((c) => c.file_path)
@@ -67,7 +67,7 @@ export async function DELETE(
 
     if (deleteError) {
       return NextResponse.json(
-        { error: `Erro ao excluir projeto: ${deleteError.message}` },
+        { error: `Erro ao eliminar projeto: ${deleteError.message}` },
         { status: 500 }
       );
     }

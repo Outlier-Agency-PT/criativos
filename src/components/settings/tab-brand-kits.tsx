@@ -199,7 +199,7 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
       setDeleteConfirm(null);
       await fetchBrandKits();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao excluir");
+      setError(err instanceof Error ? err.message : "Erro ao eliminar");
     }
   }
 
@@ -408,7 +408,7 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
                     <button
                       onClick={() => setDeleteConfirm(bk.id)}
                       className="p-1.5 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                      title="Excluir"
+                      title="eliminar"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

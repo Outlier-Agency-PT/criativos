@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     // Validar tamanho
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: `Arquivo muito grande: ${(file.size / 1024 / 1024).toFixed(1)}MB. MÃ¡ximo: 2MB` },
+        { error: `Ficheiro muito grande: ${(file.size / 1024 / 1024).toFixed(1)}MB. MÃ¡ximo: 2MB` },
         { status: 400 }
       );
     }
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      // Rollback: remover arquivo do storage
+      // Rollback: remover ficheiro do storage
       await supabase.storage.from("logos").remove([filePath]);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

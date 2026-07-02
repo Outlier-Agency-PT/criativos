@@ -54,7 +54,7 @@ export function CopyCard({ copy, orgId, onClick, onEdit, onDelete, onFavoriteTog
 
   async function handleDelete(e: React.MouseEvent) {
     e.stopPropagation();
-    if (!confirm("Excluir esta copy permanentemente?")) return;
+    if (!confirm("eliminar esta copy permanentemente?")) return;
     setDeleting(true);
     try {
       const res = await fetch(`/api/copy-library/${copy.id}`, {
@@ -75,7 +75,7 @@ export function CopyCard({ copy, orgId, onClick, onEdit, onDelete, onFavoriteTog
     onEdit();
   }
 
-  const sourceLabel = copy.source === "ai_generated" ? "IA" : copy.source === "upload" ? "Arquivo" : copy.source === "local_import" ? "Local" : "Manual";
+  const sourceLabel = copy.source === "ai_generated" ? "IA" : copy.source === "upload" ? "Ficheiro" : copy.source === "local_import" ? "Local" : "Manual";
 
   return (
     <div
