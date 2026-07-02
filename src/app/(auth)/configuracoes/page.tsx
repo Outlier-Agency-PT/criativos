@@ -14,6 +14,7 @@ import {
   Type,
   Info,
   Loader2,
+  UserPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TabPersonas } from "@/components/settings/tab-personas";
@@ -24,12 +25,14 @@ import { TabTextModel } from "@/components/settings/tab-text-model";
 import { TabAccount } from "@/components/settings/tab-account";
 import { TabTheme } from "@/components/settings/tab-theme";
 import { TabAbout } from "@/components/settings/tab-about";
+import { TabMembers } from "@/components/settings/tab-members";
 
 const ALL_TABS = [
   { id: "personas", label: "Personas", icon: Users, adminOnly: false },
   { id: "fotos", label: "Fotos", icon: Camera, adminOnly: false },
   { id: "brand-kits", label: "Brand Kits", icon: Palette, adminOnly: false },
   { id: "aparencia", label: "Aparencia", icon: Paintbrush, adminOnly: false },
+  { id: "membros", label: "Membros", icon: UserPlus, adminOnly: true },
   { id: "api-keys", label: "API Keys", icon: Key, adminOnly: true },
   { id: "modelo-texto", label: "Modelo de texto", icon: Type, adminOnly: true },
   { id: "conta", label: "Conta", icon: UserCircle, adminOnly: false },
@@ -37,6 +40,9 @@ const ALL_TABS = [
 ] as const;
 
 type TabId = (typeof ALL_TABS)[number]["id"];
+
+// Validar que "membros" é admin-only (tipo de segurança)
+const ADMIN_TABS = ["membros", "api-keys", "modelo-texto"] as const;
 
 export default function ConfiguracoesPage() {
   const searchParams = useSearchParams();
@@ -97,9 +103,9 @@ export default function ConfiguracoesPage() {
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-text-primary">Configuracoes</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Configurações</h1>
         <p className="text-sm text-text-muted mt-1">
-          Gerencie personas, fotos, brand kits, API keys e conta.
+          Gerencie personas, fotos, brand kits, membros, API keys e conta.
         </p>
       </div>
 
@@ -132,6 +138,7 @@ export default function ConfiguracoesPage() {
         {activeTab === "fotos" && <TabPhotos orgId={orgId} />}
         {activeTab === "brand-kits" && <TabBrandKits orgId={orgId} />}
         {activeTab === "aparencia" && <TabTheme />}
+        {activeTab === "membros" && <TabMembers orgId={orgId} />}
         {activeTab === "api-keys" && <TabApiKeys orgId={orgId} />}
         {activeTab === "modelo-texto" && <TabTextModel orgId={orgId} />}
         {activeTab === "conta" && <TabAccount orgId={orgId} />}

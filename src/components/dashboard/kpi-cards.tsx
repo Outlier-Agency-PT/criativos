@@ -5,13 +5,13 @@ import { BadgeDollarSign, CheckCircle2, DollarSign } from "lucide-react";
 
 interface KpiCardsProps {
   completedCount: number;
-  estimatedCostBRL: number;
-  costPerCreativeBRL: number;
+  estimatedCostEUR: number;
+  costPerCreativeEUR: number;
 }
 
-const formatCurrency = (value: number) => `R$ ${value.toFixed(2).replace(".", ",")}`;
+const formatCurrency = (value: number) => `€ ${value.toFixed(2).replace(".", ",")}`;
 
-export function KpiCards({ completedCount, estimatedCostBRL, costPerCreativeBRL }: KpiCardsProps) {
+export function KpiCards({ completedCount, estimatedCostEUR, costPerCreativeEUR }: KpiCardsProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div className="theme-panel p-5 rounded-[22px]">
@@ -31,7 +31,7 @@ export function KpiCards({ completedCount, estimatedCostBRL, costPerCreativeBRL 
             <DollarSign className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-text-primary">{formatCurrency(estimatedCostBRL)}</p>
+            <p className="text-2xl font-bold text-text-primary">{formatCurrency(estimatedCostEUR)}</p>
             <p className="text-xs text-text-muted">Custo estimado • últimos 30 dias</p>
           </div>
         </div>
@@ -43,7 +43,7 @@ export function KpiCards({ completedCount, estimatedCostBRL, costPerCreativeBRL 
             <BadgeDollarSign className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-text-primary">{formatCurrency(costPerCreativeBRL)}</p>
+            <p className="text-2xl font-bold text-text-primary">{formatCurrency(costPerCreativeEUR)}</p>
             <p className="text-xs text-text-muted">Custo médio por criativo • últimos 30 dias</p>
           </div>
         </div>

@@ -17,14 +17,14 @@ import { ProjectGroup } from "@/components/dashboard/project-group";
 import type { ProjectGroupData } from "@/components/dashboard/project-group";
 
 // Taxa USD->BRL. Uniformizada com a pÃ¡gina /uso (que busca a taxa real online,
-// fallback 5.65). Mantemos 5.65 aqui pra os dois lugares baterem.
-const USD_TO_BRL = 5.65;
+// fallback 0.92). Mantemos 0.92 aqui pra os dois lugares baterem.
+const USD_TO_EUR = 0.92;
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
 interface Stats {
   completedCount: number;
-  estimatedCostBRL: number;
-  costPerCreativeBRL: number;
+  estimatedCostEUR: number;
+  costPerCreativeEUR: number;
 }
 
 // PERF: limite de criativos trazidos pro dashboard. O dashboard ordena por
@@ -216,11 +216,11 @@ export default function DashboardPage() {
   }, [rawProjects, rawCreatives]);
 
   const stats = useMemo<Stats>(() => {
-    const estimatedCostBRL = totalCostUSD30d * USD_TO_BRL;
+    const estimatedCostEUR = totalCostUSD30d * USD_TO_EUR;
     return {
       completedCount: completedCount30d,
-      estimatedCostBRL,
-      costPerCreativeBRL: completedCount30d > 0 ? estimatedCostBRL / completedCount30d : 0,
+      estimatedCostEUR,
+      costPerCreativeEUR: completedCount30d > 0 ? estimatedCostEUR / completedCount30d : 0,
     };
   }, [completedCount30d, totalCostUSD30d]);
 
@@ -301,8 +301,8 @@ export default function DashboardPage() {
         <div className="col-span-12 space-y-3">
           <KpiCards
             completedCount={stats?.completedCount ?? 0}
-            estimatedCostBRL={stats?.estimatedCostBRL ?? 0}
-            costPerCreativeBRL={stats?.costPerCreativeBRL ?? 0}
+            estimatedCostEUR={stats?.estimatedCostEUR ?? 0}
+            costPerCreativeEUR={stats?.costPerCreativeEUR ?? 0}
           />
 
           <section className="theme-panel rounded-[26px] p-4 sm:p-5">

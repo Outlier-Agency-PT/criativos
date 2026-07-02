@@ -74,16 +74,16 @@ interface UsageSummary {
 // com orientacao pra recarregar. Recarga e manual (sem gateway de pagamento).
 const LOW_BALANCE_THRESHOLD = 20;
 
-const BRL_FALLBACK = 5.65;
+const EUR_FALLBACK = 0.92;
 
-async function fetchUsdBrl(): Promise<number> {
+async function fetchUsdEur(): Promise<number> {
   try {
     const res = await fetch("https://open.er-api.com/v6/latest/USD", { next: { revalidate: 3600 } });
-    if (!res.ok) return BRL_FALLBACK;
+    if (!res.ok) return EUR_FALLBACK;
     const data = await res.json();
-    return data.rates?.BRL ?? BRL_FALLBACK;
+    return data.rates?.EUR ?? EUR_FALLBACK;
   } catch {
-    return BRL_FALLBACK;
+    return EUR_FALLBACK;
   }
 }
 
@@ -93,7 +93,7 @@ export default function UsoPage() {
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<"7d" | "30d" | "all">("30d");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [usdBrl, setUsdBrl] = useState(BRL_FALLBACK);
+  const [usdEur, setUsdEur] = useState(EUR_FALLBACK);
   const [simQty, setSimQty] = useState(100);
   // Resumo de billing do mÃªs corrente, agregado server-side a partir de
   // criativos_generation_logs (base de cobranÃ§a por uso).
@@ -174,10 +174,10 @@ export default function UsoPage() {
             setApiKeys(keysData ?? []);
           }
         })(),
-        fetchUsdBrl(),
+        fetchUsdEur(),
       ]);
 
-      setUsdBrl(rate);
+      setUsdEur(rate);
       setLoading(false);
     }
 
@@ -282,7 +282,7 @@ export default function UsoPage() {
     ? Math.max(...summary.trend.series.map((p) => p.criativos), 1)
     : 1;
 
-  const fmtBrl = (usd: number) => (usd * usdBrl).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const fmtEur = (usd: number) => (usd * usdEur).toLocaleString("pt-PT", { style: "currency", currency: "EUR" });
 
   if (loading) {
     return (
@@ -309,7 +309,7 @@ export default function UsoPage() {
         <div className="flex items-center gap-3">
           <span className="text-[11px] text-text-muted flex items-center gap-1">
             <RefreshCw className="w-3 h-3" />
-            USD/BRL {usdBrl.toFixed(2)}
+            USD/EUR {usdEur.toFixed(2)}
           </span>
           <div className="flex gap-0.5 bg-surface-050 rounded-lg border border-border-subtle p-0.5">
             {([["7d", "7d"], ["30d", "30d"], ["all", "Tudo"]] as const).map(([value, label]) => (
@@ -352,8 +352,8 @@ export default function UsoPage() {
               <p className="text-[11px] text-text-muted mt-0.5">Custo estimado (USD)</p>
             </div>
             <div className="p-4">
-              <p className="text-lg sm:text-xl font-bold text-emerald-400">{fmtBrl(summary.totalCostUsd)}</p>
-              <p className="text-[11px] text-text-muted mt-0.5">Custo estimado (BRL)</p>
+              <p className="text-lg sm:text-xl font-bold text-emerald-400">{fmtEur(summary.totalCostUsd)}</p>
+              <p className="text-[11px] text-text-muted mt-0.5">Custo estimado (EUR)</p>
             </div>
             <div className="p-4">
               <p className={cn(
@@ -506,7 +506,7 @@ export default function UsoPage() {
                   <th className="text-left px-3 py-3 font-medium">Provider</th>
                   <th className="text-right px-3 py-3 font-medium">Criativos</th>
                   <th className="text-right px-3 py-3 font-medium">Custo USD</th>
-                  <th className="text-right px-4 sm:px-5 py-3 font-medium">Custo BRL</th>
+                  <th className="text-right px-4 sm:px-5 py-3 font-medium">Custo EUR</th>
                 </tr>
               </thead>
               <tbody>
@@ -518,7 +518,7 @@ export default function UsoPage() {
                       <td className="px-3 py-3 text-text-muted capitalize text-xs">{m.provider || "-"}</td>
                       <td className="text-right px-3 py-3 text-text-primary font-semibold">{m.count}</td>
                       <td className="text-right px-3 py-3 text-accent-champagne font-semibold">${m.costUsd.toFixed(2)}</td>
-                      <td className="text-right px-4 sm:px-5 py-3 text-emerald-400 font-medium text-xs">{fmtBrl(m.costUsd)}</td>
+                      <td className="text-right px-4 sm:px-5 py-3 text-emerald-400 font-medium text-xs">{fmtEur(m.costUsd)}</td>
                     </tr>
                   );
                 })}
@@ -528,7 +528,7 @@ export default function UsoPage() {
                   <td className="px-4 sm:px-5 py-3 font-semibold text-text-primary" colSpan={2}>Total</td>
                   <td className="text-right px-3 py-3 font-semibold text-text-primary">{summary.totalCount}</td>
                   <td className="text-right px-3 py-3 font-semibold text-accent-champagne">${summary.totalCostUsd.toFixed(2)}</td>
-                  <td className="text-right px-4 sm:px-5 py-3 font-semibold text-emerald-400 text-xs">{fmtBrl(summary.totalCostUsd)}</td>
+                  <td className="text-right px-4 sm:px-5 py-3 font-semibold text-emerald-400 text-xs">{fmtEur(summary.totalCostUsd)}</td>
                 </tr>
               </tfoot>
             </table>
@@ -579,7 +579,7 @@ export default function UsoPage() {
         <StatCard icon={CheckCircle2} label="Completos" value={metrics.completed} color="text-green-400" />
         <StatCard icon={XCircle} label="Erros" value={metrics.errors} color="text-red-400" />
         <StatCard icon={DollarSign} label="Custo (USD)" value={`$${metrics.totalCost.toFixed(2)}`} color="text-yellow-400" />
-        <StatCard icon={DollarSign} label="Custo (BRL)" value={fmtBrl(metrics.totalCost)} color="text-emerald-400" />
+        <StatCard icon={DollarSign} label="Custo (EUR)" value={fmtEur(metrics.totalCost)} color="text-emerald-400" />
         <StatCard icon={Zap} label="Taxa sucesso" value={`${metrics.successRate.toFixed(0)}%`} color="text-cyan-400" />
       </div>
 
@@ -674,7 +674,7 @@ export default function UsoPage() {
                   <th className="text-right px-3 py-3 font-medium">Imgs</th>
                   <th className="text-right px-3 py-3 font-medium">$/img</th>
                   <th className="text-right px-3 py-3 font-medium">Total USD</th>
-                  <th className="text-right px-3 py-3 font-medium">Total BRL</th>
+                  <th className="text-right px-3 py-3 font-medium">Total EUR</th>
                   <th className="text-right px-3 py-3 font-medium">Tempo</th>
                   <th className="text-right px-4 sm:px-5 py-3 font-medium">%</th>
                 </tr>
@@ -697,7 +697,7 @@ export default function UsoPage() {
                       <td className="text-right px-3 py-3 text-text-primary font-semibold">{m.count}</td>
                       <td className="text-right px-3 py-3 text-text-muted text-xs">${(modelInfo?.costPerImage ?? 0.039).toFixed(3)}</td>
                       <td className="text-right px-3 py-3 text-accent-champagne font-semibold">${m.cost.toFixed(2)}</td>
-                      <td className="text-right px-3 py-3 text-emerald-400 font-medium text-xs">{fmtBrl(m.cost)}</td>
+                      <td className="text-right px-3 py-3 text-emerald-400 font-medium text-xs">{fmtEur(m.cost)}</td>
                       <td className="text-right px-3 py-3 text-text-muted text-xs">
                         {m.avgTime > 0 ? `${m.avgTime.toFixed(1)}s` : "-"}
                       </td>
@@ -721,7 +721,7 @@ export default function UsoPage() {
                   </td>
                   <td className="text-right px-3 py-3"></td>
                   <td className="text-right px-3 py-3 font-semibold text-accent-champagne">${metrics.totalCost.toFixed(2)}</td>
-                  <td className="text-right px-3 py-3 font-semibold text-emerald-400 text-xs">{fmtBrl(metrics.totalCost)}</td>
+                  <td className="text-right px-3 py-3 font-semibold text-emerald-400 text-xs">{fmtEur(metrics.totalCost)}</td>
                   <td className="text-right px-3 py-3"></td>
                   <td className="text-right px-4 sm:px-5 py-3 text-text-muted text-[11px]">100%</td>
                 </tr>
@@ -740,7 +740,7 @@ export default function UsoPage() {
           </h3>
           <p className="text-xs text-text-muted mt-1">
             Estimativa para <strong className="text-text-primary">{simQty}</strong> imagens/mes
-            <span className="ml-2 text-text-muted">(USD 1 = R$ {usdBrl.toFixed(2)})</span>
+            <span className="ml-2 text-text-muted">(USD 1 = € {usdEur.toFixed(2)})</span>
           </p>
         </div>
 
@@ -773,9 +773,9 @@ export default function UsoPage() {
               <tr className="border-b border-border-subtle text-text-muted text-xs">
                 <th className="text-left px-4 sm:px-5 py-3 font-medium">Modelo</th>
                 <th className="text-right px-3 py-3 font-medium">$/img</th>
-                <th className="text-right px-3 py-3 font-medium">R$/img</th>
+                <th className="text-right px-3 py-3 font-medium">€/img</th>
                 <th className="text-right px-3 py-3 font-medium">{simQty} imgs (USD)</th>
-                <th className="text-right px-4 sm:px-5 py-3 font-medium">{simQty} imgs (BRL)</th>
+                <th className="text-right px-4 sm:px-5 py-3 font-medium">{simQty} imgs (EUR)</th>
               </tr>
             </thead>
             <tbody>
@@ -794,10 +794,10 @@ export default function UsoPage() {
                     </td>
                     <td className="text-right px-3 py-3 text-text-muted text-xs font-mono">${m.costPerImage.toFixed(3)}</td>
                     <td className="text-right px-3 py-3 text-text-muted text-xs font-mono">
-                      R$ {(m.costPerImage * usdBrl).toFixed(2)}
+                      € {(m.costPerImage * usdEur).toFixed(2)}
                     </td>
                     <td className="text-right px-3 py-3 text-accent-champagne font-semibold">${totalUsd.toFixed(2)}</td>
-                    <td className="text-right px-4 sm:px-5 py-3 text-emerald-400 font-semibold">{fmtBrl(totalUsd)}</td>
+                    <td className="text-right px-4 sm:px-5 py-3 text-emerald-400 font-semibold">{fmtEur(totalUsd)}</td>
                   </tr>
                 );
               })}
@@ -868,7 +868,7 @@ export default function UsoPage() {
                 <th className="text-left px-4 sm:px-5 py-3 font-medium">Modelo</th>
                 <th className="text-left px-3 py-3 font-medium">Provider</th>
                 <th className="text-right px-3 py-3 font-medium">$/img</th>
-                <th className="text-right px-3 py-3 font-medium">R$/img</th>
+                <th className="text-right px-3 py-3 font-medium">€/img</th>
                 <th className="text-right px-3 py-3 font-medium">Resolucao</th>
                 <th className="text-center px-3 py-3 font-medium">Refs</th>
                 <th className="text-left px-4 sm:px-5 py-3 font-medium">Free</th>
@@ -886,7 +886,7 @@ export default function UsoPage() {
                   <td className="px-3 py-3 text-text-muted capitalize text-xs">{m.provider}</td>
                   <td className="text-right px-3 py-3 text-accent-champagne font-medium">${m.costPerImage.toFixed(3)}</td>
                   <td className="text-right px-3 py-3 text-emerald-400 text-xs font-medium">
-                    R$ {(m.costPerImage * usdBrl).toFixed(2)}
+                    € {(m.costPerImage * usdEur).toFixed(2)}
                   </td>
                   <td className="text-right px-3 py-3 text-text-muted text-xs">{m.maxResolution}</td>
                   <td className="text-center px-3 py-3">

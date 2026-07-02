@@ -8,7 +8,7 @@ import { Portal } from "./portal";
 import { cn } from "@/lib/utils";
 import { getModelById, getDefaultModel } from "@/lib/models";
 
-const USD_TO_BRL = 5.65;
+const USD_TO_EUR = 0.92;
 import {
   LayoutTemplate,
   FileText,
@@ -694,8 +694,8 @@ export function StepReviewGenerate() {
   // Estimativa de custo antes de gerar
   const modelInfo = getModelById(preferredModel || "") || getDefaultModel();
   const costPerImageUSD = modelInfo.costPerImage;
-  const estimatedCostBRL = plannedCount * costPerImageUSD * USD_TO_BRL;
-  const fmtBRL = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const estimatedCostEUR = plannedCount * costPerImageUSD * USD_TO_EUR;
+  const fmtEUR = (v: number) => v.toLocaleString("pt-PT", { style: "currency", currency: "EUR" });
 
   // PÃ­lulas de cores do brand kit (atÃ© 5)
   const colorPills: Array<{ key: string; hex: string }> = brandKitDetails.colors
@@ -1108,10 +1108,10 @@ export function StepReviewGenerate() {
                 <span className="text-lg leading-none mt-0.5">ðŸ’°</span>
                 <div className="flex-1 text-xs">
                   <p className="text-text-primary font-semibold">
-                    {plannedCount} imagem{plannedCount !== 1 ? "ns" : ""} Â· custo estimado {fmtBRL(estimatedCostBRL)}
+                    {plannedCount} imagem{plannedCount !== 1 ? "ns" : ""} Â· custo estimado {fmtEUR(estimatedCostEUR)}
                   </p>
                   <p className="text-text-muted mt-0.5">
-                    ~{fmtBRL(costPerImageUSD * USD_TO_BRL)} por imagem ({modelInfo.name}).
+                    ~{fmtEUR(costPerImageUSD * USD_TO_EUR)} por imagem ({modelInfo.name}).
                     {formatsCount > 1 && (
                       <span className="text-amber-500"> VocÃª estÃ¡ gerando em {formatsCount} formatos, o que multiplica o custo por {formatsCount}.</span>
                     )}
