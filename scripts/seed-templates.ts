@@ -131,7 +131,7 @@ async function main() {
 
   // Verificar se já existem templates de sistema
   const { data: existing } = await supabase
-    .from("templates")
+    .from("criativos_templates")
     .select("id")
     .eq("org_id", orgId)
     .eq("is_system", true);
@@ -150,7 +150,7 @@ async function main() {
   }));
 
   const { data, error } = await supabase
-    .from("templates")
+    .from("criativos_templates")
     .insert(toInsert)
     .select("id, name, category");
 

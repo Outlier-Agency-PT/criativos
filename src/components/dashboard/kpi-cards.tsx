@@ -19,7 +19,7 @@ export function KpiCards({ completedCount, estimatedCostBRL, costPerCreativeBRL 
           <div className="p-2 rounded-xl bg-champagne-alpha-10 text-accent-champagne shadow-[var(--shadow-accent-glow)]">
             <CheckCircle2 className="w-5 h-5" />
           </div>
-          <p className="text-xs text-text-muted">Ãšltimos 30 dias</p>
+          <p className="text-xs text-text-muted">Últimos 30 dias</p>
         </div>
         <p className="text-2xl font-bold text-text-primary">{completedCount}</p>
         <p className="text-xs text-text-muted">Criativos com sucesso</p>
@@ -32,7 +32,7 @@ export function KpiCards({ completedCount, estimatedCostBRL, costPerCreativeBRL 
           </div>
           <div>
             <p className="text-2xl font-bold text-text-primary">{formatCurrency(estimatedCostBRL)}</p>
-            <p className="text-xs text-text-muted">Custo estimado â€¢ Ãºltimos 30 dias</p>
+            <p className="text-xs text-text-muted">Custo estimado • últimos 30 dias</p>
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@ export function KpiCards({ completedCount, estimatedCostBRL, costPerCreativeBRL 
           </div>
           <div>
             <p className="text-2xl font-bold text-text-primary">{formatCurrency(costPerCreativeBRL)}</p>
-            <p className="text-xs text-text-muted">Custo mÃ©dio por criativo â€¢ Ãºltimos 30 dias</p>
+            <p className="text-xs text-text-muted">Custo médio por criativo • últimos 30 dias</p>
           </div>
         </div>
       </div>

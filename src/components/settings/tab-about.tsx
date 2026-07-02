@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { Info, ShieldCheck, FileText } from "lucide-react";
@@ -16,7 +16,7 @@ export function TabAbout() {
           <p className="text-base font-semibold text-text-primary">Criativos</p>
           <p className="text-sm text-text-secondary">Desenvolvido por Torriani</p>
           <p className="text-xs text-text-muted">
-            Software proprietÃ¡rio licenciado â€” uso restrito.
+            Software proprietário licenciado — uso restrito.
           </p>
         </div>
       </div>
@@ -26,19 +26,19 @@ export function TabAbout() {
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-5 h-5 text-text-muted" />
           <h3 className="text-sm font-semibold text-text-primary">
-            LicenÃ§a e confidencialidade
+            Licença e confidencialidade
           </h3>
         </div>
         <div className="space-y-2 text-sm leading-relaxed text-text-secondary">
           <p>
-            O Criativos Ã© licenciado, nÃ£o vendido. VocÃª pode usÃ¡-lo nos seus
-            prÃ³prios projetos e disponibilizar o acesso aos seus alunos e
+            O Criativos é licenciado, não vendido. Você pode usá-lo nos seus
+            próprios projetos e disponibilizar o acesso aos seus alunos e
             colaboradores, sob sua conta e responsabilidade.
           </p>
           <p>
-            Ã‰ proibido revender, sublicenciar ou distribuir o software,
-            distribuir o cÃ³digo-fonte (confidencial, sob NDA) ou criar
-            assinatura, SaaS ou cobranÃ§a recorrente tendo o software como base.
+            É proibido revender, sublicenciar ou distribuir o software,
+            distribuir o código-fonte (confidencial, sob NDA) ou criar
+            assinatura, SaaS ou cobrança recorrente tendo o software como base.
           </p>
         </div>
         <a
@@ -48,10 +48,9 @@ export function TabAbout() {
           className="inline-flex items-center gap-1.5 text-xs text-accent-champagne hover:underline"
         >
           <FileText className="w-3.5 h-3.5" />
-          Ver licenÃ§a completa
+          Ver licença completa
         </a>
       </div>
     </div>
   );
 }
-

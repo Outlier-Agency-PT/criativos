@@ -120,7 +120,7 @@ export function CopyCard({ copy, orgId, onClick, onEdit, onDelete, onFavoriteTog
 
       {/* List items */}
       {copy.list_items && (
-        <p className="text-xs text-text-muted line-clamp-2">{copy.list_items.split("\n").filter(Boolean).join(" Â· ")}</p>
+        <p className="text-xs text-text-muted line-clamp-2">{copy.list_items.split("\n").filter(Boolean).join(" • ")}</p>
       )}
 
       {/* Meta */}

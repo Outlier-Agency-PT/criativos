@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useCallback } from "react";
@@ -15,9 +15,9 @@ interface KeyInfo {
 }
 
 /**
- * ConfiguraÃ§Ã£o do MODELO DE TEXTO (copy).
- * O usuÃ¡rio monta uma cadeia ordenada: o 1Âº Ã© o primÃ¡rio; os demais sÃ£o fallback
- * usados em ordem quando o anterior falha. Default: Haiku â†’ GPT-4o mini â†’ Gemini 2.5 Flash.
+ * Configuração do MODELO DE TEXTO (copy).
+ * O usuário monta uma cadeia ordenada: o 1º é o primário; os demais são fallback
+ * usados em ordem quando o anterior falha. Default: Haiku → GPT-4o mini → Gemini 2.5 Flash.
  */
 export function TabTextModel({ orgId }: TabTextModelProps) {
   const [chain, setChain] = useState<string[]>(DEFAULT_TEXT_MODEL_CHAIN);
@@ -38,7 +38,7 @@ export function TabTextModel({ orgId }: TabTextModelProps) {
       if (cfgRes.ok && Array.isArray(cfg.modelChain)) setChain(cfg.modelChain);
       if (keysRes.ok) setKeys(keysData.apiKeys || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao carregar configuraÃ§Ã£o");
+      setError(err instanceof Error ? err.message : "Erro ao carregar configuração");
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,7 @@ export function TabTextModel({ orgId }: TabTextModelProps) {
     load();
   }, [load]);
 
-  // HÃ¡ key ativa que sabe falar com o provider desse modelo de texto?
+  // Há key ativa que sabe falar com o provider desse modelo de texto?
   function hasKeyFor(modelId: string): boolean {
     const provider = getTextModelById(modelId)?.provider;
     if (!provider) return false;
@@ -118,8 +118,8 @@ export function TabTextModel({ orgId }: TabTextModelProps) {
         <div>
           <h3 className="text-sm font-semibold text-text-primary">Modelo de texto (copy)</h3>
           <p className="text-xs text-text-muted mt-0.5 max-w-xl">
-            Modelo usado pra gerar as copies dos criativos. O primeiro Ã© o principal; os de baixo
-            sÃ£o fallback, usados em ordem quando o anterior falha. A geraÃ§Ã£o de imagem continua no Gemini 3.
+            Modelo usado pra gerar as copies dos criativos. O primeiro é o principal; os de baixo
+            são fallback, usados em ordem quando o anterior falha. A geração de imagem continua no Gemini 3.
           </p>
         </div>
       </div>
@@ -137,7 +137,7 @@ export function TabTextModel({ orgId }: TabTextModelProps) {
               className="flex items-center gap-3 p-3 rounded-xl border border-border-subtle bg-surface-050"
             >
               <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-accent-champagne/10 text-accent-champagne text-xs font-bold flex items-center justify-center">
-                {i === 0 ? "1Âº" : `${i + 1}Âº`}
+                {i === 0 ? "1º" : `${i + 1}º`}
               </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
@@ -184,7 +184,7 @@ export function TabTextModel({ orgId }: TabTextModelProps) {
         })}
       </div>
 
-      {/* Adicionar modelos disponÃ­veis */}
+      {/* Adicionar modelos disponíveis */}
       {available.length > 0 && (
         <div>
           <p className="text-xs font-medium text-text-muted mb-2">Adicionar fallback</p>
@@ -206,9 +206,9 @@ export function TabTextModel({ orgId }: TabTextModelProps) {
       <div className="flex items-start gap-2 p-3 rounded-lg bg-surface-100/40 border border-border-subtle">
         <Info className="w-4 h-4 text-text-muted flex-shrink-0 mt-0.5" />
         <p className="text-xs text-text-muted">
-          Modelos marcados com <span className="text-amber-400">sem key</span> nÃ£o tÃªm uma API key ativa do provider
+          Modelos marcados com <span className="text-amber-400">sem key</span> não têm uma API key ativa do provider
           correspondente. Cadastre a key na aba <strong>API Keys</strong> (Anthropic pra Claude, OpenAI pra GPT,
-          Gemini/WisGate pra Gemini Flash) ou eles serÃ£o pulados.
+          Gemini/WisGate pra Gemini Flash) ou eles serão pulados.
         </p>
       </div>
 
@@ -218,9 +218,8 @@ export function TabTextModel({ orgId }: TabTextModelProps) {
         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-champagne text-surface-900 text-sm font-medium disabled:opacity-50"
       >
         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : null}
-        {saving ? "Salvando..." : saved ? "Salvo" : "Salvar configuraÃ§Ã£o"}
+        {saving ? "Salvando..." : saved ? "Salvo" : "Salvar configuração"}
       </button>
     </div>
   );
 }
-

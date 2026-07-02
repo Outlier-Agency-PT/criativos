@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useCallback } from "react";
@@ -55,7 +55,7 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
   const [error, setError] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  // EdiÃ§Ã£o de brand kit existente (null = nÃ£o estÃ¡ editando)
+  // Edição de brand kit existente (null = não está editando)
   const [editingId, setEditingId] = useState<string | null>(null);
 
   // Create form state
@@ -103,7 +103,7 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
     setEditingId(null);
   }
 
-  // Abre o formulÃ¡rio jÃ¡ preenchido com os dados de um brand kit existente.
+  // Abre o formulário já preenchido com os dados de um brand kit existente.
   function startEdit(bk: BrandKit) {
     setEditingId(bk.id);
     setShowCreate(true);
@@ -156,14 +156,14 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
 
       let res: Response;
       if (editingId) {
-        // EdiÃ§Ã£o de brand kit existente â€” PATCH (nÃ£o cria novo, nÃ£o apaga nada)
+        // Edição de brand kit existente — PATCH (não cria novo, não apaga nada)
         res = await fetch("/api/brand-kits", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: editingId, orgId, name, colors, fonts }),
         });
       } else {
-        // CriaÃ§Ã£o
+        // Criação
         res = await fetch("/api/brand-kits", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -224,8 +224,8 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
   }
 
   const colorFields: { key: keyof BrandColors; label: string }[] = [
-    { key: "primary", label: "Primaria" },
-    { key: "secondary", label: "Secundaria" },
+    { key: "primary", label: "Primária" },
+    { key: "secondary", label: "Secundária" },
     { key: "accent", label: "Acento" },
     { key: "background", label: "Fundo" },
     { key: "text", label: "Texto" },
@@ -312,7 +312,7 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-text-muted mb-1">Fonte titulos</label>
+                  <label className="block text-xs font-medium text-text-muted mb-1">Fonte títulos</label>
                   <input value={headingFont} onChange={(e) => setHeadingFont(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-surface-100 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-accent-champagne" />
                 </div>
                 <div>
@@ -323,7 +323,7 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
               <div className="flex gap-3">
                 <button onClick={handleSave} disabled={saving} className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-accent-champagne text-surface-900 text-sm font-medium disabled:opacity-50">
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                  {saving ? "Salvando..." : editingId ? "Salvar alteraÃ§Ãµes" : "Salvar Brand Kit"}
+                  {saving ? "Salvando..." : editingId ? "Salvar alterações" : "Salvar Brand Kit"}
                 </button>
                 <button onClick={() => { setShowCreate(false); resetForm(); }} className="px-4 py-2 rounded-lg bg-surface-100 text-text-secondary text-sm hover:bg-surface-200">
                   Cancelar
@@ -337,7 +337,7 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
       {/* Lista de brand kits */}
       {brandKits.length === 0 && !showCreate ? (
         <div className="text-center py-12 text-text-muted text-sm">
-          Nenhum brand kit cadastrado. Clique em &quot;Novo Brand Kit&quot; para comecar.
+          Nenhum brand kit cadastrado. Clique em &quot;Novo Brand Kit&quot; para começar.
         </div>
       ) : (
         <div className="space-y-3">
@@ -422,4 +422,3 @@ export function TabBrandKits({ orgId }: TabBrandKitsProps) {
     </div>
   );
 }
-

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useCallback } from "react";
@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { AI_MODELS, TEXT_MODELS, getDefaultModel, getDefaultTextModel, isImagenModel, isGemini3ImageModel, REQUIRE_GEMINI3_FOR_IMAGE } from "@/lib/models";
 
-// Providers de TEXTO (copy) â€” pra esses, o modelo vem de TEXT_MODELS, nÃ£o de AI_MODELS.
+// Providers de TEXTO (copy) — pra esses, o modelo vem de TEXT_MODELS, não de AI_MODELS.
 const TEXT_PROVIDERS = ["anthropic", "openai"];
 
 interface ApiKeyItem {
@@ -266,16 +266,16 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
 
       {error && <p className="text-sm text-red-400">{error}</p>}
 
-      {/* Aviso de bloqueio Gemini 3 (decisÃ£o de qualidade) */}
+      {/* Aviso de bloqueio Gemini 3 (decisão de qualidade) */}
       {REQUIRE_GEMINI3_FOR_IMAGE && (
         <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
           <Info className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
           <div className="text-xs text-amber-300">
-            <p className="font-medium">GeraÃ§Ã£o travada em Gemini 3.</p>
+            <p className="font-medium">Geração travada em Gemini 3.</p>
             <p className="mt-0.5 text-amber-300/80">
-              Por decisÃ£o de qualidade, a geraÃ§Ã£o de imagem sÃ³ usa modelos <strong>Gemini 3</strong>
+              Por decisão de qualidade, a geração de imagem só usa modelos <strong>Gemini 3</strong>
               {" "}(Nano Banana Pro / gemini-3-pro-image-preview ou gemini-3.1-flash-image-preview).
-              Keys com outros modelos ficam ignoradas na geraÃ§Ã£o. Cadastre uma key Gemini 3 funcional abaixo.
+              Keys com outros modelos ficam ignoradas na geração. Cadastre uma key Gemini 3 funcional abaixo.
             </p>
           </div>
         </div>
@@ -295,7 +295,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                   const p = e.target.value;
                   setNewProvider(p);
                   setTestOk(null);
-                  // Ao trocar entre famÃ­lia de imagem e de texto, ajusta o modelo default.
+                  // Ao trocar entre família de imagem e de texto, ajusta o modelo default.
                   if (TEXT_PROVIDERS.includes(p)) {
                     const def = TEXT_MODELS.find((m) => m.provider === p) ?? getDefaultTextModel();
                     setNewModel(def.id);
@@ -338,7 +338,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
             />
           </div>
 
-          {/* Seletor de modelo de TEXTO (quando provider Ã© Anthropic/OpenAI) */}
+          {/* Seletor de modelo de TEXTO (quando provider é Anthropic/OpenAI) */}
           {TEXT_PROVIDERS.includes(newProvider) ? (
             <div>
               <label className="block text-xs font-medium text-text-muted mb-2">Modelo de texto (copy)</label>
@@ -375,11 +375,11 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                 ))}
               </div>
               <p className="text-xs text-text-muted/70 mt-2">
-                A ordem de uso da copy (primÃ¡rio e fallback) Ã© definida em <strong>Modelo de texto</strong>, na aba de configuraÃ§Ãµes.
+                A ordem de uso da copy (primário e fallback) é definida em <strong>Modelo de texto</strong>, na aba de configurações.
               </p>
             </div>
           ) : (
-          /* EP08 S08.2: Seletor de modelo de imagem. Com o bloqueio, sÃ³ Gemini 3 Ã© selecionÃ¡vel. */
+          /* EP08 S08.2: Seletor de modelo de imagem. Com o bloqueio, só Gemini 3 é selecionável. */
           <div>
             <label className="block text-xs font-medium text-text-muted mb-2">Modelo de IA</label>
             <div className="space-y-2">
@@ -415,11 +415,11 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                     </div>
                     <div className="text-xs text-text-muted mt-0.5">
                       <span className="font-mono">{m.id}</span>
-                      <span className="mx-1.5">Â·</span>
+                      <span className="mx-1.5">•</span>
                       <span>{m.maxResolution}</span>
                       {m.freeTier && (
                         <>
-                          <span className="mx-1.5">Â·</span>
+                          <span className="mx-1.5">•</span>
                           <span className="text-green-400">{m.freeTier}</span>
                         </>
                       )}
@@ -430,8 +430,8 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                 );
               })}
 
-              {/* OpÃ§Ã£o de TEXTO: Gemini 2.5 Flash via este provider (gera copy, nÃ£o imagem).
-                  DisponÃ­vel em Gemini direto, WisGate e OpenRouter. */}
+              {/* Opção de TEXTO: Gemini 2.5 Flash via este provider (gera copy, não imagem).
+                  Disponível em Gemini direto, WisGate e OpenRouter. */}
               {TEXT_MODELS.filter((tm) => tm.provider === "gemini").map((tm) => (
                 <label
                   key={tm.id}
@@ -458,7 +458,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                       <span className="font-mono">{tm.id}</span>
                     </div>
                     <p className="text-xs text-text-muted/70 mt-0.5">
-                      Usa esta key sÃ³ pra gerar a copy (nÃ£o entra na geraÃ§Ã£o de imagem). Ative na aba Modelo de texto.
+                      Usa esta key só pra gerar a copy (não entra na geração de imagem). Ative na aba Modelo de texto.
                     </p>
                   </div>
                 </label>
@@ -472,8 +472,8 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                 <div className="text-xs text-amber-300">
                   <p className="font-medium">Imagen 4 gera imagens apenas a partir de texto.</p>
                   <p className="mt-0.5 text-amber-300/70">
-                    Templates, fotos e logo nÃ£o serÃ£o usados como referÃªncia visual.
-                    Para composiÃ§Ã£o com referÃªncias, use Nano Banana 2 ou Gemini 2.5 Flash.
+                    Templates, fotos e logo não serão usados como referência visual.
+                    Para composição com referências, use Nano Banana 2 ou Gemini 2.5 Flash.
                   </p>
                 </div>
               </div>
@@ -506,8 +506,8 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                 Testar
               </button>
             </div>
-            {testOk === true && <p className="text-xs text-green-400 mt-1">Conexao OK</p>}
-            {testOk === false && <p className="text-xs text-red-400 mt-1">Falha na conexao</p>}
+            {testOk === true && <p className="text-xs text-green-400 mt-1">Conexão OK</p>}
+            {testOk === false && <p className="text-xs text-red-400 mt-1">Falha na conexão</p>}
           </div>
 
           <div className="flex gap-3">
@@ -529,13 +529,13 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
       {/* Lista de keys */}
       {keys.length === 0 && !showCreate ? (
         <div className="text-center py-12 text-text-muted text-sm">
-          Nenhuma API key cadastrada. Clique em &quot;Nova Key&quot; para comecar.
+          Nenhuma API key cadastrada. Clique em &quot;Nova Key&quot; para começar.
         </div>
       ) : (
         <div className="space-y-3">
           {keys.map((k) => (
             <div key={k.id}>
-              {/* Modo de ediÃ§Ã£o */}
+              {/* Modo de edição */}
               {editingId === k.id ? (
                 <div className="bg-surface-050 rounded-xl border border-accent-champagne p-5 space-y-4">
                   <div className="flex items-center justify-between">
@@ -592,11 +592,11 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                             </div>
                             <div className="text-xs text-text-muted mt-0.5">
                               <span className="font-mono">{m.id}</span>
-                              <span className="mx-1.5">Â·</span>
+                              <span className="mx-1.5">•</span>
                               <span>{m.maxResolution}</span>
                               {m.freeTier && (
                                 <>
-                                  <span className="mx-1.5">Â·</span>
+                                  <span className="mx-1.5">•</span>
                                   <span className="text-green-400">{m.freeTier}</span>
                                 </>
                               )}
@@ -613,7 +613,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                         <div className="text-xs text-amber-300">
                           <p className="font-medium">Imagen 4 gera imagens apenas a partir de texto.</p>
                           <p className="mt-0.5 text-amber-300/70">
-                            Templates, fotos e logo nÃ£o serÃ£o usados como referÃªncia visual.
+                            Templates, fotos e logo não serão usados como referência visual.
                           </p>
                         </div>
                       </div>
@@ -630,7 +630,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                       className="w-full px-3 py-2 rounded-lg bg-surface-100 border border-border-subtle text-text-primary text-sm font-mono focus:outline-none focus:border-accent-champagne"
                     />
                     {editNewKey.trim() && (
-                      <p className="text-xs text-amber-400 mt-1">A key atual sera substituida ao salvar.</p>
+                      <p className="text-xs text-amber-400 mt-1">A key atual será substituída ao salvar.</p>
                     )}
                   </div>
 
@@ -641,7 +641,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                       className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-accent-champagne text-surface-900 text-sm font-medium disabled:opacity-50"
                     >
                       {editSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                      {editSaving ? "Salvando..." : "Salvar alteraÃ§Ãµes"}
+                      {editSaving ? "Salvando..." : "Salvar alterações"}
                     </button>
                     <button onClick={cancelEdit} className="px-4 py-2 rounded-lg bg-surface-100 text-text-secondary text-sm hover:bg-surface-200">
                       Cancelar
@@ -649,7 +649,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                   </div>
                 </div>
               ) : (
-                /* Modo visualizaÃ§Ã£o */
+                /* Modo visualização */
                 <div className={`bg-surface-050 rounded-xl border p-4 flex items-center gap-4 ${k.is_active ? "border-border-subtle" : "border-red-500/20 opacity-70"}`}>
                   {/* Status icon */}
                   <div className="flex-shrink-0">
@@ -671,7 +671,7 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
                     </div>
                   </div>
 
-                  {/* Acoes */}
+                  {/* Ações */}
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => startEdit(k)}
@@ -729,4 +729,3 @@ export function TabApiKeys({ orgId }: TabApiKeysProps) {
     </div>
   );
 }
-

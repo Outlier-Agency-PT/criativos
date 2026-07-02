@@ -31,7 +31,7 @@ const navItems = [
   { label: "Fotos Expert", href: "/fotos", icon: Camera },
   { label: "Swipe File", href: "/swipe-file", icon: BookOpen },
   { label: "Biblioteca", href: "/biblioteca", icon: Library },
-  { label: "ConfiguraÃ§Ãµes", href: "/configuracoes", icon: Settings },
+  { label: "Configurações", href: "/configuracoes", icon: Settings },
   { label: "Uso", href: "/uso", icon: BarChart3 },
 ];
 
@@ -80,7 +80,7 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
           aria-label="Criativos"
         >
           {desktopCollapsed ? (
-            <span aria-hidden="true" className="leading-none text-[#2B7DE1]">âœ³</span>
+            <span aria-hidden="true" className="leading-none text-[#2B7DE1]">✓</span>
           ) : (
             "Criativos"
           )}
@@ -105,9 +105,9 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           // "Criar" deve SEMPRE voltar pra lista de projetos (/criar), mesmo
-          // quando jÃ¡ estamos dentro do wizard (/criar/novo ou /criar/[id]).
-          // Um Link comum pra /criar nÃ£o remonta se a rota atual comeÃ§a com
-          // /criar, entÃ£o forÃ§amos a navegaÃ§Ã£o via router.push.
+          // quando já estamos dentro do wizard (/criar/novo ou /criar/[id]).
+          // Um Link comum pra /criar não remonta se a rota atual começa com
+          // /criar, então forçamos a navegação via router.push.
           const isCriar = item.href === "/criar";
           return (
             <Link
@@ -146,7 +146,7 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <p className="text-sm font-medium text-text-primary truncate">
-                  {userName || "UsuÃ¡rio"}
+                  {userName || "Utilizador"}
                 </p>
                 <span className="flex-shrink-0 text-[10px] text-text-muted/70 font-mono bg-surface-100 px-1.5 py-0.5 rounded">
                   v{APP_VERSION}
