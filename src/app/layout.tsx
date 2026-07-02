@@ -13,9 +13,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Criativos",
-  description: "Gerador de criativos visuais para anÃºncios, posts e stories",
-  generator: "criativos-torriani",
+  title: "Criativos | Outlier Agency",
+  description: "Gerador de criativos visuais para anúncios, posts e stories - Outlier Agency",
+  generator: "criativos-outlier",
   icons: {
     icon: "/icon.svg",
     shortcut: "/icon.svg",
