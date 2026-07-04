@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
       // Carregar templates com copy_elements do banco
       const { data: templates, error: tmplError } = await supabase
-        .from("templates")
+        .from("criativos_templates")
         .select("id, name, category, copy_elements")
         .in("id", templateIds);
 

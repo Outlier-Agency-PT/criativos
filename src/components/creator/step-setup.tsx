@@ -287,20 +287,21 @@ export function StepSetup() {
               <h3 className="text-sm font-semibold text-text-primary">Como funciona em 3 passos</h3>
               <ol className="space-y-1.5 text-xs text-text-secondary list-decimal list-inside">
                 <li>
-                  <strong className="text-text-primary">Escolha os templates</strong>: a biblioteca tem modelos
-                  prontos (incluindo o swipe file padrao). Cada template empresta o layout; o conteúdo vem da sua marca.
+                  <strong className="text-text-primary">Escolhe um estilo</strong>: selecciona templates do Swipe
+                  File como referência visual. O layout e o estilo são inspirados neles, mas o conteúdo será
+                  sempre o teu.
                 </li>
                 <li>
-                  <strong className="text-text-primary">Monte a copy</strong>: nos proximos passos voce escreve ou usa
-                  a biblioteca de copy (headlines, CTAs, descricoes). A copy define o texto de cada criativo.
+                  <strong className="text-text-primary">Escreve ou gera a tua copy</strong>: adiciona os textos do
+                  teu criativo (headline, descrição, CTA) ou deixa a IA organizar por ti.
                 </li>
                 <li>
-                  <strong className="text-text-primary">Gere</strong>: na ultima etapa, clique em gerar. Cada criativo
-                  consome credito de API. Acompanhe custo e consumo na pagina Uso.
+                  <strong className="text-text-primary">Gera e descarrega</strong>: em segundos tens criativos
+                  profissionais prontos a publicar. Podes gerar mais variações a qualquer momento.
                 </li>
               </ol>
               <p className="text-[11px] text-text-muted">
-                Dica: a primeira geracao costuma levar alguns segundos por imagem. Voce pode gerar mais a qualquer
+                Dica: a primeira geração costuma demorar alguns segundos por imagem. Podes gerar mais a qualquer
                 momento, sem apagar os anteriores.
               </p>
             </div>
