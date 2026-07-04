@@ -1,4 +1,4 @@
-﻿import { updateSession } from "@/lib/supabase-middleware";
+import { updateSession } from "@/lib/supabase-middleware";
 import { NextResponse, type NextRequest } from "next/server";
 
 // /convite e publica para que a checagem de org do middleware NAO crie uma org orfa antes de a
@@ -9,7 +9,7 @@ const PUBLIC_ROUTES = ["/login", "/registro", "/auth/callback", "/convite"];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Rotas pÃºblicas nÃ£o precisam de auth
+  // Rotas públicas não precisam de auth
   if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
     const { supabaseResponse } = await updateSession(request);
     return supabaseResponse;
@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
 
   const { user, supabaseResponse, supabase } = await updateSession(request);
 
-  // Se nÃ£o autenticado, redireciona para login
+  // Se não autenticado, redireciona para login
   if (!user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
@@ -25,14 +25,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // PERF: a verificaÃ§Ã£o de org/setup abaixo faz uma query ao banco (~300ms).
-  // Ela sÃ³ importa em NAVEGAÃ‡ÃƒO DE PÃGINA. As rotas de API (/api/*) jÃ¡ validam
-  // auth + org internamente (requireAuth), entÃ£o pulamos a query nelas â€” isso
+  // PERF: a verificação de org/setup abaixo faz uma query ao banco (~300ms).
+  // Ela só importa em NAVEGAÇÃO DE PÁGINA. As rotas de API (/api/*) já validam
+  // auth + org internamente (requireAuth), então pulamos a query nelas — isso
   // tirava ~300ms de CADA chamada de API (e o app faz muitas).
   //
-  // CACHE: quando o setup jÃ¡ estÃ¡ completo, gravamos um cookie por sessÃ£o.
-  // Nas navegaÃ§Ãµes seguintes, vemos o cookie e PULAMOS a query inteira â€” isso
-  // remove os ~300ms de cada clique de "Criar"/navegaÃ§Ã£o depois do 1Âº acesso.
+  // CACHE: quando o setup já está completo, gravamos um cookie por sessão.
+  // Nas navegações seguintes, vemos o cookie e PULAMOS a query inteira — isso
+  // remove os ~300ms de cada clique de "Criar"/navegação depois do 1º acesso.
   const setupDoneCookie = request.cookies.get("criativos_setup_done")?.value === "1";
   if (
     !setupDoneCookie &&
@@ -46,12 +46,12 @@ export async function middleware(request: NextRequest) {
       .limit(1)
       .single();
 
-    // Se nÃ£o tem organizaÃ§Ã£o, cria automaticamente
+    // Se não tem organização, cria automaticamente
     if (!membership) {
       const { data: org } = await supabase
         .from("organizations")
         .insert({
-          name: user.user_metadata?.full_name || "Minha OrganizaÃ§Ã£o",
+          name: user.user_metadata?.full_name || "Minha Organização",
           owner_id: user.id,
         })
         .select()
@@ -71,7 +71,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    // Se setup nÃ£o completo, redireciona
+    // Se setup não completo, redireciona
     const org = membership.organizations as unknown as { setup_completed: boolean } | null;
     if (org && !org.setup_completed) {
       const url = request.nextUrl.clone();
@@ -79,7 +79,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    // Setup completo: grava cookie pra pular a query nas prÃ³ximas navegaÃ§Ãµes.
+    // Setup completo: grava cookie pra pular a query nas próximas navegações.
     // Expira em 1h (se o setup for revertido, a query volta a rodar depois disso).
     if (org?.setup_completed) {
       supabaseResponse.cookies.set("criativos_setup_done", "1", {

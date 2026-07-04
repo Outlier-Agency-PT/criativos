@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useMemo } from "react";
@@ -95,10 +95,10 @@ export default function UsoPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [usdEur, setUsdEur] = useState(EUR_FALLBACK);
   const [simQty, setSimQty] = useState(100);
-  // Resumo de billing do mÃªs corrente, agregado server-side a partir de
-  // criativos_generation_logs (base de cobranÃ§a por uso).
+  // Resumo de billing do mês corrente, agregado server-side a partir de
+  // criativos_generation_logs (base de cobrança por uso).
   const [summary, setSummary] = useState<UsageSummary | null>(null);
-  // EdiÃ§Ã£o do limite mensal (quota) â€” admin only.
+  // Edição do limite mensal (quota) — admin only.
   const [limitInput, setLimitInput] = useState<string>("");
   const [savingLimit, setSavingLimit] = useState(false);
   const [limitSaved, setLimitSaved] = useState(false);
@@ -110,8 +110,8 @@ export default function UsoPage() {
       .catch(() => setSummary(null));
 
   useEffect(() => {
-    // Fonte de verdade de billing: API agregada (logs do mÃªs). Independente da
-    // varredura client-side de criativos abaixo (que mostra histÃ³rico/performance).
+    // Fonte de verdade de billing: API agregada (logs do mês). Independente da
+    // varredura client-side de criativos abaixo (que mostra histórico/performance).
     reloadSummary();
     fetch("/api/org-limits")
       .then((r) => (r.ok ? r.json() : null))
@@ -330,13 +330,13 @@ export default function UsoPage() {
         </div>
       </div>
 
-      {/* Resumo de billing do mÃªs (fonte: criativos_generation_logs) */}
+      {/* Resumo de billing do mês (fonte: criativos_generation_logs) */}
       {summary && (
         <div className="rounded-xl bg-surface-050 border border-border-subtle overflow-hidden">
           <div className="px-4 sm:px-5 py-4 border-b border-border-subtle flex items-center justify-between gap-3">
             <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
               <Calendar className="w-4 h-4 text-accent-champagne" />
-              Faturamento do mÃªs
+              Faturamento do mês
             </h3>
             <span className="text-[11px] text-text-muted">
               desde {new Date(summary.monthStart).toLocaleDateString("pt-BR", { day: "2-digit", month: "long" })}
@@ -345,7 +345,7 @@ export default function UsoPage() {
           <div className="grid grid-cols-2 sm:grid-cols-5 divide-x divide-border-subtle">
             <div className="p-4">
               <p className="text-lg sm:text-xl font-bold text-text-primary">{summary.totalCount}</p>
-              <p className="text-[11px] text-text-muted mt-0.5">Criativos no mÃªs</p>
+              <p className="text-[11px] text-text-muted mt-0.5">Criativos no mês</p>
             </div>
             <div className="p-4">
               <p className="text-lg sm:text-xl font-bold text-accent-champagne">${summary.totalCostUsd.toFixed(2)}</p>
@@ -391,7 +391,7 @@ export default function UsoPage() {
                   </>
                 )}
               </p>
-              <p className="text-[11px] text-text-muted mt-0.5">Saldo de crÃ©ditos</p>
+              <p className="text-[11px] text-text-muted mt-0.5">Saldo de créditos</p>
             </div>
           </div>
 
@@ -402,10 +402,10 @@ export default function UsoPage() {
                 <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-red-400">
-                    Saldo baixo: {summary.creditBalanceLabel} crÃ©dito{summary.creditBalance === 1 ? "" : "s"} restante{summary.creditBalance === 1 ? "" : "s"}.
+                    Saldo baixo: {summary.creditBalanceLabel} crédito{summary.creditBalance === 1 ? "" : "s"} restante{summary.creditBalance === 1 ? "" : "s"}.
                   </p>
                   <p className="text-[11px] text-text-secondary mt-0.5">
-                    Contate o administrador para recarregar e evitar que novas geraÃ§Ãµes sejam bloqueadas.
+                    Contate o administrador para recarregar e evitar que novas gerações sejam bloqueadas.
                   </p>
                 </div>
               </div>
@@ -425,7 +425,7 @@ export default function UsoPage() {
               {summary.quota.exceeded && (
                 <p className="text-[11px] text-red-400 mt-2 flex items-center gap-1">
                   <AlertTriangle className="w-3 h-3" />
-                  Limite mensal atingido. Novas geraÃ§Ãµes ficam bloqueadas atÃ© o prÃ³ximo mÃªs ou aumento do limite.
+                  Limite mensal atingido. Novas gerações ficam bloqueadas até o próximo mês ou aumento do limite.
                 </p>
               )}
             </div>
@@ -433,24 +433,24 @@ export default function UsoPage() {
         </div>
       )}
 
-      {/* TendÃªncia dos Ãºltimos 30 dias (fonte: /api/usage trend.series) */}
+      {/* Tendência dos últimos 30 dias (fonte: /api/usage trend.series) */}
       {summary && (
         <div className="rounded-xl bg-surface-050 border border-border-subtle overflow-hidden">
           <div className="px-4 sm:px-5 py-4 border-b border-border-subtle flex items-center justify-between gap-3">
             <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-accent-champagne" />
-              TendÃªncia dos Ãºltimos 30 dias
+              Tendência dos últimos 30 dias
             </h3>
             <span className="text-[11px] text-text-muted">
-              {summary.trend.series.reduce((s, p) => s + p.criativos, 0)} criativos no perÃ­odo
+              {summary.trend.series.reduce((s, p) => s + p.criativos, 0)} criativos no período
             </span>
           </div>
           <div className="p-4 sm:p-5">
             {summary.trend.series.every((p) => p.criativos === 0) ? (
-              <p className="text-sm text-text-muted text-center py-8">Sem geraÃ§Ãµes nos Ãºltimos 30 dias.</p>
+              <p className="text-sm text-text-muted text-center py-8">Sem gerações nos últimos 30 dias.</p>
             ) : (
               <>
-                <div className="flex items-end gap-[3px] h-32" role="img" aria-label="GrÃ¡fico de barras de criativos gerados por dia nos Ãºltimos 30 dias">
+                <div className="flex items-end gap-[3px] h-32" role="img" aria-label="Gráfico de barras de criativos gerados por dia nos últimos 30 dias">
                   {summary.trend.series.map((p) => {
                     const heightPct = (p.criativos / maxTrend) * 100;
                     const label = new Date(p.dia + "T12:00:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
@@ -458,7 +458,7 @@ export default function UsoPage() {
                       <div
                         key={p.dia}
                         className="flex-1 flex flex-col justify-end h-full group relative"
-                        title={`${label}: ${p.criativos} criativo${p.criativos === 1 ? "" : "s"} Â· $${p.custo.toFixed(2)}`}
+                        title={`${label}: ${p.criativos} criativo${p.criativos === 1 ? "" : "s"} · $${p.custo.toFixed(2)}`}
                       >
                         <div
                           className={cn(
@@ -495,7 +495,7 @@ export default function UsoPage() {
           <div className="px-4 sm:px-5 py-4 border-b border-border-subtle">
             <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
               <Wallet className="w-4 h-4 text-accent-champagne" />
-              Custo por modelo no mÃªs
+              Custo por modelo no mês
             </h3>
           </div>
           <div className="overflow-x-auto">
@@ -536,16 +536,16 @@ export default function UsoPage() {
         </div>
       )}
 
-      {/* Editor de limite mensal (quota) â€” admin only */}
+      {/* Editor de limite mensal (quota) — admin only */}
       {isAdmin && (
         <div className="rounded-xl bg-surface-050 border border-border-subtle p-4 sm:p-5">
           <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2 mb-1">
             <Activity className="w-4 h-4 text-amber-400" />
-            Limite mensal de geraÃ§Ã£o
+            Limite mensal de geração
           </h3>
           <p className="text-xs text-text-muted mb-3">
-            Teto de criativos por mÃªs para esta organizaÃ§Ã£o. Deixe vazio para ilimitado. Ao atingir o limite,
-            novas geraÃ§Ãµes ficam bloqueadas atÃ© o prÃ³ximo mÃªs.
+            Teto de criativos por mês para esta organização. Deixe vazio para ilimitado. Ao atingir o limite,
+            novas gerações ficam bloqueadas até o próximo mês.
           </p>
           <div className="flex items-center gap-3">
             <input
@@ -790,7 +790,7 @@ export default function UsoPage() {
                           <span className="px-1.5 py-0.5 rounded text-[10px] bg-yellow-500/10 text-yellow-400">PRO</span>
                         )}
                       </div>
-                      <span className="text-[11px] text-text-muted">{m.maxResolution} Â· {m.supportsImageInput ? "com refs" : "sem refs"}</span>
+                      <span className="text-[11px] text-text-muted">{m.maxResolution} · {m.supportsImageInput ? "com refs" : "sem refs"}</span>
                     </td>
                     <td className="text-right px-3 py-3 text-text-muted text-xs font-mono">${m.costPerImage.toFixed(3)}</td>
                     <td className="text-right px-3 py-3 text-text-muted text-xs font-mono">

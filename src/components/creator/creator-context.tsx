@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from "react";
@@ -46,34 +46,34 @@ export interface CreatorState {
   sourceProjectId: string | null;
   preferredModel: string | null;
   expertAdjustments: ExpertAdjustments;
-  /** Variar fundo/cenÃ¡rio/pose entre os criativos (mantendo rosto, layout, cores, copy). */
+  /** Variar fundo/cenário/pose entre os criativos (mantendo rosto, layout, cores, copy). */
   variationEnabled: boolean;
-  /** Variar a ROUPA/vestimenta entre os criativos. Por padrÃ£o a roupa do template Ã© mantida. */
+  /** Variar a ROUPA/vestimenta entre os criativos. Por padrão a roupa do template é mantida. */
   varyClothing: boolean;
-  /** BLOCO C â€” usar foto de fundo prÃ³pria (modo composiÃ§Ã£o). */
+  /** BLOCO C — usar foto de fundo própria (modo composição). */
   useCustomBackground: boolean;
   /**
-   * BLOCO C â€” layout do fundo prÃ³prio: "full" (foto ocupa a tela inteira, texto por cima)
+   * BLOCO C — layout do fundo próprio: "full" (foto ocupa a tela inteira, texto por cima)
    * ou "split-top" (foto no topo, bloco de cor da marca embaixo com o texto).
-   * SÃ³ tem efeito quando useCustomBackground === true.
+   * Só tem efeito quando useCustomBackground === true.
    */
   backgroundMode: BackgroundMode;
-  /** BLOCO C â€” fotos de fundo do projeto (rodÃ­zio por criativo). Dedupe por id. */
+  /** BLOCO C — fotos de fundo do projeto (rodízio por criativo). Dedupe por id. */
   selectedBackgrounds: SelectedBackground[];
   /**
-   * BLOCO C â€” cores do bloco no layout split-top (hex do brand kit). Com mais de
-   * uma, a cor varia entre os criativos (rodÃ­zio). Vazio = IA escolhe a melhor
-   * cor da paleta. SÃ³ tem efeito quando useCustomBackground === true e backgroundMode === "split-top".
+   * BLOCO C — cores do bloco no layout split-top (hex do brand kit). Com mais de
+   * uma, a cor varia entre os criativos (rodízio). Vazio = IA escolhe a melhor
+   * cor da paleta. Só tem efeito quando useCustomBackground === true e backgroundMode === "split-top".
    */
   blockColors: string[];
   /**
-   * BLOCO A â€” padrÃ£o de copy do projeto: "estatico" (headline/subheadline/ponte/cta)
+   * BLOCO A — padrão de copy do projeto: "estatico" (headline/subheadline/ponte/cta)
    * ou "mini_copy" (headline/mini_copy/list_items/cta).
    */
   copyPattern: CopyPattern;
   /**
-   * BLOCO B â€” campos de copy ativos no projeto (checkboxes). Lista de keys do
-   * padrÃ£o ativo. Default = todos os campos do padrÃ£o.
+   * BLOCO B — campos de copy ativos no projeto (checkboxes). Lista de keys do
+   * padrão ativo. Default = todos os campos do padrão.
    */
   activeCopyFields: string[];
 }
@@ -82,12 +82,12 @@ export type CopyPattern = "estatico" | "mini_copy";
 
 export type BackgroundMode = "full" | "split-top" | "split-bottom";
 
-/** Normaliza o valor de backgroundMode vindo do banco/request para um valor vÃ¡lido. */
+/** Normaliza o valor de backgroundMode vindo do banco/request para um valor válido. */
 export function normalizeBackgroundMode(v: unknown): BackgroundMode {
   return v === "split-top" || v === "split-bottom" ? v : "full";
 }
 
-/** Campos de cada padrÃ£o de copy (o primeiro de ambos Ã© sempre "headline"). */
+/** Campos de cada padrão de copy (o primeiro de ambos é sempre "headline"). */
 export const COPY_PATTERN_FIELDS: Record<CopyPattern, { key: string; label: string }[]> = {
   estatico: [
     { key: "headline", label: "Headline" },
@@ -136,7 +136,7 @@ export interface SelectedBackground {
   id: string;
   url: string;
   label: string;
-  /** Caminho no storage (bucket de backgrounds) â€” usado pela geraÃ§Ã£o pra baixar a foto. */
+  /** Caminho no storage (bucket de backgrounds) — usado pela geração pra baixar a foto. */
   filePath: string;
 }
 
@@ -206,11 +206,11 @@ function createInitialState(orgId: string): CreatorState {
   };
 }
 
-/** Sanitiza estado carregado do banco â€” protege contra dados corrompidos (font objects etc).
+/** Sanitiza estado carregado do banco — protege contra dados corrompidos (font objects etc).
  *  Usado APENAS nos boundaries de load (loadDraft, loadFromProject), nunca em updateProject. */
 function sanitizeLoadedState(state: CreatorState): CreatorState {
   const s = { ...state };
-  // Garantir format vÃ¡lido
+  // Garantir format válido
   const rawFormat: Record<string, unknown> = s.format && typeof s.format === "object" ? s.format : {};
   const fw = typeof rawFormat.width === "number" ? rawFormat.width : 1080;
   const fh = typeof rawFormat.height === "number" ? rawFormat.height : 1350;
@@ -230,7 +230,7 @@ function sanitizeLoadedState(state: CreatorState): CreatorState {
   if (typeof s.personaName !== "string") s.personaName = s.personaName ? String(s.personaName) : null;
   if (typeof s.brandKitName !== "string") s.brandKitName = s.brandKitName ? String(s.brandKitName) : null;
   if (typeof s.projectName !== "string") s.projectName = s.projectName ? String(s.projectName) : "";
-  // Sanitizar copies content â€” garantir que valores sÃ£o strings
+  // Sanitizar copies content — garantir que valores são strings
   if (Array.isArray(s.copies)) {
     s.copies = s.copies.map((c) => ({
       ...c,
@@ -300,11 +300,11 @@ export function CreatorProvider({
         if (res.ok) {
           const { draft } = await res.json();
           if (draft && draft.orgId === orgId) {
-            // Detectar corrupÃ§Ã£o â€” deletar e comeÃ§ar do zero
+            // Detectar corrupção — deletar e começar do zero
             const raw = JSON.stringify(draft);
             const isCorrupted = raw.includes('"family"') && raw.includes('"weight"');
             if (isCorrupted) {
-              console.warn("[Creator] Draft corrompido detectado â€” limpando do banco");
+              console.warn("[Creator] Draft corrompido detectado — limpando do banco");
               fetch("/api/creator-draft", { method: "DELETE" }).catch(() => {});
             }
             // Sempre sanitizar ao carregar do banco
@@ -312,7 +312,7 @@ export function CreatorProvider({
           }
         }
       } catch {
-        // Falha silenciosa â€” comeÃ§a do zero
+        // Falha silenciosa — começa do zero
       } finally {
         setDraftLoading(false);
         initialized.current = true;
@@ -321,7 +321,7 @@ export function CreatorProvider({
     loadDraft();
   }, [orgId, startFresh, skipDraftLoad]);
 
-  // Salvar draft no banco com debounce (1s apÃ³s Ãºltima mudanÃ§a)
+  // Salvar draft no banco com debounce (1s após última mudança)
   useEffect(() => {
     if (!initialized.current) return;
 
@@ -341,7 +341,7 @@ export function CreatorProvider({
     };
   }, [state, orgId]);
 
-  // Salvar progresso no banco (projeto real, nÃ£o apenas draft)
+  // Salvar progresso no banco (projeto real, não apenas draft)
   const saveProgressToDb = useCallback(async () => {
     const s = stateRef.current;
     try {
@@ -380,16 +380,16 @@ export function CreatorProvider({
         }
       }
     } catch {
-      // Falha silenciosa â€” draft system Ã© o backup
+      // Falha silenciosa — draft system é o backup
     }
   }, []);
 
   const setStep = useCallback((step: number) => {
     setState((prev) => {
       const next = { ...prev, currentStep: step };
-      // Salvar no banco ao avanÃ§ar de step (apÃ³s step 0)
+      // Salvar no banco ao avançar de step (após step 0)
       if (step > 0 && step > prev.currentStep) {
-        // Usar setTimeout para nÃ£o bloquear a navegaÃ§Ã£o
+        // Usar setTimeout para não bloquear a navegação
         setTimeout(() => saveProgressToDb(), 100);
       }
       return next;
@@ -399,9 +399,9 @@ export function CreatorProvider({
   const updateProject = useCallback((updates: Partial<CreatorState>) => {
     setState((prev) => {
       const next = { ...prev, ...updates };
-      // PERF: sÃ³ dedupar quando o patch TOCA o array relevante. Se o update nÃ£o
-      // mexe em selectedTemplates/selectedBackgrounds, nÃ£o re-roda o dedupe (que
-      // aloca Set + filtro a cada setState â€” caro com muitos itens).
+      // PERF: só dedupar quando o patch TOCA o array relevante. Se o update não
+      // mexe em selectedTemplates/selectedBackgrounds, não re-roda o dedupe (que
+      // aloca Set + filtro a cada setState — caro com muitos itens).
       if ("selectedTemplates" in updates && Array.isArray(next.selectedTemplates)) {
         next.selectedTemplates = dedupeSelectedTemplates(next.selectedTemplates);
       }
@@ -427,7 +427,7 @@ export function CreatorProvider({
       const isIncomplete = project.status === "incomplete";
       const hasGeneratedOutput = (loadedCreativesData ?? []).length > 0;
       // Sempre abrir no step de gerar quando carregar via "?regenerate=" (mesmo se sem criativos / status incomplete).
-      // CritÃ©rios pra abrir lÃ¡: jÃ¡ gerou, OU status sugere geraÃ§Ã£o, OU tem templates+copies+fotos prontos (caso "reabrir pra regerar").
+      // Critérios pra abrir lá: já gerou, OU status sugere geração, OU tem templates+copies+fotos prontos (caso "reabrir pra regerar").
       const hasReadyConfig =
         (templates ?? []).length > 0 &&
         (copies ?? []).length > 0;

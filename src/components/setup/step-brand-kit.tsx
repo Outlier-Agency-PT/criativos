@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState } from "react";
@@ -91,8 +91,8 @@ export function StepBrandKit({ orgId, onComplete, onSkip }: StepBrandKitProps) {
   }
 
   const colorFields: { key: keyof BrandColors; label: string }[] = [
-    { key: "primary", label: "PrimÃ¡ria" },
-    { key: "secondary", label: "SecundÃ¡ria" },
+    { key: "primary", label: "Primária" },
+    { key: "secondary", label: "Secundária" },
     { key: "accent", label: "Acento" },
     { key: "background", label: "Fundo" },
     { key: "text", label: "Texto" },
@@ -106,16 +106,16 @@ export function StepBrandKit({ orgId, onComplete, onSkip }: StepBrandKitProps) {
           <button onClick={() => setMode("extract")} className="flex flex-col items-center gap-3 p-6 rounded-xl border border-border-subtle hover:border-accent-champagne bg-surface-050 transition-colors">
             <Globe className="w-8 h-8 text-accent-champagne" />
             <span className="text-sm font-medium text-text-primary">Extrair do site</span>
-            <span className="text-xs text-text-muted text-center">Cole a URL e extraÃ­mos cores e fontes automaticamente</span>
+            <span className="text-xs text-text-muted text-center">Cole a URL e extraímos cores e fontes automaticamente</span>
           </button>
           <button onClick={() => setMode("manual")} className="flex flex-col items-center gap-3 p-6 rounded-xl border border-border-subtle hover:border-accent-champagne bg-surface-050 transition-colors">
             <Palette className="w-8 h-8 text-accent-champagne" />
             <span className="text-sm font-medium text-text-primary">Configurar manual</span>
-            <span className="text-xs text-text-muted text-center">Escolha cores, fontes e faÃ§a upload do logo</span>
+            <span className="text-xs text-text-muted text-center">Escolha cores, fontes e faça upload do logo</span>
           </button>
         </div>
         <button onClick={onSkip} className="w-full px-4 py-2 rounded-lg text-text-muted text-sm hover:text-text-secondary">
-          Pular â€” usar padrÃµes do sistema
+          Pular — usar padrões do sistema
         </button>
       </div>
     );
@@ -139,7 +139,7 @@ export function StepBrandKit({ orgId, onComplete, onSkip }: StepBrandKitProps) {
             </button>
           </div>
           <button onClick={() => setMode("manual")} className="text-xs text-text-muted hover:text-text-secondary">
-            Ou configurar manualmente â†’
+            Ou configurar manualmente →
           </button>
         </div>
       )}
@@ -179,7 +179,7 @@ export function StepBrandKit({ orgId, onComplete, onSkip }: StepBrandKitProps) {
           {/* Fontes */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-text-muted mb-1">Fonte tÃ­tulos</label>
+              <label className="block text-xs font-medium text-text-muted mb-1">Fonte títulos</label>
               <input value={headingFont} onChange={(e) => setHeadingFont(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-surface-050 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-accent-champagne" />
             </div>
             <div>

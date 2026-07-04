@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
@@ -6,7 +6,7 @@ const ALLOWED_TYPES = ["image/png", "image/svg+xml"];
 
 /**
  * GET /api/logos?orgId=X
- * Lista logos da organizaÃ§Ã£o com signed URLs.
+ * Lista logos da organização com signed URLs.
  */
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { data, error } = await supabase
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Gerar signed URLs EM LOTE (1 round-trip) ao invÃ©s de N chamadas.
+    // Gerar signed URLs EM LOTE (1 round-trip) ao invés de N chamadas.
     const rows = data || [];
     const paths = rows
       .map((l) => l.file_path)
@@ -67,17 +67,17 @@ export async function POST(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!file) {
-      return NextResponse.json({ error: "file obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "file obrigatório" }, { status: 400 });
     }
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     // Validar tipo
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: `Tipo nÃ£o permitido: ${file.type}. Aceitos: PNG, SVG` },
+        { error: `Tipo não permitido: ${file.type}. Aceitos: PNG, SVG` },
         { status: 400 }
       );
     }
@@ -85,12 +85,12 @@ export async function POST(request: NextRequest) {
     // Validar tamanho
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: `Ficheiro muito grande: ${(file.size / 1024 / 1024).toFixed(1)}MB. MÃ¡ximo: 2MB` },
+        { error: `Ficheiro muito grande: ${(file.size / 1024 / 1024).toFixed(1)}MB. Máximo: 2MB` },
         { status: 400 }
       );
     }
 
-    // Upload para storage. Sanitiza a extensÃ£o (Storage rejeita acentos/chars invÃ¡lidos).
+    // Upload para storage. Sanitiza a extensão (Storage rejeita acentos/chars inválidos).
     const rawExt = (file.name.split('.').pop() || 'png').toLowerCase();
     const ext = rawExt.replace(/[^a-z0-9]/g, '') || 'png';
     const fileName = `${crypto.randomUUID()}.${ext}`;

@@ -1,10 +1,10 @@
-﻿import { createServerClient } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 /**
  * Cria Supabase client com ANON KEY (respeita RLS).
- * Usar em rotas que precisam de contexto de usuÃ¡rio.
+ * Usar em rotas que precisam de contexto de usuário.
  */
 export async function createAuthSupabase() {
   const cookieStore = await cookies();
@@ -28,7 +28,7 @@ export async function createAuthSupabase() {
 
 /**
  * Cria Supabase client com SERVICE KEY.
- * Usar APENAS para operaÃ§Ãµes que precisam bypassar RLS (ex: seed, admin).
+ * Usar APENAS para operações que precisam bypassar RLS (ex: seed, admin).
  */
 export async function createServiceSupabase() {
   const cookieStore = await cookies();
@@ -51,16 +51,16 @@ interface AuthResult {
 }
 
 /**
- * Verifica autenticaÃ§Ã£o + membership na organizaÃ§Ã£o.
+ * Verifica autenticação + membership na organização.
  * Retorna user, orgId e supabase client autenticado.
- * LanÃ§a erro se nÃ£o autenticado ou nÃ£o tem acesso.
+ * Lança erro se não autenticado ou não tem acesso.
  */
 export async function requireAuth(orgId?: string | null): Promise<AuthResult> {
   const supabase = await createAuthSupabase();
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (!user || authError) {
-    throw new AuthError("NÃ£o autenticado", 401);
+    throw new AuthError("Não autenticado", 401);
   }
 
   // Se orgId fornecido, verificar membership
@@ -73,13 +73,13 @@ export async function requireAuth(orgId?: string | null): Promise<AuthResult> {
       .single();
 
     if (!membership) {
-      throw new AuthError("Sem acesso a esta organizaÃ§Ã£o", 403);
+      throw new AuthError("Sem acesso a esta organização", 403);
     }
 
     return { user, orgId, supabase };
   }
 
-  // Se orgId nÃ£o fornecido, buscar org do usuÃ¡rio
+  // Se orgId não fornecido, buscar org do usuário
   const { data: membership } = await supabase
     .from("organization_members")
     .select("org_id")
@@ -88,7 +88,7 @@ export async function requireAuth(orgId?: string | null): Promise<AuthResult> {
     .single();
 
   if (!membership) {
-    throw new AuthError("UsuÃ¡rio sem organizaÃ§Ã£o", 403);
+    throw new AuthError("Usuário sem organização", 403);
   }
 
   return { user, orgId: membership.org_id, supabase };
@@ -123,7 +123,7 @@ export function whitelist<T extends Record<string, unknown>>(
 }
 
 /**
- * Valida que uma URL Ã© pÃºblica (previne SSRF).
+ * Valida que uma URL é pública (previne SSRF).
  */
 export function isPublicUrl(urlString: string): boolean {
   try {

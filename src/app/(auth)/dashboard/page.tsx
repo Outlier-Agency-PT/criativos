@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useEffect, useMemo, useState } from "react";
@@ -16,7 +16,7 @@ import { KpiCards } from "@/components/dashboard/kpi-cards";
 import { ProjectGroup } from "@/components/dashboard/project-group";
 import type { ProjectGroupData } from "@/components/dashboard/project-group";
 
-// Taxa USD->BRL. Uniformizada com a pÃ¡gina /uso (que busca a taxa real online,
+// Taxa USD->BRL. Uniformizada com a página /uso (que busca a taxa real online,
 // fallback 0.92). Mantemos 0.92 aqui pra os dois lugares baterem.
 const USD_TO_EUR = 0.92;
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
@@ -28,8 +28,8 @@ interface Stats {
 }
 
 // PERF: limite de criativos trazidos pro dashboard. O dashboard ordena por
-// created_at desc, entÃ£o os mais recentes cobrem os Ãºltimos 30 dias com folga.
-// Os PROJETOS sÃ£o buscados separadamente (sem limite) pra garantir que nenhum
+// created_at desc, então os mais recentes cobrem os últimos 30 dias com folga.
+// Os PROJETOS são buscados separadamente (sem limite) pra garantir que nenhum
 // projeto suma da tela mesmo que seus criativos sejam antigos.
 const DASHBOARD_CREATIVES_LIMIT = 200;
 
@@ -109,33 +109,33 @@ export default function DashboardPage() {
           setUserName(user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario");
         }
 
-        // PERF: o dashboard NÃƒO carrega imagens (signed URLs). Buscava 349 criativos
-        // e gerava 349 signed URLs (~700ms cada) â€” travava por minutos. Agora sÃ³ os
+        // PERF: o dashboard NÃO carrega imagens (signed URLs). Buscava 349 criativos
+        // e gerava 349 signed URLs (~700ms cada) — travava por minutos. Agora só os
         // dados leves (sem file_path nas thumbs), e zero signed URL. As imagens ficam
-        // na Galeria e no Criar, nÃ£o no dashboard.
+        // na Galeria e no Criar, não no dashboard.
         //
-        // PERF (paginaÃ§Ã£o): em vez de trazer TODOS os 349+ criativos com join (o que
+        // PERF (paginação): em vez de trazer TODOS os 349+ criativos com join (o que
         // bloqueava a main thread no mount), buscamos:
-        //  1) a lista de PROJETOS separadamente, SEM limite (sÃ£o poucos â€” ~32 â€” e leves).
+        //  1) a lista de PROJETOS separadamente, SEM limite (são poucos — ~32 — e leves).
         //     Isso garante que nenhum projeto suma da tela, mesmo que seus criativos sejam antigos.
         //  2) os criativos LIMITADOS aos mais recentes (DASHBOARD_CREATIVES_LIMIT), sem join.
-        //  3) os agregados de custo/contagem dos Ãºltimos 30 dias via query filtrada por
+        //  3) os agregados de custo/contagem dos últimos 30 dias via query filtrada por
         //     created_at >= 30 dias (limite alto), sem trazer as 349 rows pro client.
         const thirtyDaysAgoIso = new Date(Date.now() - THIRTY_DAYS_MS).toISOString();
 
         const [projectsRes, creativesRes, recentRes] = await Promise.all([
-          // 1) Projetos â€” fonte de verdade da lista (nenhum projeto some).
+          // 1) Projetos — fonte de verdade da lista (nenhum projeto some).
           supabase
             .from("criativos_generation_projects")
             .select("id, name, status")
             .order("created_at", { ascending: false }),
-          // 2) Criativos recentes â€” limitados, sem join.
+          // 2) Criativos recentes — limitados, sem join.
           supabase
             .from("criativos_creatives")
             .select("id, status, model_used, created_at, project_id")
             .order("created_at", { ascending: false })
             .limit(DASHBOARD_CREATIVES_LIMIT),
-          // 3) Criativos concluÃ­dos dos Ãºltimos 30 dias â€” sÃ³ p/ custo/contagem (sem join).
+          // 3) Criativos concluídos dos últimos 30 dias — só p/ custo/contagem (sem join).
           supabase
             .from("criativos_creatives")
             .select("model_used")
@@ -147,8 +147,8 @@ export default function DashboardPage() {
         setRawProjects(projectsRes.data ?? []);
         setRawCreatives((creativesRes.data ?? []) as RawCreative[]);
 
-        // Agregado de custo/contagem (30 dias) â€” calculado sobre a query filtrada,
-        // nÃ£o sobre todas as rows. MantÃ©m o mesmo nÃºmero que aparecia antes.
+        // Agregado de custo/contagem (30 dias) — calculado sobre a query filtrada,
+        // não sobre todas as rows. Mantém o mesmo número que aparecia antes.
         const costMap = new Map(AI_MODELS.map((model) => [model.id, model.costPerImage]));
         const recent = recentRes.data ?? [];
         let totalCostUSD = 0;
@@ -168,13 +168,13 @@ export default function DashboardPage() {
     loadData();
   }, []);
 
-  // PERF: agrupar criativos por projeto SÃ“ quando os dados mudam (nÃ£o a cada render).
-  // Parte dos PROJETOS (lista completa) â€” assim nenhum projeto some, mesmo sem
-  // criativos recentes. Os criativos limitados sÃ£o anexados ao grupo do seu projeto.
+  // PERF: agrupar criativos por projeto SÓ quando os dados mudam (não a cada render).
+  // Parte dos PROJETOS (lista completa) — assim nenhum projeto some, mesmo sem
+  // criativos recentes. Os criativos limitados são anexados ao grupo do seu projeto.
   const projectGroups = useMemo<ProjectGroupData[]>(() => {
     const groupMap = new Map<string, ProjectGroupData>();
-    // Ãndice de ordem do projeto (created_at desc jÃ¡ vem do banco) â€” fallback de
-    // ordenaÃ§Ã£o pra projetos sem criativo recente carregado.
+    // Índice de ordem do projeto (created_at desc já vem do banco) — fallback de
+    // ordenação pra projetos sem criativo recente carregado.
     const projectOrder = new Map<string, number>();
 
     rawProjects.forEach((project, index) => {
@@ -190,8 +190,8 @@ export default function DashboardPage() {
     for (const creative of rawCreatives) {
       if (!creative.project_id) continue;
       const group = groupMap.get(creative.project_id);
-      if (!group) continue; // criativo Ã³rfÃ£o (projeto nÃ£o listado) â€” ignora
-      // Sem signed_url â€” dashboard nÃ£o exibe thumbnails (perf).
+      if (!group) continue; // criativo órfão (projeto não listado) — ignora
+      // Sem signed_url — dashboard não exibe thumbnails (perf).
       group.creatives.push({
         id: creative.id,
         status: creative.status,
@@ -201,7 +201,7 @@ export default function DashboardPage() {
       });
     }
 
-    // Ordem da tela: igual ao comportamento anterior â€” projetos com criativo mais
+    // Ordem da tela: igual ao comportamento anterior — projetos com criativo mais
     // recente primeiro (por created_at do criativo mais novo). Projetos sem criativo
     // recente carregado caem na ordem do projeto (created_at desc do banco).
     return Array.from(groupMap.values()).sort((left, right) => {
@@ -210,7 +210,7 @@ export default function DashboardPage() {
       if (leftDate && rightDate) return rightDate.localeCompare(leftDate);
       if (leftDate) return -1; // quem tem criativo recente vem antes
       if (rightDate) return 1;
-      // ambos sem criativo recente â€” usa a ordem do projeto (created_at desc)
+      // ambos sem criativo recente — usa a ordem do projeto (created_at desc)
       return (projectOrder.get(left.project_id) ?? 0) - (projectOrder.get(right.project_id) ?? 0);
     });
   }, [rawProjects, rawCreatives]);

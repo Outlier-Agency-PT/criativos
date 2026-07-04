@@ -1,11 +1,11 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 
-// GET â€” carrega o draft do usuÃ¡rio
+// GET — carrega o draft do usuário
 export async function GET() {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
+  if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   const { data } = await supabase
     .from("criativos_creator_drafts")
@@ -17,7 +17,7 @@ export async function GET() {
     return NextResponse.json({ draft: null });
   }
 
-  // Detectar corrupÃ§Ã£o â€” se draft tem {family, weight} objects, deletar
+  // Detectar corrupção — se draft tem {family, weight} objects, deletar
   const raw = JSON.stringify(data.state);
   if (raw.includes('"family"') && raw.includes('"weight"')) {
     await supabase.from("criativos_creator_drafts").delete().eq("user_id", user.id);
@@ -27,16 +27,16 @@ export async function GET() {
   return NextResponse.json({ draft: data.state });
 }
 
-// PUT â€” salva/atualiza o draft do usuÃ¡rio
+// PUT — salva/atualiza o draft do usuário
 export async function PUT(req: NextRequest) {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
+  if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   const body = await req.json();
   const { state, orgId } = body;
   if (!state || !orgId) {
-    return NextResponse.json({ error: "state e orgId obrigatÃ³rios" }, { status: 400 });
+    return NextResponse.json({ error: "state e orgId obrigatórios" }, { status: 400 });
   }
 
   const { error } = await supabase
@@ -53,11 +53,11 @@ export async function PUT(req: NextRequest) {
   return NextResponse.json({ ok: true });
 }
 
-// DELETE â€” limpa o draft
+// DELETE — limpa o draft
 export async function DELETE() {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
+  if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   await supabase
     .from("criativos_creator_drafts")

@@ -1,21 +1,21 @@
-﻿/**
+/**
  * Helpers de uso / quota / billing.
  *
- * Centraliza: (1) cÃ¡lculo do inÃ­cio do mÃªs civil (UTC), (2) contagem do uso
- * do mÃªs a partir de criativos_generation_logs, (3) leitura do limite mensal
+ * Centraliza: (1) cálculo do início do mês civil (UTC), (2) contagem do uso
+ * do mês a partir de criativos_generation_logs, (3) leitura do limite mensal
  * da org e (4) enforcement de quota. Compartilhado entre o endpoint de
- * geraÃ§Ã£o (generate/one) e a API agregada de uso (/api/usage).
+ * geração (generate/one) e a API agregada de uso (/api/usage).
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-/** InÃ­cio do mÃªs civil corrente em UTC (ISO string). */
+/** Início do mês civil corrente em UTC (ISO string). */
 export function monthStartISO(now: Date = new Date()): string {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString();
 }
 
 /**
- * Conta quantos criativos a org gerou no mÃªs corrente (logs com status completed).
- * Usa count exato com head:true: nÃ£o traz linhas, sÃ³ o nÃºmero (rÃ¡pido e sem
+ * Conta quantos criativos a org gerou no mês corrente (logs com status completed).
+ * Usa count exato com head:true: não traz linhas, só o número (rápido e sem
  * estourar o limite de 1000 rows do Supabase REST).
  */
 export async function getMonthlyUsage(
@@ -37,9 +37,9 @@ export async function getMonthlyUsage(
  * Limite mensal da org. NULL = ilimitado (sem linha em criativos_org_limits
  * ou limite explicitamente nulo).
  *
- * DEPRECADO pelo modelo de billing por crÃ©dito prÃ©-pago (EP-14): o gate de quota
- * passou a olhar credit_balance (ver getCreditBalance/getQuotaStatus). Mantido sÃ³
- * pra contexto legado e pra orgs que ainda exibam o limite mensal histÃ³rico.
+ * DEPRECADO pelo modelo de billing por crédito pré-pago (EP-14): o gate de quota
+ * passou a olhar credit_balance (ver getCreditBalance/getQuotaStatus). Mantido só
+ * pra contexto legado e pra orgs que ainda exibam o limite mensal histórico.
  */
 export async function getMonthlyLimit(
   supabase: SupabaseClient,
@@ -55,14 +55,14 @@ export async function getMonthlyLimit(
 }
 
 /**
- * Saldo de crÃ©ditos prÃ©-pago da org (EP-14). ConvenÃ§Ãµes:
- *   - nÃºmero >= 0 = crÃ©ditos restantes (0 = esgotado).
+ * Saldo de créditos pré-pago da org (EP-14). Convenções:
+ *   - número >= 0 = créditos restantes (0 = esgotado).
  *   - null        = ilimitado em consumo (org bypassa quota e decremento) OU
  *                   org sem row em criativos_org_limits.
  *
- * ObservaÃ§Ã£o de seguranÃ§a: a fonte de verdade do enforcement Ã© a RPC atÃ´mica
- * decrement_credit (que nega org sem row). Aqui o null Ã© apenas o sinal de
- * "nÃ£o bloquear no pre-check": o gate final continua sendo a RPC.
+ * Observação de segurança: a fonte de verdade do enforcement é a RPC atômica
+ * decrement_credit (que nega org sem row). Aqui o null é apenas o sinal de
+ * "não bloquear no pre-check": o gate final continua sendo a RPC.
  */
 export async function getCreditBalance(
   supabase: SupabaseClient,
@@ -77,7 +77,7 @@ export async function getCreditBalance(
   return typeof balance === "number" ? balance : null;
 }
 
-/** Um ponto da sÃ©rie diÃ¡ria de uso (base do grÃ¡fico de tendÃªncia, FR-012). */
+/** Um ponto da série diária de uso (base do gráfico de tendência, FR-012). */
 export interface DailyUsagePoint {
   /** Data civil em UTC no formato 'YYYY-MM-DD'. */
   dia: string;
@@ -87,7 +87,7 @@ export interface DailyUsagePoint {
   custo: number;
 }
 
-/** InÃ­cio do dia civil (UTC) N dias atrÃ¡s, como ISO string. */
+/** Início do dia civil (UTC) N dias atrás, como ISO string. */
 export function dayStartUTCDaysAgo(days: number, now: Date = new Date()): string {
   const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   d.setUTCDate(d.getUTCDate() - days);
@@ -100,19 +100,19 @@ function dayKeyUTC(iso: string): string {
 }
 
 /**
- * SÃ©rie diÃ¡ria de uso da org num intervalo [fromISO, toISO), agrupada por dia
- * civil (UTC). Base do grÃ¡fico de tendÃªncia (FR-012).
+ * Série diária de uso da org num intervalo [fromISO, toISO), agrupada por dia
+ * civil (UTC). Base do gráfico de tendência (FR-012).
  *
- * Inclui TODOS os dias do intervalo, mesmo os sem geraÃ§Ã£o (criativos=0, custo=0),
- * pra o grÃ¡fico nÃ£o ter buracos.
+ * Inclui TODOS os dias do intervalo, mesmo os sem geração (criativos=0, custo=0),
+ * pra o gráfico não ter buracos.
  *
- * PaginaÃ§Ã£o (NFR-005): generation_logs pode passar de 1000 linhas no perÃ­odo;
- * lÃª em lotes de 1000 com .range em loop e agrega em memÃ³ria. Usa o client
- * autenticado (anon key) recebido por parÃ¢metro, entÃ£o a RLS limita Ã  org do
- * usuÃ¡rio. Nunca usa service key aqui.
+ * Paginação (NFR-005): generation_logs pode passar de 1000 linhas no período;
+ * lê em lotes de 1000 com .range em loop e agrega em memória. Usa o client
+ * autenticado (anon key) recebido por parâmetro, então a RLS limita à org do
+ * usuário. Nunca usa service key aqui.
  *
- * fallbackCost (opcional): funÃ§Ã£o pra estimar custo de logs antigos sem cost_usd
- * gravado (ex: getImageCost do catÃ¡logo). Quando ausente, custo nulo conta zero.
+ * fallbackCost (opcional): função pra estimar custo de logs antigos sem cost_usd
+ * gravado (ex: getImageCost do catálogo). Quando ausente, custo nulo conta zero.
  */
 export async function getDailyUsageSeries(
   supabase: SupabaseClient,
@@ -168,27 +168,27 @@ export async function getDailyUsageSeries(
 }
 
 export interface QuotaStatus {
-  /** Limite mensal legado (informativo). Saldo prÃ©-pago vive em creditBalance. */
+  /** Limite mensal legado (informativo). Saldo pré-pago vive em creditBalance. */
   limit: number | null;
   used: number;
   remaining: number | null;
   exceeded: boolean;
-  /** Saldo de crÃ©ditos prÃ©-pago (EP-14). null = ilimitado. */
+  /** Saldo de créditos pré-pago (EP-14). null = ilimitado. */
   creditBalance: number | null;
 }
 
 /**
- * Status de quota da org pro mÃªs corrente (modelo de crÃ©dito prÃ©-pago, EP-14).
+ * Status de quota da org pro mês corrente (modelo de crédito pré-pago, EP-14).
  *
- * exceeded passa a refletir o SALDO DE CRÃ‰DITO, nÃ£o o limite mensal:
+ * exceeded passa a refletir o SALDO DE CRÉDITO, não o limite mensal:
  *   - credit_balance IS NULL  -> ilimitado, exceeded=false (bypass).
  *   - credit_balance <= 0     -> esgotado, exceeded=true.
  *   - credit_balance > 0      -> tem saldo, exceeded=false.
  *
- * Os campos limit/used/remaining sÃ£o preservados pra compatibilidade com o
- * dashboard (/api/usage): limit Ã© o limite mensal legado (informativo) e used Ã©
- * o consumo do mÃªs. remaining passa a ser o saldo de crÃ©dito quando hÃ¡ saldo
- * finito (mais relevante pro usuÃ¡rio prÃ©-pago).
+ * Os campos limit/used/remaining são preservados pra compatibilidade com o
+ * dashboard (/api/usage): limit é o limite mensal legado (informativo) e used é
+ * o consumo do mês. remaining passa a ser o saldo de crédito quando há saldo
+ * finito (mais relevante pro usuário pré-pago).
  */
 export async function getQuotaStatus(
   supabase: SupabaseClient,
@@ -200,7 +200,7 @@ export async function getQuotaStatus(
     getMonthlyUsage(supabase, orgId, fromISO),
     getCreditBalance(supabase, orgId),
   ]);
-  // Bypass ilimitado: credit_balance IS NULL nunca estÃ¡ esgotado.
+  // Bypass ilimitado: credit_balance IS NULL nunca está esgotado.
   if (creditBalance === null) {
     return { limit, used, remaining: limit === null ? null : Math.max(0, limit - used), exceeded: false, creditBalance: null };
   }

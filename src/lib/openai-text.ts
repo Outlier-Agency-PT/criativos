@@ -1,5 +1,5 @@
-﻿/**
- * Client da OpenAI para geraÃ§Ã£o de TEXTO â€” usado na geraÃ§Ã£o de copy como fallback.
+/**
+ * Client da OpenAI para geração de TEXTO — usado na geração de copy como fallback.
  * Chama a Chat Completions API direto via fetch (sem SDK).
  * Doc: https://platform.openai.com/docs/api-reference/chat
  */
@@ -10,8 +10,8 @@ const ENDPOINT = ENDPOINTS.OPENAI;
 const DEFAULT_MODEL = "gpt-4o-mini";
 
 /**
- * Gera texto com a OpenAI. Recebe um prompt Ãºnico e devolve o texto da resposta.
- * Usado por generateTextWithRotation quando o provider do modelo Ã© "openai".
+ * Gera texto com a OpenAI. Recebe um prompt único e devolve o texto da resposta.
+ * Usado por generateTextWithRotation quando o provider do modelo é "openai".
  */
 export async function generateText(
   apiKey: string,
@@ -48,12 +48,12 @@ export async function generateText(
   const text = data?.choices?.[0]?.message?.content ?? "";
 
   if (!text) {
-    throw new Error("OpenAI nÃ£o retornou texto na resposta");
+    throw new Error("OpenAI não retornou texto na resposta");
   }
   return text;
 }
 
-/** Testa a conexÃ£o com a OpenAI (key vÃ¡lida). */
+/** Testa a conexão com a OpenAI (key válida). */
 export async function testConnection(
   apiKey: string,
   model: string = DEFAULT_MODEL,

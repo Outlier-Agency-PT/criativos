@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, whitelist } from "@/lib/api-auth";
 
 export async function GET(request: NextRequest) {
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { data, error } = await supabase
@@ -54,7 +54,7 @@ export async function PATCH(request: NextRequest) {
     const { supabase } = await requireAuth(orgId || org_id);
 
     if (!id) {
-      return NextResponse.json({ error: "id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
     }
 
     const safeUpdates = whitelist(rest, [
@@ -85,11 +85,11 @@ export async function DELETE(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!id) {
-      return NextResponse.json({ error: "id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
     }
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { error } = await supabase

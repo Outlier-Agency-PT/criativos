@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, createServiceSupabase } from "@/lib/api-auth";
 import type { BriefingPrompt, BriefingFormat } from "@/lib/briefing-types";
 
@@ -6,11 +6,11 @@ export const maxDuration = 60;
 
 /**
  * POST /api/briefing/generate
- * PREPARA os criativos do modo briefing (sem template) â€” NÃƒO gera em background.
+ * PREPARA os criativos do modo briefing (sem template) — NÃO gera em background.
  * Cria o projeto generation_mode='briefing', insere 1 criativo pending por prompt
- * aprovado (item Ã— formato) com visual_direction + prompt_used, e retorna os
- * creativeIds. O frontend entÃ£o chama /api/generate/one com promptOverride por id
- * (mesmo padrÃ£o do wizard).
+ * aprovado (item × formato) com visual_direction + prompt_used, e retorna os
+ * creativeIds. O frontend então chama /api/generate/one com promptOverride por id
+ * (mesmo padrão do wizard).
  */
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     const formats: BriefingFormat[] = Array.isArray(body?.formats) ? body.formats : [];
     const prompts: BriefingPrompt[] = Array.isArray(body?.prompts) ? body.prompts : [];
 
-    // Imagens de referÃªncia (opcional) â€” rodÃ­zio entre criativos via backgrounds.
+    // Imagens de referência (opcional) — rodízio entre criativos via backgrounds.
     const rawRefImages: Array<{ file_path?: string }> = Array.isArray(body?.referenceImages)
       ? body.referenceImages
       : [];
@@ -29,13 +29,13 @@ export async function POST(request: NextRequest) {
       typeof body?.imageInstruction === "string" ? body.imageInstruction.trim() : "";
 
     if (typeof brandKitId !== "string" || !brandKitId) {
-      return NextResponse.json({ error: "brandKitId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "brandKitId obrigatório" }, { status: 400 });
     }
     if (formats.length === 0) {
-      return NextResponse.json({ error: "formats obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "formats obrigatório" }, { status: 400 });
     }
     if (prompts.length === 0) {
-      return NextResponse.json({ error: "prompts obrigatÃ³rio (lista nÃ£o vazia)" }, { status: 400 });
+      return NextResponse.json({ error: "prompts obrigatório (lista não vazia)" }, { status: 400 });
     }
 
     const { orgId } = await requireAuth();
@@ -49,13 +49,13 @@ export async function POST(request: NextRequest) {
       .eq("org_id", orgId)
       .single();
     if (!brandKit) {
-      return NextResponse.json({ error: "Brand kit nÃ£o encontrado" }, { status: 404 });
+      return NextResponse.json({ error: "Brand kit não encontrado" }, { status: 404 });
     }
 
     // Formato base do projeto (primeiro selecionado)
     const base = formats[0];
 
-    // Dedupe das imagens de referÃªncia por file_path, preservando a ordem.
+    // Dedupe das imagens de referência por file_path, preservando a ordem.
     const seenBg = new Set<string>();
     const refImageRows: Array<{ file_path: string; sort_order: number }> = [];
     for (const raw of rawRefImages) {
@@ -80,13 +80,13 @@ export async function POST(request: NextRequest) {
         height: base.height,
         selected_formats: formats,
         show_logo: true,
-        // Imagens de referÃªncia: liga o modo composiÃ§Ã£o pro /one baixar e passar
-        // o fundo do rodÃ­zio ao modelo. Sem imagens, fica false (comportamento atual).
+        // Imagens de referência: liga o modo composição pro /one baixar e passar
+        // o fundo do rodízio ao modelo. Sem imagens, fica false (comportamento atual).
         use_custom_background: hasRefImages,
         briefing_image_instruction: imageInstruction || null,
-        // NOTA: nÃ£o setamos preferred_model aqui â€” a coluna nÃ£o estÃ¡ no schema atual
-        // deste banco (migration local Ã³rfÃ£). /api/generate/one jÃ¡ usa o default
-        // "gemini-3-pro-image-preview" quando project.preferred_model Ã© undefined.
+        // NOTA: não setamos preferred_model aqui — a coluna não está no schema atual
+        // deste banco (migration local órfã). /api/generate/one já usa o default
+        // "gemini-3-pro-image-preview" quando project.preferred_model é undefined.
         status: "generating",
       })
       .select("id")
@@ -99,9 +99,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Inserir as imagens de referÃªncia no rodÃ­zio (criativos_project_backgrounds).
+    // Inserir as imagens de referência no rodízio (criativos_project_backgrounds).
     // O /api/generate/one baixa esses ficheiros do bucket expert-photos quando
-    // use_custom_background=true e passa um por criativo (rodÃ­zio) ao modelo.
+    // use_custom_background=true e passa um por criativo (rodízio) ao modelo.
     if (hasRefImages) {
       const bgRows = refImageRows.map((r) => ({
         project_id: project.id,
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
         .from("criativos_project_backgrounds")
         .insert(bgRows);
       if (bgError) {
-        console.error(`[briefing/generate] falha ao inserir imagens de referÃªncia: ${bgError.message}`);
+        console.error(`[briefing/generate] falha ao inserir imagens de referência: ${bgError.message}`);
       }
     }
 
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
         height: p.height,
         format_label: p.formatLabel,
         visual_direction: p.visualDirection ?? null,
-        prompt_used: p.prompt, // prompt aprovado pelo usuÃ¡rio; /one usarÃ¡ via promptOverride
+        prompt_used: p.prompt, // prompt aprovado pelo usuário; /one usará via promptOverride
       }));
 
     const { data: creatives, error: insertError } = await supabase

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState } from "react";
@@ -32,11 +32,11 @@ export function StepPersona({ orgId, onComplete }: StepPersonaProps) {
   const [error, setError] = useState<string | null>(null);
 
   const questions = [
-    { key: "target_audience", label: "Quem Ã© seu pÃºblico principal?", placeholder: "Descreva com suas palavras quem sÃ£o seus clientes ideais..." },
-    { key: "audience_problems", label: "Quais problemas esse pÃºblico enfrenta?", placeholder: "Liste as principais dores e frustraÃ§Ãµes..." },
-    { key: "purchase_objections", label: "Tem objeÃ§Ãµes de compra que vocÃª jÃ¡ conhece?", placeholder: "O que impede essas pessoas de comprar..." },
-    { key: "deep_desires", label: "Qual o desejo profundo do seu pÃºblico?", placeholder: "O que eles realmente querem alcanÃ§ar..." },
-    { key: "extra_context", label: "Algo mais que queira adicionar? (opcional)", placeholder: "Contexto adicional sobre seu negÃ³cio ou pÃºblico..." },
+    { key: "target_audience", label: "Quem é seu público principal?", placeholder: "Descreva com suas palavras quem são seus clientes ideais..." },
+    { key: "audience_problems", label: "Quais problemas esse público enfrenta?", placeholder: "Liste as principais dores e frustrações..." },
+    { key: "purchase_objections", label: "Tem objeções de compra que você já conhece?", placeholder: "O que impede essas pessoas de comprar..." },
+    { key: "deep_desires", label: "Qual o desejo profundo do seu público?", placeholder: "O que eles realmente querem alcançar..." },
+    { key: "extra_context", label: "Algo mais que queira adicionar? (opcional)", placeholder: "Contexto adicional sobre seu negócio ou público..." },
   ];
 
   const canGenerate = answers.target_audience.trim() && answers.audience_problems.trim();
@@ -68,7 +68,7 @@ export function StepPersona({ orgId, onComplete }: StepPersonaProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // Usando rota genÃ©rica, mas precisamos salvar persona
+          // Usando rota genérica, mas precisamos salvar persona
         }),
       });
       // Salvar persona diretamente via Supabase client

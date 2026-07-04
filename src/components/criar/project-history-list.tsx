@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect } from "react";
@@ -19,10 +19,10 @@ import {
   Download,
 } from "lucide-react";
 
-// PERF: formatDate Ã© chamada uma vez por projeto a cada render (~32x). toLocaleDateString
-// Ã© caro (cria Intl.DateTimeFormat internamente). Memoizamos por string de data no
-// mÃ³dulo: a mesma data nunca re-formata. O resultado Ã© determinÃ­stico (mesma data â†’
-// mesmo texto), entÃ£o o cache Ã© seguro e nunca invalida.
+// PERF: formatDate é chamada uma vez por projeto a cada render (~32x). toLocaleDateString
+// é caro (cria Intl.DateTimeFormat internamente). Memoizamos por string de data no
+// módulo: a mesma data nunca re-formata. O resultado é determinístico (mesma data →
+// mesmo texto), então o cache é seguro e nunca invalida.
 const dateCache = new Map<string, string>();
 
 function formatDate(dateStr: string): string {
@@ -59,7 +59,7 @@ interface ProjectHistoryListProps {
   orgId: string;
   /** Abre a tela de escolha (Template vs Briefing). */
   onNewCreative: () => void;
-  /** Abre um projeto existente no wizard (transiÃ§Ã£o por estado, nÃ£o por URL). */
+  /** Abre um projeto existente no wizard (transição por estado, não por URL). */
   onOpenProject: (projectId: string) => void;
 }
 
@@ -77,7 +77,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
       const supabase = createBrowserSupabase();
 
       // Fetch all projects for this org, ordered by most recent
-      // Tentar com current_step; se falhar (coluna nÃ£o existe), fazer sem
+      // Tentar com current_step; se falhar (coluna não existe), fazer sem
       let projectRows: Array<{
         id: string;
         name: string;
@@ -94,7 +94,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
         .order("created_at", { ascending: false });
 
       if (res1.error) {
-        // Fallback sem current_step (coluna pode nÃ£o existir ainda)
+        // Fallback sem current_step (coluna pode não existir ainda)
         const res2 = await supabase
           .from("criativos_generation_projects")
           .select("id, name, status, total_creatives, created_at")
@@ -112,7 +112,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
       }
 
       // PERF: antes fazia N+1 (1 query + 4 signed URLs por projeto = ~120 chamadas
-      // em sÃ©rie pra 24 projetos). Agora: 1 query traz criativos de TODOS os projetos,
+      // em série pra 24 projetos). Agora: 1 query traz criativos de TODOS os projetos,
       // e 1 chamada createSignedUrls gera todas as thumbnails de uma vez.
       const projectIds = projectRows.map((p) => p.id);
       const previewsByProject = new Map<string, ProjectCreative[]>();
@@ -126,7 +126,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
           .not("file_path", "is", null)
           .order("created_at", { ascending: false });
 
-        // atÃ© 4 previews por projeto
+        // até 4 previews por projeto
         const collected = new Map<string, { id: string; file_path: string }[]>();
         for (const c of allCreatives ?? []) {
           if (!c.project_id || !c.file_path) continue;
@@ -207,7 +207,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
       setDuplicatedId(newId);
       setTimeout(() => setDuplicatedId(null), 3000);
     } catch {
-      // Silencioso â€” poderia adicionar toast aqui
+      // Silencioso — poderia adicionar toast aqui
     } finally {
       setDuplicatingId(null);
     }
@@ -216,9 +216,9 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
   function handleRegenerate(e: React.MouseEvent, projectId: string) {
     e.preventDefault();
     e.stopPropagation();
-    if (openingId) return; // jÃ¡ estÃ¡ abrindo um â€” ignora cliques repetidos
+    if (openingId) return; // já está abrindo um — ignora cliques repetidos
     setOpeningId(projectId); // feedback visual + bloqueia duplo-clique
-    onOpenProject(projectId); // transiÃ§Ã£o por estado (abre o wizard na hora)
+    onOpenProject(projectId); // transição por estado (abre o wizard na hora)
   }
 
   async function handleDownload(e: React.MouseEvent, projectId: string, projectName: string) {
@@ -260,7 +260,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
 
     // OPTIMISTIC UPDATE: remove da UI IMEDIATAMENTE (sem esperar o servidor).
     // Se o DELETE falhar, restauramos o projeto na lista. Isso elimina a
-    // sensaÃ§Ã£o de "travado" â€” o item some na hora do clique.
+    // sensação de "travado" — o item some na hora do clique.
     const snapshot = projects;
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
 
@@ -298,7 +298,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
                   const parts: string[] = [];
                   if (complete > 0) parts.push(`${complete} completo${complete !== 1 ? "s" : ""}`);
                   if (incomplete > 0) parts.push(`${incomplete} em andamento`);
-                  return parts.join(" Â· ");
+                  return parts.join(" · ");
                 })()
               : "Nenhum projeto ainda"}
           </p>
@@ -360,7 +360,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
                 "transition-all cursor-pointer"
               )}
             >
-              {/* Thumbnail previews â€” 2x2 grid */}
+              {/* Thumbnail previews — 2x2 grid */}
               <div className="flex-shrink-0 w-28 h-28 rounded-lg overflow-hidden bg-surface-100 grid grid-cols-2 grid-rows-2 gap-0.5">
                 {isIncomplete ? (
                   <div className="col-span-2 row-span-2 flex flex-col items-center justify-center bg-surface-100">
@@ -415,7 +415,7 @@ export function ProjectHistoryList({ orgId, onNewCreative, onOpenProject }: Proj
                   {isIncomplete ? (
                     <span className="flex items-center gap-1 text-xs text-amber-500/80">
                       <Clock className="w-3 h-3" />
-                      Passo {project.current_step + 1}/4 â€” {stepLabels[project.current_step]}
+                      Passo {project.current_step + 1}/4 — {stepLabels[project.current_step]}
                     </span>
                   ) : project.total_creatives > 0 ? (
                     <span className="flex items-center gap-1 text-xs text-text-secondary">

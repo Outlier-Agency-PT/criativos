@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -42,7 +42,7 @@ export default function GaleriaPage() {
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [selectedCreative, setSelectedCreative] = useState<typeof creatives[number] | null>(null);
-  // SeleÃ§Ã£o para download em massa
+  // Seleção para download em massa
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [downloadingZip, setDownloadingZip] = useState(false);
@@ -99,7 +99,7 @@ export default function GaleriaPage() {
     const { data } = await query;
     const rows = (data ?? []) as unknown as CreativeRow[];
 
-    // Gerar signed URLs EM LOTE (1 round-trip) ao invÃ©s de N chamadas.
+    // Gerar signed URLs EM LOTE (1 round-trip) ao invés de N chamadas.
     const paths = rows
       .map((r) => r.file_path)
       .filter((p): p is string => Boolean(p));
@@ -156,7 +156,7 @@ export default function GaleriaPage() {
     loadCreatives();
   }, [loadCreatives]);
 
-  // Reconciliar criativos Ã³rfÃ£os via /api/generate/status antes de repollar
+  // Reconciliar criativos órfãos via /api/generate/status antes de repollar
   const reconcileStale = useCallback(async () => {
     const staleProjectIds = [
       ...new Set(
@@ -176,13 +176,13 @@ export default function GaleriaPage() {
     );
   }, [creatives, selectedProject]);
 
-  // Polling: enquanto houver criativos em geraÃ§Ã£o, refetch a cada 3s
+  // Polling: enquanto houver criativos em geração, refetch a cada 3s
   useEffect(() => {
     if (loading) return;
     const hasInFlight = creatives.some(
       (c) => c.status === "pending" || c.status === "generating"
     );
-    // TambÃ©m repolla se hÃ¡ completed sem signed_url (storage ainda propagando)
+    // Também repolla se há completed sem signed_url (storage ainda propagando)
     const hasMissingUrl = creatives.some(
       (c) => (c.status === "completed" || c.status === "approved") && c.file_path && !c.signed_url
     );
@@ -195,9 +195,9 @@ export default function GaleriaPage() {
   }, [creatives, loading, loadCreatives, reconcileStale]);
 
   // Refetch ao voltar o foco para a aba (cobre o caso "voltei do wizard")
-  // Recarrega ao voltar o foco â€” mas sÃ³ se passou >60s desde a Ãºltima carga.
+  // Recarrega ao voltar o foco — mas só se passou >60s desde a última carga.
   // (Antes: recarregava a galeria INTEIRA a cada foco, inclusive ao fechar um
-  // modal, fazendo a pÃ¡gina "piscar"/recarregar sem necessidade.)
+  // modal, fazendo a página "piscar"/recarregar sem necessidade.)
   const lastLoadRef = useRef(Date.now());
   useEffect(() => {
     function onFocus() {
@@ -277,7 +277,7 @@ export default function GaleriaPage() {
         </div>
       </div>
 
-      {/* Barra de seleÃ§Ã£o / download em massa */}
+      {/* Barra de seleção / download em massa */}
       <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
         {!selectionMode ? (
           <button

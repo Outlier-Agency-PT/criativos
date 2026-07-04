@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { createServiceSupabase } from "@/lib/api-auth";
 import { generateWithRotation, getNextAvailableKey } from "@/lib/api-key-rotator";
@@ -8,7 +8,7 @@ import { isImagenModel, getImageCost } from "@/lib/models";
 import { REQUIRED_IMAGE_MODEL } from "@/lib/config/image-models";
 import { getCreditBalance } from "@/lib/usage";
 
-// Permitir atÃ© 5 minutos para geraÃ§Ã£o de imagem
+// Permitir até 5 minutos para geração de imagem
 export const maxDuration = 300;
 
 // Cache de assets por projeto (evita re-download a cada criativo)
@@ -22,8 +22,8 @@ const projectAssetsCache = new Map<string, {
 }>();
 
 // Chave do cache: projectId + assinatura da config de fundo. Sem isso, ligar/desligar
-// fundo prÃ³prio (ou trocar de fundo) entre geraÃ§Ãµes reutilizava assets antigos
-// (ex.: rgbBackgrounds vazio) â€” o modo composiÃ§Ã£o nÃ£o ativava. (bug 2026-06-18)
+// fundo próprio (ou trocar de fundo) entre gerações reutilizava assets antigos
+// (ex.: rgbBackgrounds vazio) — o modo composição não ativava. (bug 2026-06-18)
 function cacheKey(projectId: string, bgSignature: string) {
   return `${projectId}::${bgSignature}`;
 }
@@ -38,22 +38,22 @@ function getCachedAssets(key: string) {
 
 /**
  * POST /api/generate/one
- * Gera UM criativo de forma sÃ­ncrona.
+ * Gera UM criativo de forma síncrona.
  * Frontend chama esta rota para cada criativo, controlando o loop.
- * NÃ£o depende de background process â€” resiliente a restart do servidor.
+ * Não depende de background process — resiliente a restart do servidor.
  */
 export async function POST(request: NextRequest) {
-  // Estado de compensaÃ§Ã£o do gate de crÃ©dito (EP-14): preenchido quando a RPC
-  // decrement_credit confirma um dÃ©bito/log ANTES da geraÃ§Ã£o. Se a geraÃ§Ã£o falhar
-  // depois, o catch usa isto pra estornar o crÃ©dito (quando debitou de fato) e marcar
-  // o log como 'failed' (nunca deleta, CON-007). Honra AC-6: falha nÃ£o cobra o cliente.
+  // Estado de compensação do gate de crédito (EP-14): preenchido quando a RPC
+  // decrement_credit confirma um débito/log ANTES da geração. Se a geração falhar
+  // depois, o catch usa isto pra estornar o crédito (quando debitou de fato) e marcar
+  // o log como 'failed' (nunca deleta, CON-007). Honra AC-6: falha não cobra o cliente.
   let creditGate: { orgId: string; creativeId: string; debited: boolean } | null = null;
 
   try {
     const { creativeId, promptOverride, forceVariation, varyClothing } = await request.json();
 
     if (!creativeId) {
-      return NextResponse.json({ error: "creativeId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "creativeId obrigatório" }, { status: 400 });
     }
 
     const { orgId } = await requireAuth();
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (creativeError || !creative) {
-      return NextResponse.json({ error: "Criativo nÃ£o encontrado" }, { status: 404 });
+      return NextResponse.json({ error: "Criativo não encontrado" }, { status: 404 });
     }
 
     // Buscar projeto e verificar ownership
@@ -79,21 +79,21 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!project) {
-      return NextResponse.json({ error: "Projeto nÃ£o encontrado ou sem permissÃ£o" }, { status: 404 });
+      return NextResponse.json({ error: "Projeto não encontrado ou sem permissão" }, { status: 404 });
     }
 
-    // QUOTA (EP-14, billing por crÃ©dito prÃ©-pago): pre-check barato de saldo ANTES
-    // de gastar com o modelo. credit_balance <= 0 (e nÃ£o-ilimitado) => 429 imediato,
+    // QUOTA (EP-14, billing por crédito pré-pago): pre-check barato de saldo ANTES
+    // de gastar com o modelo. credit_balance <= 0 (e não-ilimitado) => 429 imediato,
     // sem chamar o Gemini, sem custo (NFR-006). credit_balance IS NULL = ilimitado.
-    // O gate atÃ´mico final continua sendo a RPC decrement_credit (abaixo), que Ã© o
-    // ponto de verdade sob concorrÃªncia; este pre-check sÃ³ evita o gasto na maioria
+    // O gate atômico final continua sendo a RPC decrement_credit (abaixo), que é o
+    // ponto de verdade sob concorrência; este pre-check só evita o gasto na maioria
     // dos casos de saldo esgotado.
     const preCheckBalance = await getCreditBalance(supabase, orgId);
     if (preCheckBalance !== null && preCheckBalance <= 0) {
       return NextResponse.json(
         {
           success: false,
-          error: "Saldo de crÃ©ditos esgotado, recarregue.",
+          error: "Saldo de créditos esgotado, recarregue.",
           creditBalance: preCheckBalance,
         },
         { status: 429 }
@@ -103,11 +103,11 @@ export async function POST(request: NextRequest) {
     // Marcar como gerando
     await supabase.from("criativos_creatives").update({ status: "generating" }).eq("id", creativeId);
 
-    // EP-13: quando hÃ¡ promptOverride, o prompt vem pronto e a copy nÃ£o Ã© necessÃ¡ria
-    // (modo briefing nÃ£o tem copy/template). O wizard sempre tem copy e nunca manda override.
+    // EP-13: quando há promptOverride, o prompt vem pronto e a copy não é necessária
+    // (modo briefing não tem copy/template). O wizard sempre tem copy e nunca manda override.
     const hasPromptOverride = typeof promptOverride === "string" && promptOverride.trim().length > 0;
 
-    // Buscar copy especÃ­fica (apenas quando vamos montar o prompt via buildPrompt)
+    // Buscar copy específica (apenas quando vamos montar o prompt via buildPrompt)
     let copy: { content?: Record<string, string> } | null = null;
     if (creative.copy_id) {
       const { data } = await supabase
@@ -119,14 +119,14 @@ export async function POST(request: NextRequest) {
     }
 
     if (!copy && !hasPromptOverride) {
-      await supabase.from("criativos_creatives").update({ status: "error", error_message: "Copy nÃ£o encontrada" }).eq("id", creativeId);
-      return NextResponse.json({ error: "Copy nÃ£o encontrada" }, { status: 404 });
+      await supabase.from("criativos_creatives").update({ status: "error", error_message: "Copy não encontrada" }).eq("id", creativeId);
+      return NextResponse.json({ error: "Copy não encontrada" }, { status: 404 });
     }
 
-    // Modo composiÃ§Ã£o: fundo prÃ³prio preservado (template empresta sÃ³ layout/texto).
+    // Modo composição: fundo próprio preservado (template empresta só layout/texto).
     const useCustomBackground = project.use_custom_background === true;
 
-    // Buscar templates, fotos e (se modo fundo prÃ³prio) fundos
+    // Buscar templates, fotos e (se modo fundo próprio) fundos
     const [templatesRes, photosRes, backgroundsRes] = await Promise.all([
       supabase.from("criativos_project_templates").select("*, template:criativos_templates(*)").eq("project_id", project.id).order("sort_order"),
       supabase.from("criativos_project_photos").select("*, photo:criativos_expert_photos(*)").eq("project_id", project.id).order("sort_order"),
@@ -139,12 +139,12 @@ export async function POST(request: NextRequest) {
     const photos = photosRes.data ?? [];
     const backgrounds = (backgroundsRes.data ?? []) as { file_path: string }[];
 
-    // Assinatura da config de fundo â€” entra na chave do cache. Se mudar (ligar/desligar
-    // fundo, trocar fundos, mudar background_mode), o cache antigo Ã© ignorado.
+    // Assinatura da config de fundo — entra na chave do cache. Se mudar (ligar/desligar
+    // fundo, trocar fundos, mudar background_mode), o cache antigo é ignorado.
     const bgSignature = `${useCustomBackground ? "bg" : "nobg"}:${project.background_mode || "full"}:${backgrounds.map((b) => b.file_path).join(",")}`;
     const assetsKey = cacheKey(project.id, bgSignature);
 
-    // Download de assets â€” usa cache para nÃ£o re-baixar a cada criativo
+    // Download de assets — usa cache para não re-baixar a cada criativo
     const t0 = Date.now();
     let rgbTemplates: Buffer[];
     let rgbPhotos: Buffer[];
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
           if (data) expertBuffers.push(Buffer.from(await data.arrayBuffer()));
         });
 
-      // Fundos prÃ³prios â€” preservar ordem (sort_order) pra rodÃ­zio determinÃ­stico por criativo.
+      // Fundos próprios — preservar ordem (sort_order) pra rodízio determinístico por criativo.
       const backgroundBuffers: (Buffer | null)[] = new Array(backgrounds.length).fill(null);
       const backgroundDownloads = backgrounds.map(async (bg, idx) => {
         if (!bg.file_path) return;
@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
               logoBuffer = Buffer.from(await data.arrayBuffer());
               return;
             }
-            // Fallback: tentar bucket legado caso o logo tenha sido criado fora do fluxo padrÃ£o.
+            // Fallback: tentar bucket legado caso o logo tenha sido criado fora do fluxo padrão.
             const legacy = await supabase.storage.from("brand-assets").download(project.brand_kit.logo_path);
             if (legacy.data) logoBuffer = Buffer.from(await legacy.data.arrayBuffer());
           })
@@ -205,13 +205,13 @@ export async function POST(request: NextRequest) {
 
       await Promise.all([...templateDownloads, ...photoDownloads, ...backgroundDownloads, logoDownload]);
 
-      // Converter RGBAâ†’RGB
+      // Converter RGBA→RGB
       rgbTemplates = await ensureAllRGB(templateBuffers);
       rgbPhotos = await ensureAllRGB(expertBuffers);
       rgbBackgrounds = await ensureAllRGB(backgroundBuffers.filter((b): b is Buffer => b !== null));
       rgbLogo = logoBuffer ? await ensureRGB(logoBuffer) : undefined;
 
-      // Cachear para os prÃ³ximos criativos do mesmo projeto (mesma config de fundo)
+      // Cachear para os próximos criativos do mesmo projeto (mesma config de fundo)
       projectAssetsCache.set(assetsKey, {
         rgbTemplates, rgbPhotos, rgbBackgrounds, rgbLogo, templateBufferMap,
         timestamp: Date.now(),
@@ -219,13 +219,13 @@ export async function POST(request: NextRequest) {
     }
     const downloadTime = Date.now() - t0;
 
-    // Modelo preferido â€” prioridade: projeto > Nano Banana Pro (default) > key disponÃ­vel
+    // Modelo preferido — prioridade: projeto > Nano Banana Pro (default) > key disponível
     const activeKey = await getNextAvailableKey(orgId);
     const preferredModel = project.preferred_model || REQUIRED_IMAGE_MODEL || activeKey?.model;
     const useRefs = !preferredModel || !isImagenModel(preferredModel);
 
-    // VARIAÃ‡ÃƒO: Ã­ndice deste criativo dentro do projeto (ordem de criaÃ§Ã£o).
-    // Usado para (1) rodÃ­zio de fotos do expert e (2) variar cenÃ¡rio/composiÃ§Ã£o.
+    // VARIAÇÃO: índice deste criativo dentro do projeto (ordem de criação).
+    // Usado para (1) rodízio de fotos do expert e (2) variar cenário/composição.
     const { data: siblingIds } = await supabase
       .from("criativos_creatives")
       .select("id")
@@ -233,23 +233,23 @@ export async function POST(request: NextRequest) {
       .order("created_at", { ascending: true });
     const creativeIndex = Math.max(0, (siblingIds ?? []).findIndex((s) => s.id === creative.id));
 
-    // RODÃZIO DE FOTOS: se hÃ¡ vÃ¡rias fotos do expert, cada criativo usa UMA foto
-    // diferente, revezando pelo Ã­ndice. (Antes: todas as fotos em todos â†’ o modelo
-    // usava sempre a mesma.) MantÃ©m comportamento atual quando hÃ¡ 0 ou 1 foto.
+    // RODÍZIO DE FOTOS: se há várias fotos do expert, cada criativo usa UMA foto
+    // diferente, revezando pelo índice. (Antes: todas as fotos em todos → o modelo
+    // usava sempre a mesma.) Mantém comportamento atual quando há 0 ou 1 foto.
     const rotatedPhotos = rgbPhotos.length === 0
       ? []
       : rgbPhotos.length > 1
         ? [rgbPhotos[creativeIndex % rgbPhotos.length]]
         : rgbPhotos;
 
-    // RODÃZIO DE FUNDO: no modo composiÃ§Ã£o, cada criativo usa um fundo do rodÃ­zio.
+    // RODÍZIO DE FUNDO: no modo composição, cada criativo usa um fundo do rodízio.
     const activeBackground = (useCustomBackground && rgbBackgrounds.length > 0)
       ? rgbBackgrounds[creativeIndex % rgbBackgrounds.length]
       : undefined;
     const hasCustomBackground = !!activeBackground;
 
-    // RODÃZIO DE COR DO BLOCO (layout split-top): se o usuÃ¡rio escolheu vÃ¡rias
-    // cores, cada criativo usa uma cor diferente, revezando pelo Ã­ndice. Se
+    // RODÍZIO DE COR DO BLOCO (layout split-top): se o usuário escolheu várias
+    // cores, cada criativo usa uma cor diferente, revezando pelo índice. Se
     // escolheu 1, usa sempre ela. Se nenhuma, a IA escolhe da paleta da marca.
     const blockColors = Array.isArray(project.block_colors) ? (project.block_colors as string[]) : [];
     const isSplit = project.background_mode === "split-top" || project.background_mode === "split-bottom";
@@ -257,13 +257,13 @@ export async function POST(request: NextRequest) {
       ? blockColors[creativeIndex % blockColors.length]
       : undefined;
 
-    // No modo matrix, usar apenas o template especÃ­fico
+    // No modo matrix, usar apenas o template específico
     const isMatrix = !!creative.template_id;
     const activeTemplateBuffers = isMatrix && creative.template_id && templateBufferMap.has(creative.template_id)
       ? [templateBufferMap.get(creative.template_id)!]
       : rgbTemplates;
 
-    // Mini prompts + anÃ¡lise visual
+    // Mini prompts + análise visual
     const activeTemplateRow = creative.template_id
       ? templates.find((t) => t.template_id === creative.template_id)?.template
       : null;
@@ -275,7 +275,7 @@ export async function POST(request: NextRequest) {
 
     const activeTemplateMiniPrompt = activeTemplateRow?.mini_prompt || allMiniPrompts;
 
-    // Quando nÃ£o estamos em matrix, agregamos has_logo/has_person dos templates ativos
+    // Quando não estamos em matrix, agregamos has_logo/has_person dos templates ativos
     const aggregatedTemplate = activeTemplateRow ?? {
       has_logo: templates.some((t) => t.template?.has_logo === true),
       has_person: templates.some((t) => t.template?.has_person === true),
@@ -283,7 +283,7 @@ export async function POST(request: NextRequest) {
       logo_position: templates.find((t) => t.template?.logo_position)?.template?.logo_position || null,
     };
 
-    // Extrair dados enriquecidos da anÃ¡lise V2 (graceful fallback se nÃ£o existirem)
+    // Extrair dados enriquecidos da análise V2 (graceful fallback se não existirem)
     const templateSource = activeTemplateRow ?? ({} as Record<string, unknown>);
     const templateBackground = (templateSource as Record<string, unknown>).background as { type: string; description: string; colors?: string[] } | null ?? null;
     const templateTextLayout = (templateSource as Record<string, unknown>).text_layout as { role: string; text_found: string; position: string; grid_area?: string; size_pct?: number; style?: string; color?: string; lines?: number }[] | null ?? null;
@@ -309,8 +309,8 @@ export async function POST(request: NextRequest) {
           hasLogo: !!rgbLogo,
           variationIndex: creativeIndex,
           forceVariation: forceVariation === true,
-          // Roupa: lÃª a flag do projeto. Aceita override no body (varyClothing) pra
-          // espelhar como forceVariation Ã© tratado vindo do frontend.
+          // Roupa: lê a flag do projeto. Aceita override no body (varyClothing) pra
+          // espelhar como forceVariation é tratado vindo do frontend.
           varyClothing: varyClothing === true || (project as { vary_clothing?: boolean }).vary_clothing === true,
           hasCustomBackground,
           backgroundMode: project.background_mode === "split-top" || project.background_mode === "split-bottom"
@@ -351,17 +351,17 @@ export async function POST(request: NextRequest) {
           } : undefined,
         });
 
-    // GATE ATÃ”MICO DE CRÃ‰DITO (EP-14): debita 1 crÃ©dito + grava o log de geraÃ§Ã£o na
-    // MESMA transaÃ§Ã£o (RPC decrement_credit), ANTES de chamar o modelo. Ã‰ o ponto de
-    // verdade sob concorrÃªncia (resolve overspend no Ãºltimo crÃ©dito). Tratamento:
-    //   - 'denied'    => saldo zerou (corrida no Ãºltimo crÃ©dito ou jÃ¡ estava 0). 429,
+    // GATE ATÔMICO DE CRÉDITO (EP-14): debita 1 crédito + grava o log de geração na
+    // MESMA transação (RPC decrement_credit), ANTES de chamar o modelo. É o ponto de
+    // verdade sob concorrência (resolve overspend no último crédito). Tratamento:
+    //   - 'denied'    => saldo zerou (corrida no último crédito ou já estava 0). 429,
     //                    nenhuma chamada ao provider, nenhum custo.
-    //   - 'unlimited' => org ilimitada (credit_balance NULL). Log gravado, sem dÃ©bito. Segue.
+    //   - 'unlimited' => org ilimitada (credit_balance NULL). Log gravado, sem débito. Segue.
     //   - 'ok'        => debitou 1 e logou. Segue.
-    // Se a geraÃ§Ã£o falhar DEPOIS (modelo/upload/update), o bloco catch COMPENSA:
-    // estorna +1 crÃ©dito (quando houve dÃ©bito real) e marca o log como 'failed', pra
-    // honrar "geraÃ§Ã£o que falha nÃ£o debita nem loga como completed" (AC-6). Nunca deleta
-    // (CON-007): o log Ã³rfÃ£o Ã© atualizado pra status failed, nÃ£o removido.
+    // Se a geração falhar DEPOIS (modelo/upload/update), o bloco catch COMPENSA:
+    // estorna +1 crédito (quando houve débito real) e marca o log como 'failed', pra
+    // honrar "geração que falha não debita nem loga como completed" (AC-6). Nunca deleta
+    // (CON-007): o log órfão é atualizado pra status failed, não removido.
     const debitModel = preferredModel || REQUIRED_IMAGE_MODEL || "gemini-3-pro-image-preview";
     const debitCost = getImageCost(debitModel);
     const { data: debitResult, error: debitError } = await supabase.rpc("decrement_credit", {
@@ -373,28 +373,28 @@ export async function POST(request: NextRequest) {
     });
 
     if (debitError) {
-      // Falha tÃ©cnica do gate (RPC indisponÃ­vel/permissÃ£o). Por seguranÃ§a financeira,
-      // NÃƒO gerar sem confirmar o dÃ©bito. Reverte status do criativo e devolve erro.
+      // Falha técnica do gate (RPC indisponível/permissão). Por segurança financeira,
+      // NÃO gerar sem confirmar o débito. Reverte status do criativo e devolve erro.
       console.error(`[generate/one] decrement_credit FALHOU creative=${creative.id.slice(0,8)}: ${debitError.message}`);
-      await supabase.from("criativos_creatives").update({ status: "error", error_message: "Falha no gate de crÃ©dito" }).eq("id", creative.id);
-      return NextResponse.json({ success: false, error: "Falha ao validar o saldo de crÃ©ditos. Tente novamente." }, { status: 503 });
+      await supabase.from("criativos_creatives").update({ status: "error", error_message: "Falha no gate de crédito" }).eq("id", creative.id);
+      return NextResponse.json({ success: false, error: "Falha ao validar o saldo de créditos. Tente novamente." }, { status: 503 });
     }
 
     const debitStatus = (debitResult as { status?: string; balance?: number | null } | null)?.status;
 
     if (debitStatus === "denied") {
-      // Saldo esgotado (corrida no Ãºltimo crÃ©dito): 429 ANTES de gastar com o modelo.
+      // Saldo esgotado (corrida no último crédito): 429 ANTES de gastar com o modelo.
       console.log(`[generate/one] credito negado creative=${creative.id.slice(0,8)} org=${project.org_id.slice(0,8)}`);
-      await supabase.from("criativos_creatives").update({ status: "error", error_message: "Saldo de crÃ©ditos esgotado" }).eq("id", creative.id);
+      await supabase.from("criativos_creatives").update({ status: "error", error_message: "Saldo de créditos esgotado" }).eq("id", creative.id);
       return NextResponse.json(
-        { success: false, error: "Saldo de crÃ©ditos esgotado, recarregue.", creditBalance: 0 },
+        { success: false, error: "Saldo de créditos esgotado, recarregue.", creditBalance: 0 },
         { status: 429 }
       );
     }
 
-    // A partir daqui houve dÃ©bito (status 'ok') ou bypass ilimitado ('unlimited').
-    // Em ambos os casos a RPC jÃ¡ gravou 1 log 'completed' pra este creative_id.
-    // Registra o estado pro catch compensar se a geraÃ§Ã£o falhar (sÃ³ estorna se debitou).
+    // A partir daqui houve débito (status 'ok') ou bypass ilimitado ('unlimited').
+    // Em ambos os casos a RPC já gravou 1 log 'completed' pra este creative_id.
+    // Registra o estado pro catch compensar se a geração falhar (só estorna se debitou).
     creditGate = { orgId: project.org_id, creativeId: creative.id, debited: debitStatus === "ok" };
 
     // Gerar imagem
@@ -404,7 +404,7 @@ export async function POST(request: NextRequest) {
     const logoPayload = useRefs ? rgbLogo : undefined;
     const backgroundPayload = useRefs ? activeBackground : undefined;
     console.log(`[generate/one] creative=${creative.id.slice(0,8)} project=${project.id.slice(0,8)} | templates=${templatesPayload.length} (${templatesPayload.map(b=>b.length).join(',')}B) | expertPhotos=${expertPayload?.length || 0} (${expertPayload?.map(b=>b.length).join(',') || '-'}B) | background=${backgroundPayload ? backgroundPayload.length+'B' : 'NONE'} | logo=${logoPayload ? logoPayload.length+'B' : 'NONE'} | model=${preferredModel} | useRefs=${useRefs} | prompt=${prompt.length}chars`);
-    // TODO: remover apÃ³s debug â€” imprime o prompt completo enviado ao Gemini
+    // TODO: remover após debug — imprime o prompt completo enviado ao Gemini
     console.log(`[DEBUG PROMPT GEMINI] creative=${creative.id.slice(0,8)} project=${project.id.slice(0,8)}\n${prompt}`);
     const result = await generateWithRotation(
       project.org_id,
@@ -431,7 +431,7 @@ export async function POST(request: NextRequest) {
       throw new Error(`Falha no upload da imagem: ${uploadError.message}`);
     }
 
-    // Atualizar registro â€” checar erro (RLS/connection) em vez de ignorar silenciosamente
+    // Atualizar registro — checar erro (RLS/connection) em vez de ignorar silenciosamente
     const { error: updateError } = await supabase.from("criativos_creatives").update({
       status: "completed",
       file_path: filePath,
@@ -446,12 +446,12 @@ export async function POST(request: NextRequest) {
       throw new Error(`Falha ao atualizar criativo: ${updateError.message}`);
     }
 
-    // LOG DE USO / CUSTO (base de billing): o INSERT do log jÃ¡ foi feito ATOMICAMENTE
-    // pela RPC decrement_credit (junto com o dÃ©bito), entÃ£o NÃƒO inserimos de novo aqui
+    // LOG DE USO / CUSTO (base de billing): o INSERT do log já foi feito ATOMICAMENTE
+    // pela RPC decrement_credit (junto com o débito), então NÃO inserimos de novo aqui
     // (evita duplicar). A RPC logou com o modelo PRETENDIDO (preferredModel) e provider
-    // "pending"; aqui sÃ³ atualizamos o log existente pra refletir o modelo/provider/custo
+    // "pending"; aqui só atualizamos o log existente pra refletir o modelo/provider/custo
     // EFETIVAMENTE usados (result.*), que podem diferir por causa de fallback do rotator.
-    // Best-effort: nunca falha a geraÃ§Ã£o se a atualizaÃ§Ã£o do log nÃ£o gravar.
+    // Best-effort: nunca falha a geração se a atualização do log não gravar.
     try {
       await supabase
         .from("criativos_generation_logs")
@@ -480,18 +480,18 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (err) {
-    // COMPENSAÃ‡ÃƒO DO GATE DE CRÃ‰DITO (EP-14, AC-6): se a RPC jÃ¡ confirmou dÃ©bito/log
-    // mas a geraÃ§Ã£o falhou depois, o cliente NÃƒO pode ser cobrado por um criativo que
-    // nÃ£o saiu. Estorna +1 crÃ©dito (sÃ³ quando debitou de fato, bypass ilimitado nÃ£o
+    // COMPENSAÇÃO DO GATE DE CRÉDITO (EP-14, AC-6): se a RPC já confirmou débito/log
+    // mas a geração falhou depois, o cliente NÃO pode ser cobrado por um criativo que
+    // não saiu. Estorna +1 crédito (só quando debitou de fato, bypass ilimitado não
     // mexe em saldo) e marca o log que a RPC gravou como 'failed' (nunca deleta, CON-007),
-    // pra que /api/usage (que conta status='completed') nÃ£o cobre essa geraÃ§Ã£o.
+    // pra que /api/usage (que conta status='completed') não cobre essa geração.
     if (creditGate) {
       try {
         const supabase = await createServiceSupabase();
         if (creditGate.debited) {
-          // Estorno via RPC atÃ´mica (UPDATE credit_balance = credit_balance + 1 no banco):
-          // evita a corrida do read-then-write que estornava de menos sob concorrÃªncia.
-          // A prÃ³pria RPC ignora org ilimitada (WHERE credit_balance IS NOT NULL).
+          // Estorno via RPC atômica (UPDATE credit_balance = credit_balance + 1 no banco):
+          // evita a corrida do read-then-write que estornava de menos sob concorrência.
+          // A própria RPC ignora org ilimitada (WHERE credit_balance IS NOT NULL).
           const { error: refundErr } = await supabase.rpc("refund_credit", {
             p_org_id: creditGate.orgId,
           });
@@ -527,7 +527,7 @@ export async function POST(request: NextRequest) {
       return handleAuthError(err);
     }
 
-    const message = err instanceof Error ? err.message : "Erro desconhecido na geraÃ§Ã£o";
+    const message = err instanceof Error ? err.message : "Erro desconhecido na geração";
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

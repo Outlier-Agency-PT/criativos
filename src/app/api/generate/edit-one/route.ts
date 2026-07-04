@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, createServiceSupabase } from "@/lib/api-auth";
 import { generateWithRotation, getNextAvailableKey } from "@/lib/api-key-rotator";
 import { buildImageEditPrompt } from "@/lib/prompt-builder";
@@ -244,7 +244,7 @@ export async function POST(request: NextRequest) {
     });
 
     const activeKey = await getNextAvailableKey(orgId);
-    // Edit sempre exclui Imagen (nÃ£o suporta image input). Coluna preferred_model pendente de migration â€” usa default.
+    // Edit sempre exclui Imagen (não suporta image input). Coluna preferred_model pendente de migration — usa default.
     void activeKey; void isImagenModel;
     const preferredModel: string = REQUIRED_IMAGE_MODEL;
 

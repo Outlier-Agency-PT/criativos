@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { getImageCost } from "@/lib/models";
 import {
@@ -9,11 +9,11 @@ import {
   dayStartUTCDaysAgo,
 } from "@/lib/usage";
 
-/** Dias da sÃ©rie de tendÃªncia quando from/to nÃ£o delimitam o perÃ­odo. */
+/** Dias da série de tendência quando from/to não delimitam o período. */
 const TREND_DAYS = 30;
 
 /**
- * Valida um parÃ¢metro de data ISO vindo da query. Aceita 'YYYY-MM-DD' ou ISO
+ * Valida um parâmetro de data ISO vindo da query. Aceita 'YYYY-MM-DD' ou ISO
  * completo. Retorna a ISO string normalizada ou null se ausente/invalida.
  */
 function parseISODate(value: string | null): string | null {
@@ -28,30 +28,30 @@ function parseISODate(value: string | null): string | null {
  *
  * Resumo de uso/custo da org agregado server-side a partir de
  * criativos_generation_logs (base de billing). Conta apenas logs com
- * status='completed'. Pagina os logs em lotes de 1000 e agrega em memÃ³ria,
+ * status='completed'. Pagina os logs em lotes de 1000 e agrega em memória,
  * nunca devolve linha por linha pro cliente.
  *
  * Isolamento (RLS): usa o client autenticado de requireAuth (anon key), que
- * respeita a RLS endurecida da EP-14.02. NUNCA usa service key aqui, entÃ£o o
- * cliente sÃ³ enxerga a prÃ³pria org.
+ * respeita a RLS endurecida da EP-14.02. NUNCA usa service key aqui, então o
+ * cliente só enxerga a própria org.
  *
  * Query params (todos opcionais):
- *   - from: ISO date. InÃ­cio da janela de custo/count. Default: inÃ­cio do mÃªs.
+ *   - from: ISO date. Início da janela de custo/count. Default: início do mês.
  *   - to:   ISO date. Fim (exclusivo) da janela de custo/count. Default: agora.
  *
  * Contrato da resposta:
  *   - windowFrom, windowTo: ISO strings da janela efetiva de custo/count.
  *   - monthStart: alias de windowFrom (compat com clients antigos).
- *   - totalCount: criativos no perÃ­odo.
- *   - totalCostUsd: custo estimado total (USD) no perÃ­odo.
+ *   - totalCount: criativos no período.
+ *   - totalCostUsd: custo estimado total (USD) no período.
  *   - models: [{ model, provider, count, costUsd }] ordenado por count desc.
  *   - quota: status de quota (ver getQuotaStatus).
- *   - creditBalance: nÃºmero (crÃ©ditos restantes) ou null.
- *   - unlimited: true quando creditBalance Ã© null (sem teto de crÃ©dito).
- *   - creditBalanceLabel: rÃ³tulo pronto pra UI ('ilimitado' quando unlimited).
+ *   - creditBalance: número (créditos restantes) ou null.
+ *   - unlimited: true quando creditBalance é null (sem teto de crédito).
+ *   - creditBalanceLabel: rótulo pronto pra UI ('ilimitado' quando unlimited).
  *   - trend: { from, to, days, series: [{ dia: 'YYYY-MM-DD', criativos, custo }] }
- *            SÃ©rie diÃ¡ria com zeros inclusos. Janela = from/to quando passados,
- *            senÃ£o os ultimos TREND_DAYS dias.
+ *            Série diária com zeros inclusos. Janela = from/to quando passados,
+ *            senão os ultimos TREND_DAYS dias.
  */
 export async function GET(request: NextRequest) {
   try {
@@ -85,8 +85,8 @@ export async function GET(request: NextRequest) {
     // Saldo de credito atual da org. null = sem teto (ilimitado em consumo).
     const creditBalance = await getCreditBalance(supabase, orgId);
 
-    // AgregaÃ§Ã£o por modelo: paginada (range) pra nÃ£o estourar o teto de 1000
-    // rows do Supabase REST quando a org tem muito volume no mÃªs.
+    // Agregação por modelo: paginada (range) pra não estourar o teto de 1000
+    // rows do Supabase REST quando a org tem muito volume no mês.
     const PAGE = 1000;
     let offset = 0;
     let totalCount = 0;
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
       const rows = data ?? [];
       for (const row of rows) {
         const model = row.model_used || "desconhecido";
-        // cost_usd vem do banco; fallback no catÃ¡logo se vier nulo (logs antigos).
+        // cost_usd vem do banco; fallback no catálogo se vier nulo (logs antigos).
         const cost = typeof row.cost_usd === "number" ? row.cost_usd : getImageCost(row.model_used);
         totalCount += 1;
         totalCostUsd += cost;

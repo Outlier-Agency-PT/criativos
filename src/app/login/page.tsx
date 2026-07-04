@@ -1,16 +1,17 @@
-﻿"use client";
+"use client";
 
 
 import { Suspense, useState, useEffect } from "react";
 import { createBrowserSupabase } from "@/lib/supabase-browser";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Loader2, Sparkles, Zap, Image, BookOpen, ChevronRight } from "lucide-react";
+import { Loader2, Sparkles, Zap, Image, BookOpen, ChevronRight, Eye, EyeOff } from "lucide-react";
 import { getThemeCSSVars, getThemeById } from "@/lib/themes";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -51,7 +52,7 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen flex" style={{ background: "#000" }}>
-      {/* ===== LEFT PANEL â€” Hero / Info ===== */}
+      {/* ===== LEFT PANEL — Hero / Info ===== */}
       <div
         className="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center p-10 overflow-hidden"
         style={{
@@ -92,7 +93,7 @@ function LoginForm() {
             <img src="/logooutiliercriativos.png" alt="Outlier Criativos" className="h-8" />
           </div>
 
-          {/* Stats â€” no topo, logo abaixo do logo */}
+          {/* Stats — no topo, logo abaixo do logo */}
           <div className="flex gap-8 mb-10">
             {[
               { val: "500+", lbl: "Criativos gerados" },
@@ -169,7 +170,7 @@ function LoginForm() {
         </div>
       </div>
 
-      {/* ===== RIGHT PANEL â€” Login ===== */}
+      {/* ===== RIGHT PANEL — Login ===== */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative">
         {/* Subtle dot grid on right too */}
         <div
@@ -229,15 +230,26 @@ function LoginForm() {
                 <label className="text-xs font-semibold text-[var(--text-muted)]" htmlFor="password">
                   Palavra-passe
                 </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="w-full px-4 py-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.1)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:shadow-[0_0_0_2px_rgba(var(--accent-rgb),0.08)] transition-all text-sm"
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    className="w-full px-4 py-3 pr-11 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.1)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:shadow-[0_0_0_2px_rgba(var(--accent-rgb),0.08)] transition-all text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? "Ocultar palavra-passe" : "Mostrar palavra-passe"}
+                    tabIndex={-1}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               {error && (

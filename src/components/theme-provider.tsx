@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
@@ -73,7 +73,7 @@ export function ThemeProvider({ children, orgId }: ThemeProviderProps) {
         body: JSON.stringify({ orgId, themeId: id }),
       });
     } catch {
-      // silent â€” theme already applied visually
+      // silent — theme already applied visually
     }
   }, [orgId]);
 

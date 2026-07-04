@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useRef } from "react";
@@ -144,7 +144,7 @@ function PersonaBadge() {
   );
 }
 
-// --- Safe primitive extraction â€” prevents {family, weight} objects from leaking into JSX ---
+// --- Safe primitive extraction — prevents {family, weight} objects from leaking into JSX ---
 function safeNum(v: unknown, fallback: number): number {
   return typeof v === "number" && isFinite(v) ? v : fallback;
 }
@@ -295,7 +295,7 @@ function CreatorContent({ onBackToHistory }: { onBackToHistory: () => void }) {
     }
   }
 
-  // Extract safe primitives from format â€” NEVER render format fields directly
+  // Extract safe primitives from format — NEVER render format fields directly
   const formatWidth = safeNum(format?.width, 1080);
   const formatHeight = safeNum(format?.height, 1350);
   const formatLabel = safeStr(format?.label, "Feed");
@@ -537,12 +537,12 @@ function RegenerateLoader({ projectId, onReady }: { projectId: string; onReady: 
 }
 
 /**
- * Shell reutilizÃ¡vel do wizard de criaÃ§Ã£o.
+ * Shell reutilizável do wizard de criação.
  *
  * Renderiza o CreatorProvider + wizard, carregando um projeto existente
  * (`projectId`) ou iniciando do zero (`startFresh`).
  *
- * `onBackToHistory` Ã© chamado quando o usuÃ¡rio clica em "Voltar" no header â€”
+ * `onBackToHistory` é chamado quando o usuário clica em "Voltar" no header —
  * cada rota decide pra onde navegar (normalmente router.push("/criar")).
  */
 export function WizardShell({
@@ -561,7 +561,7 @@ export function WizardShell({
 
   return (
     <CreatorProvider
-      // key forÃ§a remontar limpo ao trocar de projeto (abrir A, voltar, abrir B)
+      // key força remontar limpo ao trocar de projeto (abrir A, voltar, abrir B)
       // ou ao iniciar um projeto novo, evitando vazar estado do projeto anterior.
       key={regenerateProjectId ?? (startFresh ? "fresh" : "wizard")}
       orgId={orgId}

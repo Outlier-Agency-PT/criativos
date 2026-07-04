@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useCallback } from "react";
@@ -35,7 +35,7 @@ interface Campaign {
 interface CopyLibraryBrowserProps {
   orgId: string;
   onSelect: (copies: LibraryCopy[]) => void | Promise<void>;
-  /** Quando true, mostra "Organizando com IA..." no botÃ£o e bloqueia novo clique. */
+  /** Quando true, mostra "Organizando com IA..." no botão e bloqueia novo clique. */
   busy?: boolean;
 }
 
@@ -153,7 +153,7 @@ export function CopyLibraryBrowser({ orgId, onSelect, busy = false }: CopyLibrar
         >
           <option value="created_at">Recentes</option>
           <option value="times_used">Mais usadas</option>
-          <option value="last_used_at">Ãšltimo uso</option>
+          <option value="last_used_at">Último uso</option>
         </select>
       </div>
 
@@ -198,7 +198,7 @@ export function CopyLibraryBrowser({ orgId, onSelect, busy = false }: CopyLibrar
                   {copy.list_items && (
                     <p className="text-[11px] text-text-muted line-clamp-1">
                       {copy.list_items.split("\n").filter(Boolean).slice(0, 3).map((item, i) => (
-                        <span key={i}>{i > 0 ? " Â· " : ""}{item.trim()}</span>
+                        <span key={i}>{i > 0 ? " · " : ""}{item.trim()}</span>
                       ))}
                     </p>
                   )}
@@ -251,7 +251,7 @@ export function CopyLibraryBrowser({ orgId, onSelect, busy = false }: CopyLibrar
               disabled={page * 20 >= total}
               className="px-3 py-1 text-xs rounded border border-border-subtle disabled:opacity-50"
             >
-              PrÃ³xima
+              Próxima
             </button>
           </div>
         </div>

@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { generateTextWithRotation } from "@/lib/api-key-rotator";
 
@@ -7,15 +7,15 @@ const PERSONA_PROMPT = `Com base nas respostas abaixo, gere um resumo de persona
 Inclua em formato JSON:
 {
   "nome_sugerido": "nome curto para a persona (ex: 'Advogados Trabalhistas')",
-  "perfil_demografico": "descriÃ§Ã£o do perfil",
+  "perfil_demografico": "descrição do perfil",
   "dores_principais": ["dor 1", "dor 2", "dor 3"],
   "desejos_profundos": ["desejo 1", "desejo 2", "desejo 3"],
-  "objecoes_compra": ["objeÃ§Ã£o 1", "objeÃ§Ã£o 2"],
-  "tom_comunicacao": "tom recomendado para falar com esse pÃºblico",
-  "resumo": "parÃ¡grafo resumo da persona"
+  "objecoes_compra": ["objeção 1", "objeção 2"],
+  "tom_comunicacao": "tom recomendado para falar com esse público",
+  "resumo": "parágrafo resumo da persona"
 }
 
-Retorne APENAS o JSON, sem markdown ou explicaÃ§Ãµes.`;
+Retorne APENAS o JSON, sem markdown ou explicações.`;
 
 /**
  * POST /api/persona-generate
@@ -27,16 +27,16 @@ export async function POST(request: NextRequest) {
     await requireAuth(orgId);
 
     if (!answers || !orgId) {
-      return NextResponse.json({ error: "answers e orgId obrigatÃ³rios" }, { status: 400 });
+      return NextResponse.json({ error: "answers e orgId obrigatórios" }, { status: 400 });
     }
 
     const prompt = `${PERSONA_PROMPT}
 
-PÃºblico: ${answers.target_audience || "NÃ£o informado"}
-Problemas: ${answers.audience_problems || "NÃ£o informado"}
-ObjeÃ§Ãµes: ${answers.purchase_objections || "NÃ£o informado"}
-Desejos: ${answers.deep_desires || "NÃ£o informado"}
-Contexto adicional: ${answers.extra_context || "NÃ£o informado"}`;
+Público: ${answers.target_audience || "Não informado"}
+Problemas: ${answers.audience_problems || "Não informado"}
+Objeções: ${answers.purchase_objections || "Não informado"}
+Desejos: ${answers.deep_desires || "Não informado"}
+Contexto adicional: ${answers.extra_context || "Não informado"}`;
 
     try {
       const text = await generateTextWithRotation(orgId, prompt);

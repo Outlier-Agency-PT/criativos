@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useCallback } from "react";
@@ -91,12 +91,12 @@ export function StepSetup() {
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [previewTemplate, setPreviewTemplate] = useState<TemplateItem | null>(null);
-  // Onboarding educativo: card explicativo dispensÃ¡vel (lembra a escolha por usuÃ¡rio).
+  // Onboarding educativo: card explicativo dispensável (lembra a escolha por usuário).
   const [showOnboarding, setShowOnboarding] = useState(true);
   useEffect(() => {
     try {
       setShowOnboarding(localStorage.getItem("criativos_onboarding_setup_dismissed") !== "1");
-    } catch { /* localStorage indisponÃ­vel: mantÃ©m visÃ­vel */ }
+    } catch { /* localStorage indisponível: mantém visível */ }
   }, []);
   function dismissOnboarding() {
     setShowOnboarding(false);
@@ -115,7 +115,7 @@ export function StepSetup() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
 
-        // API jÃ¡ retorna imageUrl com signed URL (service key server-side)
+        // API já retorna imageUrl com signed URL (service key server-side)
         const activeTemplates = (data.templates ?? []).filter((t: TemplateItem) => t.is_active);
         setTemplates(activeTemplates);
       } catch (err) {
@@ -199,7 +199,7 @@ export function StepSetup() {
           {tmpl.imageUrl ? (
             <img src={tmpl.imageUrl} alt={tmpl.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           ) : (
-            <div className="flex items-center justify-center w-full h-full text-text-muted text-2xl">ðŸ“„</div>
+            <div className="flex items-center justify-center w-full h-full text-text-muted text-2xl">📄</div>
           )}
           {/* Zoom icon on hover */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
@@ -268,7 +268,7 @@ export function StepSetup() {
 
   return (
     <div className="space-y-6">
-      {/* Onboarding educativo (dispensÃ¡vel) â€” como o fluxo funciona */}
+      {/* Onboarding educativo (dispensável) — como o fluxo funciona */}
       {showOnboarding && (
         <div className="theme-panel rounded-[26px] p-4 lg:p-5 relative border border-accent-champagne/30">
           <button
@@ -323,7 +323,7 @@ export function StepSetup() {
               />
             </div>
             <p className="text-xs text-text-muted">
-              Nomeie o projeto para localizar a configuraÃ§Ã£o e os criativos depois.
+              Nomeie o projeto para localizar a configuração e os criativos depois.
             </p>
           </div>
         </div>
@@ -439,9 +439,9 @@ export function StepSetup() {
                 </div>
                 <div className="flex items-center gap-2 text-[10px] text-text-muted">
                   <span className="text-accent-champagne font-medium">~${m.costPerImage.toFixed(3)}/img</span>
-                  <span>Â·</span>
+                  <span>·</span>
                   <span>{m.maxResolution}</span>
-                  {m.supportsImageInput && <span>Â· Ref. visual</span>}
+                  {m.supportsImageInput && <span>· Ref. visual</span>}
                 </div>
                 <p className="text-[11px] text-text-muted/70 leading-snug">{m.description}</p>
               </button>
@@ -476,7 +476,7 @@ export function StepSetup() {
             <span className="font-medium text-text-primary">{selectedTemplates.length}</span>
             /{MAX_TEMPLATES} selecionados
             {filtered.length !== templates.length && (
-              <span className="text-text-muted ml-2">Â· {filtered.length} de {templates.length} templates</span>
+              <span className="text-text-muted ml-2">· {filtered.length} de {templates.length} templates</span>
             )}
           </p>
         </div>
@@ -677,7 +677,7 @@ export function StepSetup() {
                 {previewTemplate.imageUrl ? (
                   <img src={previewTemplate.imageUrl} alt={previewTemplate.name} className="max-w-full max-h-[80vh] object-contain" />
                 ) : (
-                  <div className="flex items-center justify-center text-6xl text-text-muted">ðŸ“„</div>
+                  <div className="flex items-center justify-center text-6xl text-text-muted">📄</div>
                 )}
               </div>
 

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useMemo, useRef } from "react";
@@ -51,24 +51,24 @@ export function StepCopy() {
     activeCopyFields,
   } = useCreator();
   const [mode, setMode] = useState<"manual" | "ai" | "library">("manual");
-  // Reorganizando copies da biblioteca com IA pro padrÃ£o ativo (loading).
+  // Reorganizando copies da biblioteca com IA pro padrão ativo (loading).
   const [libraryOrganizing, setLibraryOrganizing] = useState(false);
 
-  // BLOCO A â€” campos visÃ­veis derivam do padrÃ£o de copy ativo.
+  // BLOCO A — campos visíveis derivam do padrão de copy ativo.
   const patternFields = COPY_PATTERN_FIELDS[copyPattern];
 
-  // BLOCO A â€” trocar padrÃ£o reseta os campos ativos pro default do novo padrÃ£o.
+  // BLOCO A — trocar padrão reseta os campos ativos pro default do novo padrão.
   function changeCopyPattern(next: CopyPattern) {
     if (next === copyPattern) return;
     updateProject({ copyPattern: next, activeCopyFields: defaultActiveFields(next) });
   }
 
-  // BLOCO B â€” liga/desliga um campo (nÃ­vel projeto). MantÃ©m ao menos 1 marcado.
+  // BLOCO B — liga/desliga um campo (nível projeto). Mantém ao menos 1 marcado.
   function toggleActiveField(key: string) {
     const current = activeCopyFields.length > 0 ? activeCopyFields : defaultActiveFields(copyPattern);
     const isOn = current.includes(key);
     const next = isOn ? current.filter((k) => k !== key) : [...current, key];
-    if (next.length === 0) return; // nÃ£o deixar zerar todos os campos
+    if (next.length === 0) return; // não deixar zerar todos os campos
     updateProject({ activeCopyFields: next });
   }
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -108,7 +108,7 @@ export function StepCopy() {
       }
     }
     if (map.size === 0) {
-      // BLOCO A â€” 4 campos do PADRÃƒO ativo (EstÃ¡tico ou Mini copy)
+      // BLOCO A — 4 campos do PADRÃO ativo (Estático ou Mini copy)
       for (const f of COPY_PATTERN_FIELDS[copyPattern]) {
         map.set(f.key, { key: f.key, label: f.label, type: "text" });
       }
@@ -206,10 +206,10 @@ export function StepCopy() {
 
     const copySource = list === "ai" ? "ai_generated" : list === "manual-file" ? "upload" : "manual";
 
-    // Mapeia SEMPRE pro padrÃ£o ativo (estatico â†’ headline/subheadline/ponte/cta).
-    // Os modos paste/ficheiro jÃ¡ mapeiam antes, mas o "gerar com IA" criava os campos
-    // crus (headline/mini_copy/list_items/cta) â€” sem isto, a copy gerada por IA nÃ£o
-    // respeitava o padrÃ£o EstÃ¡tico selecionado.
+    // Mapeia SEMPRE pro padrão ativo (estatico → headline/subheadline/ponte/cta).
+    // Os modos paste/ficheiro já mapeiam antes, mas o "gerar com IA" criava os campos
+    // crus (headline/mini_copy/list_items/cta) — sem isto, a copy gerada por IA não
+    // respeitava o padrão Estático selecionado.
     const newCopies: CopyItem[] = approved.map((c) => ({
       id: generateId(),
       content: mapAnalyzedToPattern(c.fields),
@@ -234,7 +234,7 @@ export function StepCopy() {
   }
 
   // --- "Ja tem copy" paste handler ---
-  // Mapeia a copy extraÃ­da pela IA pros campos do PADRÃƒO ativo (estatico/mini_copy).
+  // Mapeia a copy extraída pela IA pros campos do PADRÃO ativo (estatico/mini_copy).
   function mapAnalyzedToPattern(c: Record<string, string>): Record<string, string> {
     if (copyPattern === "estatico") {
       return {
@@ -410,10 +410,10 @@ export function StepCopy() {
 
   return (
     <div className="space-y-6">
-      {/* BLOCO A â€” PadrÃ£o de copy do projeto */}
+      {/* BLOCO A — Padrão de copy do projeto */}
       <div className="bg-surface-050 rounded-xl border border-border-subtle p-4 space-y-3">
         <div>
-          <p className="text-sm font-medium text-text-primary">PadrÃ£o de copy</p>
+          <p className="text-sm font-medium text-text-primary">Padrão de copy</p>
           <p className="text-xs text-text-muted mt-0.5">
             Define os campos da copy deste projeto. Vale para todos os criativos.
           </p>
@@ -431,15 +431,15 @@ export function StepCopy() {
               )}
               aria-pressed={copyPattern === p}
             >
-              {p === "estatico" ? "EstÃ¡tico" : "Mini copy"}
+              {p === "estatico" ? "Estático" : "Mini copy"}
             </button>
           ))}
         </div>
 
-        {/* BLOCO B â€” Checkboxes de campos (nÃ­vel projeto) */}
+        {/* BLOCO B — Checkboxes de campos (nível projeto) */}
         <div className="pt-1">
           <p className="text-xs font-medium text-text-muted mb-2">
-            Campos usados na arte (desmarque o que nÃ£o quer)
+            Campos usados na arte (desmarque o que não quer)
           </p>
           <div className="flex flex-wrap gap-2">
             {patternFields.map((f) => {
@@ -1005,7 +1005,7 @@ export function StepCopy() {
           busy={libraryOrganizing}
           onSelect={async (selectedCopies) => {
             // A copy da biblioteca vem com campos antigos (mini_copy com sub+bullets
-            // misturados). Pra respeitar o padrÃ£o EstÃ¡tico, REORGANIZAMOS cada copy
+            // misturados). Pra respeitar o padrão Estático, REORGANIZAMOS cada copy
             // com IA (analyze-text + copyPattern), separando de verdade em
             // headline/subheadline/ponte/cta. Sem isso ficava tudo grudado no mini_copy.
             setLibraryOrganizing(true);
@@ -1032,7 +1032,7 @@ export function StepCopy() {
                       };
                     }
                   } catch {
-                    // se a IA falhar, cai no mapeamento mecÃ¢nico abaixo
+                    // se a IA falhar, cai no mapeamento mecânico abaixo
                   }
                   return {
                     id: generateId(),
@@ -1160,7 +1160,7 @@ export function StepCopy() {
                       }
                       if (ordered.length === 0) {
                         return (
-                          <p className="text-xs italic text-text-muted">(copy sem conteÃºdo preenchido)</p>
+                          <p className="text-xs italic text-text-muted">(copy sem conteúdo preenchido)</p>
                         );
                       }
                       return ordered.map(({ key, label }) => {
@@ -1206,7 +1206,7 @@ export function StepCopy() {
 
 /**
  * Card de uma copy organizada pela IA (modos "Colar texto" e "Enviar ficheiro").
- * Os campos editÃ¡veis e exibidos derivam do PADRÃƒO ativo (patternFields), pra
+ * Os campos editáveis e exibidos derivam do PADRÃO ativo (patternFields), pra
  * todos os 4 campos aparecerem consistentemente em qualquer modo.
  */
 function AnalyzedCopyCard({

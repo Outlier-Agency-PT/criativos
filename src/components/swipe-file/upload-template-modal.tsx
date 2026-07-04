@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useCallback } from "react";
@@ -107,7 +107,7 @@ export function UploadTemplateModal({ onClose, onUploaded, orgId }: UploadTempla
 
       if (!uploadRes.ok) throw new Error(uploadData.error);
 
-      // 2. AnÃ¡lise visual completa via IA (sÃ­ncrona, mas tolerante a falha)
+      // 2. Análise visual completa via IA (síncrona, mas tolerante a falha)
       setAnalyzing(true);
       type Analysis = {
         mini_prompt: string | null;
@@ -136,11 +136,11 @@ export function UploadTemplateModal({ onClose, onUploaded, orgId }: UploadTempla
           analysis = analyzeData.analysis ?? null;
         }
       } catch {
-        // AnÃ¡lise falhou, continua sem
+        // Análise falhou, continua sem
       }
       setAnalyzing(false);
 
-      // 3. Salvar template no banco com tudo que veio da anÃ¡lise
+      // 3. Salvar template no banco com tudo que veio da análise
       const tags = tagsInput.split(",").map((t) => t.trim()).filter(Boolean);
 
       const saveRes = await fetch("/api/templates", {
@@ -169,7 +169,7 @@ export function UploadTemplateModal({ onClose, onUploaded, orgId }: UploadTempla
           niche: niche || null,
           offer_type: offerType || null,
           source_format: sourceFormat || null,
-          // Se usuÃ¡rio nÃ£o escolheu visual_style manualmente, usa o detectado
+          // Se usuário não escolheu visual_style manualmente, usa o detectado
           visual_style: visualStyle || analysis?.visual_style || null,
           hook: hook || null,
           cta: cta || null,
@@ -220,7 +220,7 @@ export function UploadTemplateModal({ onClose, onUploaded, orgId }: UploadTempla
             >
               <Upload className="w-8 h-8 text-text-muted mb-2" />
               <p className="text-sm text-text-secondary">Arraste uma imagem ou clique para selecionar</p>
-              <p className="text-xs text-text-muted mt-1">PNG, JPG, WebP â€” max 10MB</p>
+              <p className="text-xs text-text-muted mt-1">PNG, JPG, WebP — max 10MB</p>
               <input
                 id="template-file-input"
                 type="file"

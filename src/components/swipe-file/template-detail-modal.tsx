@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -240,7 +240,7 @@ export function TemplateDetailModal({
 
         {/* Content: image + optional side panel */}
         <div className="w-full flex bg-surface-000 border border-border-subtle border-t-0 rounded-b-2xl overflow-hidden">
-          {/* Image â€” big, centered */}
+          {/* Image — big, centered */}
           <div className="relative group/img flex-1 flex items-center justify-center bg-surface-050 min-h-[50vh] max-h-[80vh] overflow-hidden">
             {template.imageUrl ? (
               <img
@@ -249,7 +249,7 @@ export function TemplateDetailModal({
                 className="max-w-full max-h-[80vh] object-contain"
               />
             ) : (
-              <div className="flex items-center justify-center text-6xl text-text-muted">ðŸ“„</div>
+              <div className="flex items-center justify-center text-6xl text-text-muted">📄</div>
             )}
             {/* Replace image button */}
             {onReplaceImage && (
@@ -316,7 +316,7 @@ export function TemplateDetailModal({
                       <div>
                         <label className="block text-[10px] font-medium text-text-muted mb-0.5">Nicho</label>
                         <select value={niche} onChange={(e) => setNiche(e.target.value)} className="w-full px-2 py-1.5 rounded bg-surface-100 border border-border-subtle text-xs text-text-primary">
-                          <option value="">â€”</option>
+                          <option value="">—</option>
                           <option value="high_ticket">High Ticket</option>
                           <option value="infoprodutos">Infoprodutos</option>
                           <option value="vendas">Vendas</option>
@@ -332,7 +332,7 @@ export function TemplateDetailModal({
                       <div>
                         <label className="block text-[10px] font-medium text-text-muted mb-0.5">Tipo de Oferta</label>
                         <select value={offerType} onChange={(e) => setOfferType(e.target.value)} className="w-full px-2 py-1.5 rounded bg-surface-100 border border-border-subtle text-xs text-text-primary">
-                          <option value="">â€”</option>
+                          <option value="">—</option>
                           <option value="mentoria">Mentoria</option>
                           <option value="curso">Curso</option>
                           <option value="evento">Evento</option>
@@ -345,7 +345,7 @@ export function TemplateDetailModal({
                       <div>
                         <label className="block text-[10px] font-medium text-text-muted mb-0.5">Formato</label>
                         <select value={sourceFormat} onChange={(e) => setSourceFormat(e.target.value)} className="w-full px-2 py-1.5 rounded bg-surface-100 border border-border-subtle text-xs text-text-primary">
-                          <option value="">â€”</option>
+                          <option value="">—</option>
                           <option value="story">Story</option>
                           <option value="feed">Feed</option>
                           <option value="carrossel">Carrossel</option>
@@ -354,7 +354,7 @@ export function TemplateDetailModal({
                       <div className="col-span-2">
                         <label className="block text-[10px] font-medium text-text-muted mb-0.5">Estilo Visual</label>
                         <select value={visualStyle} onChange={(e) => setVisualStyle(e.target.value)} className="w-full px-2 py-1.5 rounded bg-surface-100 border border-border-subtle text-xs text-text-primary">
-                          <option value="">â€”</option>
+                          <option value="">—</option>
                           <option value="minimalista">Minimalista</option>
                           <option value="bold">Bold / Impactante</option>
                           <option value="editorial">Editorial</option>
@@ -492,7 +492,7 @@ export function TemplateDetailModal({
                     <div>
                       <h4 className="text-xs font-medium text-amber-400/80 mb-1.5 flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                        Prompt de SubstituiÃ§Ã£o
+                        Prompt de Substituição
                       </h4>
                       <p className="text-sm text-text-secondary bg-amber-500/5 border border-amber-500/10 p-3 rounded-lg leading-relaxed">{template.mini_prompt}</p>
                     </div>

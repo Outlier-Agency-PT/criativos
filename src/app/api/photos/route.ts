@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, whitelist } from "@/lib/api-auth";
 import { createServiceSupabase } from "@/lib/api-auth";
 
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { data, error } = await supabase
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-    // Bucket Ã© privado; a UI precisa de signed URLs.
+    // Bucket é privado; a UI precisa de signed URLs.
     const photosWithUrls = await Promise.all(
       (data || []).map((photo) => withSignedUrl(photo))
     );
@@ -72,7 +72,7 @@ export async function PATCH(request: NextRequest) {
     const { supabase } = await requireAuth(orgId || org_id);
 
     if (!id) {
-      return NextResponse.json({ error: "id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
     }
 
     const safeUpdates = whitelist(rest, ["is_active"]);
@@ -100,11 +100,11 @@ export async function DELETE(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!id) {
-      return NextResponse.json({ error: "id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
     }
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { error } = await supabase

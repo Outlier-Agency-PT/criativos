@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const urls: Record<string, string> = {};
 
     if (templates && templates.length > 0) {
-      // Gera signed URLs EM LOTE (1 round-trip) ao invÃ©s de N chamadas.
+      // Gera signed URLs EM LOTE (1 round-trip) ao invés de N chamadas.
       const withPath = templates.filter(
         (t): t is { id: string; file_path: string } => Boolean(t.file_path)
       );

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect } from "react";
@@ -113,7 +113,7 @@ export default function SetupPage() {
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
             <img src="/logooutiliercriativos.png" alt="Outlier Criativos" className="h-8" />
-            <p className="text-xs text-text-muted">ConfiguraÃ§Ã£o inicial</p>
+            <p className="text-xs text-text-muted">Configuração inicial</p>
           </div>
           <button
             onClick={async () => {
@@ -167,10 +167,10 @@ export default function SetupPage() {
         <div className="bg-surface-000 rounded-xl border border-border-subtle p-6">
           <h2 className="text-lg font-semibold text-text-primary mb-1">
             {STEPS[currentStep].label}
-            {STEPS[currentStep].required && <span className="text-accent-champagne ml-1 text-sm">obrigatÃ³rio</span>}
+            {STEPS[currentStep].required && <span className="text-accent-champagne ml-1 text-sm">obrigatório</span>}
           </h2>
           <p className="text-sm text-text-muted mb-6">
-            {currentStep === 0 && "Responda algumas perguntas para que a IA entenda seu pÃºblico."}
+            {currentStep === 0 && "Responda algumas perguntas para que a IA entenda seu público."}
             {currentStep === 1 && "Fotos do expert para usar nos criativos."}
             {currentStep === 2 && "Configure as cores, fontes e logo da sua marca."}
             {currentStep === 3 && "Cadastre suas API keys para gerar criativos."}

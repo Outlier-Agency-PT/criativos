@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -21,22 +21,22 @@ export async function POST(request: NextRequest) {
     const replaceFile = formData.get("replaceFile") as string | null;
 
     if (!file) {
-      return NextResponse.json({ error: "file obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "file obrigatório" }, { status: 400 });
     }
 
     if (!bucket) {
-      return NextResponse.json({ error: "bucket obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "bucket obrigatório" }, { status: 400 });
     }
 
     // Validar bucket permitido
     if (!ALLOWED_BUCKETS.includes(bucket)) {
-      return NextResponse.json({ error: "Bucket nÃ£o permitido" }, { status: 400 });
+      return NextResponse.json({ error: "Bucket não permitido" }, { status: 400 });
     }
 
     // Validar tipo
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: `Tipo nÃ£o permitido: ${file.type}. Aceitos: ${ALLOWED_TYPES.join(", ")}` },
+        { error: `Tipo não permitido: ${file.type}. Aceitos: ${ALLOWED_TYPES.join(", ")}` },
         { status: 400 }
       );
     }
@@ -44,12 +44,12 @@ export async function POST(request: NextRequest) {
     // Validar tamanho
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: `Ficheiro muito grande: ${(file.size / 1024 / 1024).toFixed(1)}MB. MÃ¡ximo: 10MB` },
+        { error: `Ficheiro muito grande: ${(file.size / 1024 / 1024).toFixed(1)}MB. Máximo: 10MB` },
         { status: 400 }
       );
     }
 
-    // Gerar path Ãºnico. O Supabase Storage rejeita "keys" com acentos/caracteres
+    // Gerar path único. O Supabase Storage rejeita "keys" com acentos/caracteres
     // especiais (erro InvalidKey). Sanitizamos extensao e prefixo de path.
     const sanitizeKeySegment = (s: string) =>
       s

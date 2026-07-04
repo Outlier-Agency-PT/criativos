@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useCallback } from "react";
@@ -82,7 +82,7 @@ export function StepPhotos({ orgId, onComplete, onSkip }: StepPhotosProps) {
   return (
     <div className="space-y-5">
       <p className="text-sm text-text-muted">
-        Suba fotos do expert para usar nos criativos. Recomendado: mÃ­nimo 3 fotos, ideal 5+.
+        Suba fotos do expert para usar nos criativos. Recomendado: mínimo 3 fotos, ideal 5+.
       </p>
 
       {/* Drop zone */}
@@ -101,7 +101,7 @@ export function StepPhotos({ orgId, onComplete, onSkip }: StepPhotosProps) {
           <>
             <Upload className="w-6 h-6 text-text-muted mb-2" />
             <p className="text-sm text-text-secondary">Arraste fotos ou clique para selecionar</p>
-            <p className="text-xs text-text-muted">PNG, JPG, WebP â€” mÃ¡x 10MB cada</p>
+            <p className="text-xs text-text-muted">PNG, JPG, WebP — máx 10MB cada</p>
           </>
         )}
         <input

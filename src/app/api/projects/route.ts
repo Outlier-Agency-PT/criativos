@@ -1,10 +1,10 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 
 /**
  * POST /api/projects
  * Cria um generation_project no banco a partir dos dados do wizard.
- * Insere tambÃ©m project_templates, project_copies e project_photos.
+ * Insere também project_templates, project_copies e project_photos.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -29,11 +29,11 @@ export async function POST(request: NextRequest) {
     const { orgId, supabase } = await requireAuth();
 
     if (!format?.width || !format?.height) {
-      return NextResponse.json({ error: "format (width/height) obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "format (width/height) obrigatório" }, { status: 400 });
     }
 
     if (!copies?.length) {
-      return NextResponse.json({ error: "Pelo menos 1 copy Ã© necessÃ¡rio" }, { status: 400 });
+      return NextResponse.json({ error: "Pelo menos 1 copy é necessário" }, { status: 400 });
     }
 
     // 1. Criar projeto
@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 5. Inserir fundos prÃ³prios (dedupe por file_path)
+    // 5. Inserir fundos próprios (dedupe por file_path)
     if (Array.isArray(selectedBackgrounds) && selectedBackgrounds.length > 0) {
       const seenBg = new Set<string>();
       const backgroundRows: Array<{ project_id: string; file_path: string; file_name: string | null; sort_order: number }> = [];

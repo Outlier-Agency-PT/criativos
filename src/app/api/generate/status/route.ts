@@ -1,8 +1,8 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { createServiceSupabase } from "@/lib/api-auth";
 
-const STALE_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutos â€” items "generating" hÃ¡ mais tempo = orphaned
+const STALE_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutos — items "generating" há mais tempo = orphaned
 
 async function storageObjectExists(
   supabase: Awaited<ReturnType<typeof createServiceSupabase>>,
@@ -17,21 +17,21 @@ async function storageObjectExists(
 
 /**
  * GET /api/generate/status?projectId=xxx
- * Retorna progresso da geraÃ§Ã£o de criativos.
+ * Retorna progresso da geração de criativos.
  * Frontend faz polling a cada 2s.
- * Detecta items orphaned (gerando hÃ¡ mais de 3 min) e os marca como erro.
+ * Detecta items orphaned (gerando há mais de 3 min) e os marca como erro.
  */
 export async function GET(request: NextRequest) {
   try {
     const projectId = request.nextUrl.searchParams.get("projectId");
 
     if (!projectId) {
-      return NextResponse.json({ error: "projectId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "projectId obrigatório" }, { status: 400 });
     }
 
     const { supabase, orgId } = await requireAuth();
 
-    // Verificar que o projeto pertence Ã  org do usuÃ¡rio
+    // Verificar que o projeto pertence à org do usuário
     const { data: project } = await supabase
       .from("criativos_generation_projects")
       .select("id, org_id, created_at, status")
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (!project) {
-      return NextResponse.json({ error: "Projeto nÃ£o encontrado" }, { status: 404 });
+      return NextResponse.json({ error: "Projeto não encontrado" }, { status: 404 });
     }
 
     const { data: creatives, error } = await supabase
@@ -56,14 +56,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Nenhum criativo encontrado para este projeto" }, { status: 404 });
     }
 
-    // Reconciliar items Ã³rfÃ£os:
-    // 1. "generating" com file_path â†’ jÃ¡ completou, sÃ³ faltou atualizar status
-    // 2. "generating" sem file_path hÃ¡ mais de 3 min â†’ verificar storage ou marcar erro
-    // 3. "error" por timeout anterior â†’ re-verificar storage
+    // Reconciliar items órfãos:
+    // 1. "generating" com file_path → já completou, só faltou atualizar status
+    // 2. "generating" sem file_path há mais de 3 min → verificar storage ou marcar erro
+    // 3. "error" por timeout anterior → re-verificar storage
     const now = Date.now();
     const projectAge = now - new Date(project.created_at).getTime();
 
-    // Caso 1: "generating" mas jÃ¡ tem file_path â€” corrigir status imediatamente
+    // Caso 1: "generating" mas já tem file_path — corrigir status imediatamente
     const withFilePath = creatives.filter((c) => c.status === "generating" && c.file_path);
     if (withFilePath.length > 0) {
       const serviceSupabase = await createServiceSupabase();
@@ -108,10 +108,10 @@ export async function GET(request: NextRequest) {
         if (item.status === "generating") {
           await serviceSupabase.from("criativos_creatives").update({
             status: "error",
-            error_message: "Timeout: geraÃ§Ã£o interrompida (servidor reiniciou ou conexÃ£o perdida)",
+            error_message: "Timeout: geração interrompida (servidor reiniciou ou conexão perdida)",
           }).eq("id", item.id);
           item.status = "error";
-          item.error_message = "Timeout: geraÃ§Ã£o interrompida";
+          item.error_message = "Timeout: geração interrompida";
         }
       }
     }
@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
     const pending = creatives.filter((c) => c.status === "pending").length;
     const done = pending === 0 && !generating;
 
-    // Atualizar status do projeto quando todos os criativos estÃ£o prontos
+    // Atualizar status do projeto quando todos os criativos estão prontos
     if (done && project.status === "generating") {
       const serviceSupabase = await createServiceSupabase();
       const finalStatus = completed === 0 && errors > 0 ? "error" : errors > 0 ? "partial" : "completed";

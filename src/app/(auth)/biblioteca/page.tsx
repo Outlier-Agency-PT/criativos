@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useCallback } from "react";
@@ -282,7 +282,7 @@ export default function BibliotecaPage() {
   const totalPages = Math.ceil(total / 24);
   const totalCopies = campaigns.reduce((sum, c) => sum + c.copy_count, 0);
 
-  // â”€â”€â”€ Campaign Grid View â”€â”€â”€
+  // ─── Campaign Grid View ───
   if (!selectedCampaign) {
     return (
       <div className="space-y-6">
@@ -291,7 +291,7 @@ export default function BibliotecaPage() {
           <div>
             <h1 className="text-2xl font-bold text-text-primary">Biblioteca</h1>
             <p className="text-sm text-text-muted mt-1">
-              {campaigns.length} campanha{campaigns.length !== 1 ? "s" : ""} Â· {totalCopies} copies
+              {campaigns.length} campanha{campaigns.length !== 1 ? "s" : ""} · {totalCopies} copies
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -443,7 +443,7 @@ export default function BibliotecaPage() {
           </div>
         )}
 
-        {/* Local directory import â€” localhost only */}
+        {/* Local directory import — localhost only */}
         {isLocalhost && (
           <LocalDirectoryImport
             orgId={orgId}
@@ -465,7 +465,7 @@ export default function BibliotecaPage() {
     );
   }
 
-  // â”€â”€â”€ Copies View (inside a campaign) â”€â”€â”€
+  // ─── Copies View (inside a campaign) ───
   return (
     <div className="space-y-6">
       {/* Header with back */}

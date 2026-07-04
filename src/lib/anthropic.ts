@@ -1,6 +1,6 @@
-﻿/**
- * Client da Anthropic (Claude) para geraÃ§Ã£o de TEXTO â€” usado na geraÃ§Ã£o de copy.
- * Chama a Messages API direto via fetch (sem SDK, pra nÃ£o adicionar dependÃªncia).
+/**
+ * Client da Anthropic (Claude) para geração de TEXTO — usado na geração de copy.
+ * Chama a Messages API direto via fetch (sem SDK, pra não adicionar dependência).
  * Doc: https://docs.anthropic.com/en/api/messages
  */
 
@@ -11,8 +11,8 @@ const ANTHROPIC_VERSION = "2023-06-01";
 const DEFAULT_MODEL = "claude-haiku-4-5-20251001";
 
 /**
- * Gera texto com Claude. Recebe um prompt Ãºnico e devolve o texto da resposta.
- * Usado por generateTextWithRotation quando o provider da key Ã© "anthropic".
+ * Gera texto com Claude. Recebe um prompt único e devolve o texto da resposta.
+ * Usado por generateTextWithRotation quando o provider da key é "anthropic".
  */
 export async function generateText(
   apiKey: string,
@@ -57,12 +57,12 @@ export async function generateText(
     : "";
 
   if (!text) {
-    throw new Error("Anthropic nÃ£o retornou texto na resposta");
+    throw new Error("Anthropic não retornou texto na resposta");
   }
   return text;
 }
 
-/** Testa a conexÃ£o com a Anthropic (key vÃ¡lida). */
+/** Testa a conexão com a Anthropic (key válida). */
 export async function testConnection(
   apiKey: string,
   model: string = DEFAULT_MODEL,

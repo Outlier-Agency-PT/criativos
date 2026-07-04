@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 
 /**
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Nenhum criativo encontrado com ficheiro" }, { status: 404 });
     }
 
-    // Verificar ownership: todos os projetos devem pertencer Ã  org do usuÃ¡rio
+    // Verificar ownership: todos os projetos devem pertencer à org do usuário
     const projectIds = [...new Set(creatives.map(c => c.project_id))];
     const { data: projects } = await supabase
       .from("criativos_generation_projects")
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Nenhum criativo encontrado com ficheiro" }, { status: 404 });
     }
 
-    // Gerar signed URLs EM LOTE (1 round-trip) ao invÃ©s de N chamadas.
+    // Gerar signed URLs EM LOTE (1 round-trip) ao invés de N chamadas.
     const paths = allowedCreatives.map((c) => c.file_path!);
     const { data: signedList } = await supabase.storage
       .from("creatives")

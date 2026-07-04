@@ -1,13 +1,13 @@
-﻿import { GoogleGenAI, type Content } from "@google/genai";
+import { GoogleGenAI, type Content } from "@google/genai";
 import { getImageSize, getTimeout } from "./models";
 
 export interface GenerateCreativeInput {
   templates: Buffer[];
   expertPhotos?: Buffer[];
   /**
-   * Foto de fundo prÃ³pria (modo composiÃ§Ã£o). Quando presente, Ã© anexada como a
-   * PRIMEIRA imagem do payload â€” o prompt instrui o modelo a preservÃ¡-la como cena
-   * final e sÃ³ aplicar os textos do template por cima.
+   * Foto de fundo própria (modo composição). Quando presente, é anexada como a
+   * PRIMEIRA imagem do payload — o prompt instrui o modelo a preservá-la como cena
+   * final e só aplicar os textos do template por cima.
    */
   background?: Buffer;
   logo?: Buffer;
@@ -23,7 +23,7 @@ export interface GenerateCreativeResult {
 
 /**
  * Gera um criativo usando Google Gemini API.
- * EP08: Aceita model dinÃ¢mico + imageConfig com resoluÃ§Ã£o por modelo.
+ * EP08: Aceita model dinâmico + imageConfig com resolução por modelo.
  */
 export async function generateCreative(
   apiKey: string,
@@ -34,7 +34,7 @@ export async function generateCreative(
 
   const parts: Content["parts"] = [
     { text: input.prompt },
-    // Modo composiÃ§Ã£o: a foto de fundo entra como PRIMEIRA imagem (a "cena final").
+    // Modo composição: a foto de fundo entra como PRIMEIRA imagem (a "cena final").
     ...(input.background
       ? [{ inlineData: { mimeType: "image/png" as const, data: input.background.toString("base64") } }]
       : []),
@@ -51,7 +51,7 @@ export async function generateCreative(
 
   const timeout = getTimeout(model);
   const timeoutPromise = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error(`Timeout: Gemini nÃ£o respondeu em ${timeout / 1000}s`)), timeout)
+    setTimeout(() => reject(new Error(`Timeout: Gemini não respondeu em ${timeout / 1000}s`)), timeout)
   );
 
   const response = await Promise.race([
@@ -71,7 +71,7 @@ export async function generateCreative(
 
   const candidates = response.candidates;
   if (!candidates || candidates.length === 0) {
-    throw new Error("Gemini nÃ£o retornou candidatos na resposta");
+    throw new Error("Gemini não retornou candidatos na resposta");
   }
 
   const responseParts = candidates[0].content?.parts ?? [];
@@ -91,7 +91,7 @@ export async function generateCreative(
 
   if (!image) {
     throw new Error(
-      "Gemini nÃ£o retornou imagem. Verifique se responseModalities inclui 'Image' e se o prompt solicita geraÃ§Ã£o de imagem."
+      "Gemini não retornou imagem. Verifique se responseModalities inclui 'Image' e se o prompt solicita geração de imagem."
     );
   }
 
@@ -99,8 +99,8 @@ export async function generateCreative(
 }
 
 /**
- * Testa conexÃ£o com a API do Gemini.
- * EP08: Aceita model dinÃ¢mico.
+ * Testa conexão com a API do Gemini.
+ * EP08: Aceita model dinâmico.
  */
 export async function testConnection(apiKey: string, model: string = "gemini-2.5-flash"): Promise<boolean> {
   try {

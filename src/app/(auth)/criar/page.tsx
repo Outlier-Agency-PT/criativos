@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useEffect } from "react";
@@ -8,21 +8,21 @@ import { WizardShellSkeleton } from "@/components/criar/wizard-shell";
 import { useOrgId } from "@/components/criar/use-org-id";
 
 /**
- * /criar â€” lista de projetos (histÃ³rico) + botÃ£o "Novo criativo".
+ * /criar — lista de projetos (histórico) + botão "Novo criativo".
  *
  * Rotas relacionadas:
- *  - /criar/novo          â†’ wizard pra projeto novo (escolha Template vs Briefing)
- *  - /criar/[projectId]   â†’ abre/edita um projeto existente (deep-link bookmarkÃ¡vel)
+ *  - /criar/novo          → wizard pra projeto novo (escolha Template vs Briefing)
+ *  - /criar/[projectId]   → abre/edita um projeto existente (deep-link bookmarkável)
  *
  * Backward compat: links antigos com ?regenerate=ID, ?new=true e ?briefing=true
- * sÃ£o redirecionados pras novas rotas.
+ * são redirecionados pras novas rotas.
  */
 export default function CriarPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { orgId, loading } = useOrgId();
 
-  // Backward compat â€” redireciona query params legados pras rotas novas.
+  // Backward compat — redireciona query params legados pras rotas novas.
   const legacyRegenerate = searchParams.get("regenerate");
   const legacyNew = searchParams.get("new") === "true";
   const legacyBriefing = searchParams.get("briefing") === "true";

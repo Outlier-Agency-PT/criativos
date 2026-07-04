@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect } from "react";
@@ -24,7 +24,7 @@ import type { BriefingItem, BriefingPrompt, BriefingFormat } from "@/lib/briefin
 const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_REF_IMAGE_SIZE = 4 * 1024 * 1024;
 
-/** Imagem de referÃªncia subida no modo briefing (rodÃ­zio entre os criativos). */
+/** Imagem de referência subida no modo briefing (rodízio entre os criativos). */
 interface BriefingRefImage {
   file_path: string;
   url: string;
@@ -66,7 +66,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
   const [selectedFormats, setSelectedFormats] = useState<BriefingFormat[]>([DEFAULT_FORMATS[0]]);
   const [items, setItems] = useState<BriefingItem[]>([]);
 
-  // Imagens de referÃªncia (opcional) â€” rodÃ­zio entre criativos + instruÃ§Ã£o
+  // Imagens de referência (opcional) — rodízio entre criativos + instrução
   const [refImages, setRefImages] = useState<BriefingRefImage[]>([]);
   const [imageInstruction, setImageInstruction] = useState("");
   const [uploadingRefs, setUploadingRefs] = useState(false);
@@ -107,11 +107,11 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
     setItems((prev) => prev.filter((i) => i.id !== id));
   }
 
-  // â”€â”€ Imagens de referÃªncia (upload no bucket expert-photos) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Imagens de referência (upload no bucket expert-photos) ─────────────────
   async function handleRefImagesUpload(files: FileList | File[]) {
     const fileArray = Array.from(files).filter((f) => {
       if (!PHOTO_TYPES.includes(f.type)) {
-        setError(`${f.name}: tipo nÃ£o suportado (use JPG, PNG ou WEBP).`);
+        setError(`${f.name}: tipo não suportado (use JPG, PNG ou WEBP).`);
         return false;
       }
       return true;
@@ -127,7 +127,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
         let file = raw;
         try {
           file = await optimizeImageForUpload(raw, { maxBytes: MAX_REF_IMAGE_SIZE, maxDimension: 1600 });
-        } catch { /* segue com o ficheiro original se a otimizaÃ§Ã£o falhar */ }
+        } catch { /* segue com o ficheiro original se a otimização falhar */ }
 
         const formData = new FormData();
         formData.append("file", file);
@@ -137,7 +137,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Falha no upload da imagem.");
 
-        // expert-photos Ã© bucket privado â†’ gerar signed URL pro preview
+        // expert-photos é bucket privado → gerar signed URL pro preview
         let url = "";
         const { data: signed } = await supabase.storage
           .from("expert-photos")
@@ -167,8 +167,8 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
     setRefImages((prev) => prev.filter((r) => r.file_path !== filePath));
   }
 
-  // â”€â”€ AÃ§Ãµes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  // Passo 1 â†’ 2: parse + build-prompts (faz os dois de uma vez ao avanÃ§ar)
+  // ── Ações ────────────────────────────────────────────────────────────────
+  // Passo 1 → 2: parse + build-prompts (faz os dois de uma vez ao avançar)
   async function handleProcessBriefing() {
     setError(null);
     if (!markdown.trim()) return setError("Cole o briefing primeiro.");
@@ -212,7 +212,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
     setPrompts((prev) => prev.map((p, i) => (i === idx ? { ...p, prompt: value } : p)));
   }
 
-  // Aplicar uma instruÃ§Ã£o a TODOS os prompts de uma vez (anexa no fim de cada um).
+  // Aplicar uma instrução a TODOS os prompts de uma vez (anexa no fim de cada um).
   const [bulkInstruction, setBulkInstruction] = useState("");
   function applyToAll() {
     const txt = bulkInstruction.trim();
@@ -221,7 +221,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
     setBulkInstruction("");
   }
 
-  // Passo 2 â†’ 3: gera
+  // Passo 2 → 3: gera
   async function handleGenerate() {
     setError(null);
     if (prompts.length === 0) return setError("Nenhum prompt para gerar.");
@@ -241,7 +241,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
         }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Falha ao preparar a geraÃ§Ã£o.");
+      if (!res.ok) throw new Error(json.error || "Falha ao preparar a geração.");
       setProjectId(json.projectId);
       const initial: GeneratedCreative[] = (json.creatives || []).map(
         (c: { id: string; prompt: string }, i: number) => ({
@@ -290,7 +290,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
     if (projectId) window.open(`/api/generate/download?projectId=${projectId}`, "_blank");
   }
 
-  // â”€â”€ NavegaÃ§Ã£o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Navegação ─────────────────────────────────────────────────────────────
   function canAdvance(): boolean {
     if (currentStep === 0) return markdown.trim().length > 0 && !!brandKitId && selectedFormats.length > 0;
     if (currentStep === 1) return prompts.length > 0;
@@ -306,7 +306,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
 
   const completedCount = creatives.filter((c) => c.status === "completed").length;
 
-  // â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Render ──────────────────────────────────────────────────────────────
   return (
     <div className="space-y-6 pb-28">
       {/* Header */}
@@ -363,11 +363,11 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
         </div>
       )}
 
-      {/* ConteÃºdo do step */}
+      {/* Conteúdo do step */}
       <div className="theme-panel rounded-[26px] p-6 min-h-[400px]">
         <h2 className="text-lg font-semibold text-text-primary mb-4">{STEPS[currentStep]?.label}</h2>
 
-        {/* PASSO 1 â€” Setup + Briefing */}
+        {/* PASSO 1 — Setup + Briefing */}
         {currentStep === 0 && (
           <div className="space-y-4">
             <div className="grid gap-4 lg:grid-cols-2">
@@ -421,23 +421,23 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
                 value={markdown}
                 onChange={(e) => setMarkdown(e.target.value)}
                 rows={14}
-                placeholder="Cole aqui o briefing com os criativos. Cada um pode ter ideia, copy e direÃ§Ã£o visual (ou um prompt pronto)..."
+                placeholder="Cole aqui o briefing com os criativos. Cada um pode ter ideia, copy e direção visual (ou um prompt pronto)..."
                 className="w-full px-4 py-3 rounded-xl bg-surface-100 border border-border-subtle text-text-primary text-sm font-mono leading-relaxed"
               />
               <p className="text-xs text-text-muted">
-                A IA separa cada criativo. Se o briefing jÃ¡ trouxer prompts prontos, eles sÃ£o usados direto.
+                A IA separa cada criativo. Se o briefing já trouxer prompts prontos, eles são usados direto.
               </p>
             </div>
 
-            {/* Imagens de referÃªncia (opcional) */}
+            {/* Imagens de referência (opcional) */}
             <div className="theme-panel rounded-[22px] p-4 space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <label className="block text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">
-                  Imagens de referÃªncia (opcional)
+                  Imagens de referência (opcional)
                 </label>
                 {refImages.length > 0 && (
                   <span className="text-[11px] text-text-muted">
-                    {refImages.length} imagem{refImages.length > 1 ? "ns" : ""} Â· rodÃ­zio entre os criativos
+                    {refImages.length} imagem{refImages.length > 1 ? "ns" : ""} · rodízio entre os criativos
                   </span>
                 )}
               </div>
@@ -505,25 +505,25 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
                   value={imageInstruction}
                   onChange={(e) => setImageInstruction(e.target.value)}
                   rows={3}
-                  placeholder="Ex.: usar como fundo preservado (foto real da franquia) com o texto por cima; ou usar como referÃªncia de estilo/cores."
+                  placeholder="Ex.: usar como fundo preservado (foto real da franquia) com o texto por cima; ou usar como referência de estilo/cores."
                   className="w-full px-4 py-3 rounded-xl bg-surface-100 border border-border-subtle text-text-primary text-sm leading-relaxed"
                 />
                 <p className="text-xs text-text-muted">
-                  As imagens entram no rodÃ­zio: cada criativo usa uma delas como referÃªncia, seguindo a instruÃ§Ã£o acima.
+                  As imagens entram no rodízio: cada criativo usa uma delas como referência, seguindo a instrução acima.
                 </p>
               </div>
             </div>
           </div>
         )}
 
-        {/* PASSO 2 â€” Itens + Prompts editÃ¡veis */}
+        {/* PASSO 2 — Itens + Prompts editáveis */}
         {currentStep === 1 && (
           <div className="space-y-4">
             <p className="text-sm text-text-muted">
-              {prompts.length} {prompts.length === 1 ? "prompt" : "prompts"} de {items.length} {items.length === 1 ? "criativo" : "criativos"} Ã— {selectedFormats.length} formato(s). Revise e edite antes de gerar.
+              {prompts.length} {prompts.length === 1 ? "prompt" : "prompts"} de {items.length} {items.length === 1 ? "criativo" : "criativos"} × {selectedFormats.length} formato(s). Revise e edite antes de gerar.
             </p>
 
-            {/* Aplicar instruÃ§Ã£o a todos os prompts de uma vez */}
+            {/* Aplicar instrução a todos os prompts de uma vez */}
             <div className="theme-panel rounded-[22px] p-3 flex flex-col sm:flex-row gap-2 items-stretch sm:items-end">
               <div className="flex-1">
                 <label className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-text-muted mb-1">
@@ -533,7 +533,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
                   value={bulkInstruction}
                   onChange={(e) => setBulkInstruction(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") applyToAll(); }}
-                  placeholder="Ex: deixe o fundo mais escuro / adicione um selo de garantia / varie o cenÃ¡rio..."
+                  placeholder="Ex: deixe o fundo mais escuro / adicione um selo de garantia / varie o cenário..."
                   className="w-full px-3 py-2 rounded-lg bg-surface-100 border border-border-subtle text-text-primary text-xs"
                 />
               </div>
@@ -555,9 +555,9 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-text-primary truncate">
                         {item?.titulo || p.itemId}
-                        {item?.angulo && <span className="text-text-muted font-normal"> Â· {item.angulo}</span>}
+                        {item?.angulo && <span className="text-text-muted font-normal"> · {item.angulo}</span>}
                       </p>
-                      <p className="text-xs text-text-muted">{p.formatLabel} Â· {p.width}x{p.height}</p>
+                      <p className="text-xs text-text-muted">{p.formatLabel} · {p.width}x{p.height}</p>
                     </div>
                     {items.length > 1 && (
                       <button
@@ -569,7 +569,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
                       </button>
                     )}
                   </div>
-                  {item?.headline && <p className="text-xs text-text-secondary">ðŸ“° {item.headline}</p>}
+                  {item?.headline && <p className="text-xs text-text-secondary">📰 {item.headline}</p>}
                   <textarea
                     value={p.prompt}
                     onChange={(e) => updatePrompt(idx, e.target.value)}
@@ -582,11 +582,11 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
           </div>
         )}
 
-        {/* PASSO 3 â€” Gerar / grade */}
+        {/* PASSO 3 — Gerar / grade */}
         {currentStep === 2 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-text-muted">{completedCount}/{creatives.length} concluÃ­dos</p>
+              <p className="text-sm text-text-muted">{completedCount}/{creatives.length} concluídos</p>
               {projectId && completedCount > 0 && (
                 <button
                   onClick={handleDownloadZip}
@@ -620,7 +620,7 @@ export function BriefingMode({ orgId, onBack }: { orgId: string; onBack: () => v
         )}
       </div>
 
-      {/* NavegaÃ§Ã£o flutuante (some no passo 3) */}
+      {/* Navegação flutuante (some no passo 3) */}
       {currentStep < 2 && (
         <div className="theme-panel-strong flex items-center justify-between rounded-[22px] px-4 py-3 shadow-[0_18px_48px_rgba(0,0,0,0.36)]">
           <button

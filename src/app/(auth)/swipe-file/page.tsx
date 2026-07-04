@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useCallback } from "react";
@@ -276,7 +276,7 @@ export default function SwipeFilePage() {
             onClick={runAnalyzeBatch}
             disabled={analyzingBatch || !orgId}
             className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-surface-100 border border-border-subtle text-text-secondary text-xs font-medium hover:bg-surface-150 disabled:opacity-50"
-            title="Analisa via IA todos os templates ainda nÃ£o analisados (atÃ© 30 por vez)"
+            title="Analisa via IA todos os templates ainda não analisados (até 30 por vez)"
           >
             {analyzingBatch ? "Analisando..." : batchResult || "Analisar pendentes"}
           </button>
@@ -301,7 +301,7 @@ export default function SwipeFilePage() {
         />
       </div>
 
-      {/* Filtros â€” V1 Cards por categoria */}
+      {/* Filtros — V1 Cards por categoria */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {/* Formato */}
         <div className="bg-surface-050 border border-border-subtle rounded-xl p-3.5">

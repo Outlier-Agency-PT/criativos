@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { createServiceSupabase } from "@/lib/api-auth";
 import { getCreditBalance } from "@/lib/usage";
@@ -7,7 +7,7 @@ export const maxDuration = 60;
 
 /**
  * POST /api/generate
- * PREPARA criativos para geraÃ§Ã£o â€” NÃƒO gera em background.
+ * PREPARA criativos para geração — NÃO gera em background.
  * Frontend chama /api/generate/one para cada criativo individualmente.
  */
 export async function POST(request: NextRequest) {
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     } = await request.json();
 
     if (!projectId) {
-      return NextResponse.json({ error: "projectId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "projectId obrigatório" }, { status: 400 });
     }
 
     const { orgId, supabase: authSupabase } = await requireAuth();
@@ -39,10 +39,10 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!projectCheck) {
-      return NextResponse.json({ error: "Projeto nÃ£o encontrado" }, { status: 404 });
+      return NextResponse.json({ error: "Projeto não encontrado" }, { status: 404 });
     }
 
-    // Service key para operaÃ§Ãµes internas
+    // Service key para operações internas
     const supabase = await createServiceSupabase();
 
     // Buscar projeto completo
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (projError || !project) {
-      return NextResponse.json({ error: "Projeto nÃ£o encontrado" }, { status: 404 });
+      return NextResponse.json({ error: "Projeto não encontrado" }, { status: 404 });
     }
 
     // Buscar templates, copies e fotos
@@ -92,26 +92,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // NÃƒO apagar criativos anteriores. Re-gerar ACUMULA os novos junto dos antigos
-    // â€” o usuÃ¡rio nÃ£o perde (nem paga 2x por) trabalho jÃ¡ gerado. Para remover,
-    // ele apaga manualmente os criativos que nÃ£o quer.
-    // (Antes: este bloco deletava TODOS os criativos do projeto a cada geraÃ§Ã£o.)
+    // NÃO apagar criativos anteriores. Re-gerar ACUMULA os novos junto dos antigos
+    // — o usuário não perde (nem paga 2x por) trabalho já gerado. Para remover,
+    // ele apaga manualmente os criativos que não quer.
+    // (Antes: este bloco deletava TODOS os criativos do projeto a cada geração.)
 
-    // EP08: Validar limite de 14 imagens de referÃªncia
+    // EP08: Validar limite de 14 imagens de referência
     const totalRefs = templates.length + photos.length + (project.show_logo && project.brand_kit?.logo_path ? 1 : 0);
     if (totalRefs > 14) {
       return NextResponse.json(
-        { error: `MÃ¡ximo de 14 referÃªncias. Atual: ${totalRefs}. Reduza templates ou fotos.` },
+        { error: `Máximo de 14 referências. Atual: ${totalRefs}. Reduza templates ou fotos.` },
         { status: 400 }
       );
     }
 
-    // Modo de geraÃ§Ã£o: "per_copy" ou "matrix" (templates Ã— copies)
+    // Modo de geração: "per_copy" ou "matrix" (templates × copies)
     const generationMode = requestedMode === "matrix" || requestedMode === "per_copy"
       ? requestedMode
       : templates.length > 1 ? "matrix" : "per_copy";
 
-    // Formatos selecionados pelo usuÃ¡rio (1+ tamanhos). Fallback: formato Ãºnico do projeto.
+    // Formatos selecionados pelo usuário (1+ tamanhos). Fallback: formato único do projeto.
     type FormatSpec = { width: number; height: number; label: string };
     const rawFormats = Array.isArray(project.selected_formats) ? project.selected_formats : null;
     const formats: FormatSpec[] = (rawFormats && rawFormats.length > 0
@@ -166,20 +166,20 @@ export async function POST(request: NextRequest) {
     }
 
     // EP-14.05: gate de batch (UX / fail-fast). Antes de enfileirar os N creatives,
-    // checa o saldo de crÃ©ditos da org e cria APENAS os que cabem no saldo (geraÃ§Ã£o
-    // parcial). Isto evita enfileirar dezenas de jobs que estourariam no crÃ©dito 1 e
-    // acumulariam creatives Ã³rfÃ£os em status error (CON-007: este endpoint sÃ³ faz
-    // INSERT, nunca delete; o corte Ã© por criar MENOS, nÃ£o por apagar).
+    // checa o saldo de créditos da org e cria APENAS os que cabem no saldo (geração
+    // parcial). Isto evita enfileirar dezenas de jobs que estourariam no crédito 1 e
+    // acumulariam creatives órfãos em status error (CON-007: este endpoint só faz
+    // INSERT, nunca delete; o corte é por criar MENOS, não por apagar).
     //
-    // DecisÃ£o travada:
+    // Decisão travada:
     //   credit_balance IS NULL (ilimitada) -> bypassa, cria todos N.
     //   credit_balance >= N               -> cria todos N.
     //   0 < credit_balance < N            -> cria apenas credit_balance creatives, partial=true.
     //   credit_balance == 0               -> 429, cria 0 creatives.
     //
-    // NÃƒO debita aqui. O dÃ©bito acontece no /api/generate/one quando cada criativo
-    // de fato gera, via RPC atÃ´mica decrement_credit (EP-14.04), que continua sendo o
-    // ponto de verdade final sob concorrÃªncia. Este gate Ã© sÃ³ UX/fail-fast.
+    // NÃO debita aqui. O débito acontece no /api/generate/one quando cada criativo
+    // de fato gera, via RPC atômica decrement_credit (EP-14.04), que continua sendo o
+    // ponto de verdade final sob concorrência. Este gate é só UX/fail-fast.
     const requested = creativesToGenerate.length;
     const creditBalance = await getCreditBalance(supabase, orgId);
 
@@ -190,7 +190,7 @@ export async function POST(request: NextRequest) {
       if (creditBalance <= 0) {
         return NextResponse.json(
           {
-            error: "Saldo de crÃ©ditos esgotado, recarregue.",
+            error: "Saldo de créditos esgotado, recarregue.",
             enqueued: 0,
             requested,
             partial: false,
@@ -201,9 +201,9 @@ export async function POST(request: NextRequest) {
         );
       }
       if (creditBalance < requested) {
-        // Trunca a lista para caber no saldo. A lista jÃ¡ estÃ¡ montada na ordem de
-        // geraÃ§Ã£o (templates x copies x formatos); cortar pelo inÃ­cio preserva a
-        // prioridade de enfileiramento e cria sÃ³ os primeiros credit_balance itens.
+        // Trunca a lista para caber no saldo. A lista já está montada na ordem de
+        // geração (templates x copies x formatos); cortar pelo início preserva a
+        // prioridade de enfileiramento e cria só os primeiros credit_balance itens.
         creativesToGenerate = creativesToGenerate.slice(0, creditBalance);
         partial = true;
         reason = "partial_credits";
@@ -219,7 +219,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Falha ao criar criativos: ${insertError.message}` }, { status: 500 });
     }
 
-    // total_creatives = total acumulado no projeto (nÃ£o sÃ³ os novos desta rodada)
+    // total_creatives = total acumulado no projeto (não só os novos desta rodada)
     const { count: totalCount } = await supabase
       .from("criativos_creatives")
       .select("id", { count: "exact", head: true })
@@ -231,9 +231,9 @@ export async function POST(request: NextRequest) {
       .eq("id", projectId);
 
     // Retorna lista de IDs para o frontend gerar 1 por vez.
-    // Contrato EP-14.05: enqueued/requested/partial/reason indicam geraÃ§Ã£o parcial
+    // Contrato EP-14.05: enqueued/requested/partial/reason indicam geração parcial
     // (saldo insuficiente para todos os solicitados). Campos legados (total,
-    // creativeIds) preservados para nÃ£o quebrar o frontend que jÃ¡ consome este endpoint.
+    // creativeIds) preservados para não quebrar o frontend que já consome este endpoint.
     const enqueued = creatives!.length;
     return NextResponse.json({
       projectId,

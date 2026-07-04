@@ -1,4 +1,4 @@
-﻿import type { GenerateCreativeInput, GenerateCreativeResult } from "./gemini";
+import type { GenerateCreativeInput, GenerateCreativeResult } from "./gemini";
 import { getTimeout } from "./models";
 import { ENDPOINTS } from "@/lib/config/endpoints";
 
@@ -23,7 +23,7 @@ interface OpenRouterResponse {
 
 /**
  * Mapeia model ID interno para formato OpenRouter.
- * Ex: 'gemini-3.1-flash-image-preview' â†’ 'google/gemini-3.1-flash-image-preview'
+ * Ex: 'gemini-3.1-flash-image-preview' → 'google/gemini-3.1-flash-image-preview'
  */
 function toOpenRouterModel(model: string): string {
   if (model.startsWith("google/")) return model;
@@ -32,7 +32,7 @@ function toOpenRouterModel(model: string): string {
 
 /**
  * Gera um criativo usando OpenRouter como fallback.
- * EP08: Aceita model dinÃ¢mico com prefixo google/ automÃ¡tico.
+ * EP08: Aceita model dinâmico com prefixo google/ automático.
  */
 export async function generateCreative(
   apiKey: string,
@@ -41,7 +41,7 @@ export async function generateCreative(
 ): Promise<GenerateCreativeResult> {
   const content: Array<Record<string, unknown>> = [
     { type: "text", text: input.prompt },
-    // Modo composiÃ§Ã£o: a foto de fundo entra como PRIMEIRA imagem (a "cena final").
+    // Modo composição: a foto de fundo entra como PRIMEIRA imagem (a "cena final").
     ...(input.background
       ? [{ type: "image_url", image_url: { url: `data:image/png;base64,${input.background.toString("base64")}` } }]
       : []),
@@ -93,7 +93,7 @@ export async function generateCreative(
   }
 
   if (!data.choices?.length) {
-    throw new Error("OpenRouter nÃ£o retornou choices na resposta");
+    throw new Error("OpenRouter não retornou choices na resposta");
   }
 
   const messageContent = data.choices[0].message.content;
@@ -140,7 +140,7 @@ export async function generateCreative(
 
   if (!image) {
     throw new Error(
-      "OpenRouter nÃ£o retornou imagem. Verifique se modalities inclui 'image'."
+      "OpenRouter não retornou imagem. Verifique se modalities inclui 'image'."
     );
   }
 
@@ -148,8 +148,8 @@ export async function generateCreative(
 }
 
 /**
- * Testa conexÃ£o com OpenRouter.
- * EP08: Aceita model dinÃ¢mico.
+ * Testa conexão com OpenRouter.
+ * EP08: Aceita model dinâmico.
  */
 export async function testConnection(apiKey: string, model: string = "gemini-2.5-flash"): Promise<boolean> {
   try {

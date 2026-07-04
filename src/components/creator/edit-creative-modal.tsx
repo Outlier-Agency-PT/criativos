@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useMemo, useRef, useState } from "react";
@@ -75,10 +75,10 @@ export function EditCreativeModal({ creativeId, imageUrl, label, onClose, onSave
   const [selectedPresets, setSelectedPresets] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Imagem mostrada no preview â€” comeÃ§a com a original, atualiza apÃ³s cada ediÃ§Ã£o bem-sucedida
+  // Imagem mostrada no preview — começa com a original, atualiza após cada edição bem-sucedida
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(imageUrl);
   const [lastSavedAt, setLastSavedAt] = useState<number | null>(null);
-  // Foto de referÃªncia subida sÃ³ pra essa ediÃ§Ã£o (face swap)
+  // Foto de referência subida só pra essa edição (face swap)
   const [referencePhoto, setReferencePhoto] = useState<{ file: File; previewUrl: string } | null>(null);
   const referenceInputRef = useRef<HTMLInputElement>(null);
 
@@ -124,7 +124,7 @@ export function EditCreativeModal({ creativeId, imageUrl, label, onClose, onSave
     try {
       let res: Response;
       if (referencePhoto) {
-        // Com foto de referÃªncia: usa FormData (multipart)
+        // Com foto de referência: usa FormData (multipart)
         const fd = new FormData();
         if (creativeId) fd.append("creativeId", creativeId);
         fd.append("instruction", instruction);
@@ -148,8 +148,8 @@ export function EditCreativeModal({ creativeId, imageUrl, label, onClose, onSave
         throw new Error(data.error || "Erro ao editar imagem");
       }
 
-      // Atualiza o preview com a nova versÃ£o (modal continua aberta pra mais ajustes)
-      // Cache-bust pra forÃ§ar o <img> a recarregar mesmo se a URL for igual.
+      // Atualiza o preview com a nova versão (modal continua aberta pra mais ajustes)
+      // Cache-bust pra forçar o <img> a recarregar mesmo se a URL for igual.
       const newUrl = data.url ? `${data.url}${data.url.includes("?") ? "&" : "?"}v=${Date.now()}` : null;
       setCurrentImageUrl(newUrl);
       setLastSavedAt(Date.now());
@@ -157,7 +157,7 @@ export function EditCreativeModal({ creativeId, imageUrl, label, onClose, onSave
       setInstruction("");
       clearReferencePhoto();
       onSaved({ url: data.url || null });
-      // NÃƒO fecha â€” usuÃ¡rio continua editando ou fecha manualmente.
+      // NÃO fecha — usuário continua editando ou fecha manualmente.
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao editar imagem");
     } finally {
@@ -219,7 +219,7 @@ export function EditCreativeModal({ creativeId, imageUrl, label, onClose, onSave
               )}
             </div>
 
-            {/* Foto de referÃªncia â€” abaixo da imagem do criativo */}
+            {/* Foto de referência — abaixo da imagem do criativo */}
             <div className="mt-3 rounded-2xl border border-border-subtle bg-surface-000 p-3">
               <div className="flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Foto de referencia (opcional)</p>
@@ -260,10 +260,10 @@ export function EditCreativeModal({ creativeId, imageUrl, label, onClose, onSave
             </div>
           </div>
 
-          {/* Coluna direita: 2 zonas â€” ajustes (scroll), instruÃ§Ã£o tamanho original, aÃ§Ãµes fixas */}
+          {/* Coluna direita: 2 zonas — ajustes (scroll), instrução tamanho original, ações fixas */}
           <div className="flex min-h-0 flex-col">
 
-            {/* Zona 1: ajustes rÃ¡pidos COM SCROLL PRÃ“PRIO */}
+            {/* Zona 1: ajustes rápidos COM SCROLL PRÓPRIO */}
             <div className="min-h-0 flex-1 overflow-y-auto p-5 pb-3">
               <div className="rounded-2xl border border-border-subtle bg-surface-050 p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Ajustes rapidos</p>
@@ -295,7 +295,7 @@ export function EditCreativeModal({ creativeId, imageUrl, label, onClose, onSave
               </div>
             </div>
 
-            {/* Zona 2: instruÃ§Ã£o livre (tamanho original, fixo) */}
+            {/* Zona 2: instrução livre (tamanho original, fixo) */}
             <div className="flex-shrink-0 border-t border-border-subtle px-5 pt-4 pb-3">
               <div className="rounded-2xl border border-border-subtle bg-surface-050 p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Instrucao da edicao</p>
@@ -317,7 +317,7 @@ export function EditCreativeModal({ creativeId, imageUrl, label, onClose, onSave
               )}
             </div>
 
-            {/* Zona 3: barra de aÃ§Ã£o FIXA embaixo, sempre visÃ­vel */}
+            {/* Zona 3: barra de ação FIXA embaixo, sempre visível */}
             <div className="flex flex-shrink-0 items-center justify-between gap-3 border-t border-border-subtle bg-surface-050 px-5 py-3">
               <span className="text-[10px] text-text-muted">
                 {selectedPresets.length > 0 && `${selectedPresets.length} ajuste${selectedPresets.length > 1 ? "s" : ""} selecionado${selectedPresets.length > 1 ? "s" : ""}`}

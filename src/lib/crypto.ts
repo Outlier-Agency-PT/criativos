@@ -1,4 +1,4 @@
-﻿import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
+import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
 const ALGORITHM = "aes-256-gcm";
 const IV_LENGTH = 12;
@@ -8,7 +8,7 @@ function getEncryptionKey(): Buffer {
   const key = process.env.ENCRYPTION_KEY;
   if (!key || key.length !== 64) {
     throw new Error(
-      "ENCRYPTION_KEY nÃ£o configurada ou invÃ¡lida. Deve ter 64 caracteres hex (32 bytes)."
+      "ENCRYPTION_KEY não configurada ou inválida. Deve ter 64 caracteres hex (32 bytes)."
     );
   }
   return Buffer.from(key, "hex");
@@ -42,7 +42,7 @@ export function encryptKey(plaintext: string): string {
 export function decryptKey(encrypted: string): string {
   const parts = encrypted.split(":");
   if (parts.length !== 3) {
-    throw new Error("Formato de key criptografada invÃ¡lido. Esperado: iv:authTag:ciphertext");
+    throw new Error("Formato de key criptografada inválido. Esperado: iv:authTag:ciphertext");
   }
 
   const [ivB64, authTagB64, ciphertext] = parts;
@@ -51,10 +51,10 @@ export function decryptKey(encrypted: string): string {
   const authTag = Buffer.from(authTagB64, "base64");
 
   if (iv.length !== IV_LENGTH) {
-    throw new Error(`IV invÃ¡lido: esperado ${IV_LENGTH} bytes, recebido ${iv.length}`);
+    throw new Error(`IV inválido: esperado ${IV_LENGTH} bytes, recebido ${iv.length}`);
   }
   if (authTag.length !== AUTH_TAG_LENGTH) {
-    throw new Error(`AuthTag invÃ¡lido: esperado ${AUTH_TAG_LENGTH} bytes, recebido ${authTag.length}`);
+    throw new Error(`AuthTag inválido: esperado ${AUTH_TAG_LENGTH} bytes, recebido ${authTag.length}`);
   }
 
   const decipher = createDecipheriv(ALGORITHM, key, iv);

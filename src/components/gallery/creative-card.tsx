@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { cn } from "@/lib/utils";
@@ -22,7 +22,7 @@ interface CreativeCardProps {
 
 const statusConfig: Record<string, { label: string; className: string; icon: React.ElementType }> = {
   approved: { label: "Aprovado", className: "bg-green-500/20 text-green-400", icon: CheckCircle2 },
-  completed: { label: "ConcluÃ­do", className: "bg-blue-500/20 text-blue-400", icon: CheckCircle2 },
+  completed: { label: "Concluído", className: "bg-blue-500/20 text-blue-400", icon: CheckCircle2 },
   pending: { label: "Pendente", className: "bg-yellow-500/20 text-yellow-400", icon: Clock },
   generating: { label: "Gerando", className: "bg-yellow-500/20 text-yellow-400", icon: Clock },
   error: { label: "Erro", className: "bg-red-500/20 text-red-400", icon: AlertCircle },

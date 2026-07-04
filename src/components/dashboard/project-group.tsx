@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState } from "react";
@@ -46,12 +46,12 @@ export function ProjectGroup({ group }: ProjectGroupProps) {
     <div className="theme-panel rounded-[22px] overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-4 p-4">
-        {/* Thumbnails + nome â€” clique vai pro projeto */}
+        {/* Thumbnails + nome — clique vai pro projeto */}
         <div
           onClick={() => router.push(`/criar?regenerate=${group.project_id}`)}
           className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer hover:opacity-80 transition-opacity"
         >
-          {/* Thumbnails preview â€” 4 primeiros criativos */}
+          {/* Thumbnails preview — 4 primeiros criativos */}
           <div className="flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden bg-surface-100 grid grid-cols-2 grid-rows-2 gap-px border border-white/5">
             {[0, 1, 2, 3].map((i) => {
               const c = completedCreatives[i];
@@ -88,7 +88,7 @@ export function ProjectGroup({ group }: ProjectGroupProps) {
           </div>
         </div>
 
-        {/* Setinha â€” expande/colapsa galeria */}
+        {/* Setinha — expande/colapsa galeria */}
         <button
           onClick={() => setExpanded(!expanded)}
           className="flex-shrink-0 p-2.5 rounded-xl hover:bg-champagne-alpha-10 transition-colors"
@@ -102,7 +102,7 @@ export function ProjectGroup({ group }: ProjectGroupProps) {
         </button>
       </div>
 
-      {/* Expanded content â€” list of creatives */}
+      {/* Expanded content — list of creatives */}
       {expanded && (
         <div className="border-t border-border-subtle px-4 py-3">
           {group.creatives.length === 0 ? (

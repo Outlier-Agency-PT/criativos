@@ -1,29 +1,29 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { generateTextWithRotation } from "@/lib/api-key-rotator";
 import type { BriefingItem } from "@/lib/briefing-types";
 
-// A extraÃ§Ã£o via IA pode levar alguns segundos.
+// A extração via IA pode levar alguns segundos.
 export const maxDuration = 120;
 
-const EXTRACTION_INSTRUCTION = `VocÃª Ã© um extrator de briefings de criativos. Recebe um documento markdown com vÃ¡rios criativos (geralmente blocos separados por tÃ­tulos "# ...") e devolve um JSON estruturado.
+const EXTRACTION_INSTRUCTION = `Você é um extrator de briefings de criativos. Recebe um documento markdown com vários criativos (geralmente blocos separados por títulos "# ...") e devolve um JSON estruturado.
 
 Para CADA criativo no documento, extraia:
-- "titulo": o tÃ­tulo do bloco (linha de cabeÃ§alho).
-- "angulo": o Ã¢ngulo estratÃ©gico (A/B/C/D/E ou similar), se houver. SenÃ£o omita.
+- "titulo": o título do bloco (linha de cabeçalho).
+- "angulo": o ângulo estratégico (A/B/C/D/E ou similar), se houver. Senão omita.
 - "headline": a headline principal que deve aparecer na arte, se houver.
 - "subheadline": a subheadline de apoio (sub-riddle line), se houver.
-- "ponte": o texto de ponte / chamada â€” o corpo que conecta a ideia principal ao call to action (pode ser o "texto de apoio", "primary text" ou frase de transiÃ§Ã£o), se houver.
-- "cta": o call to action (vira botÃ£o na arte), se houver.
-- "direcao_visual": a descriÃ§Ã£o visual do criativo (o que aparece na imagem). Este campo Ã© OBRIGATÃ“RIO â€” se o bloco nÃ£o tiver uma seÃ§Ã£o de direÃ§Ã£o visual explÃ­cita, infira uma descriÃ§Ã£o curta a partir do conteÃºdo.
-- "texto_apoio": o texto de apoio / primary text do anÃºncio, se houver.
-- "prompt_pronto": se o bloco jÃ¡ contÃ©m um PROMPT DE GERAÃ‡ÃƒO completo escrito Ã  mÃ£o (geralmente dentro de cercas de cÃ³digo \`\`\`, comeÃ§ando com algo como "Crie uma imagem..." e contendo ESTILO/FUNDO/PALETA/TIPOGRAFIA/COMPOSIÃ‡ÃƒO), copie esse prompt INTEIRO e EXATO aqui (sem as cercas \`\`\`). Se nÃ£o houver prompt pronto no bloco, OMITA este campo.
+- "ponte": o texto de ponte / chamada — o corpo que conecta a ideia principal ao call to action (pode ser o "texto de apoio", "primary text" ou frase de transição), se houver.
+- "cta": o call to action (vira botão na arte), se houver.
+- "direcao_visual": a descrição visual do criativo (o que aparece na imagem). Este campo é OBRIGATÓRIO — se o bloco não tiver uma seção de direção visual explícita, infira uma descrição curta a partir do conteúdo.
+- "texto_apoio": o texto de apoio / primary text do anúncio, se houver.
+- "prompt_pronto": se o bloco já contém um PROMPT DE GERAÇÃO completo escrito à mão (geralmente dentro de cercas de código \`\`\`, começando com algo como "Crie uma imagem..." e contendo ESTILO/FUNDO/PALETA/TIPOGRAFIA/COMPOSIÇÃO), copie esse prompt INTEIRO e EXATO aqui (sem as cercas \`\`\`). Se não houver prompt pronto no bloco, OMITA este campo.
 
 REGRAS:
-- Preserve EXATAMENTE a acentuaÃ§Ã£o e pontuaÃ§Ã£o do portuguÃªs (Ã¡ Ã© Ã­ Ã³ Ãº Ã£ Ãµ Ã§ Ãª Ã¢ etc). NUNCA remova acentos.
-- NÃƒO invente campos que nÃ£o existem no bloco (exceto direcao_visual, que pode ser inferida).
-- NÃƒO use travessÃ£o (â€”) em nenhum texto.
-- Responda SOMENTE com um objeto JSON vÃ¡lido no formato: {"items": [ {...}, {...} ]}. Sem texto antes ou depois, sem cercas de cÃ³digo.
+- Preserve EXATAMENTE a acentuação e pontuação do português (á é í ó ú ã õ ç ê â etc). NUNCA remova acentos.
+- NÃO invente campos que não existem no bloco (exceto direcao_visual, que pode ser inferida).
+- NÃO use travessão (—) em nenhum texto.
+- Responda SOMENTE com um objeto JSON válido no formato: {"items": [ {...}, {...} ]}. Sem texto antes ou depois, sem cercas de código.
 
 Documento markdown a processar:
 `;
@@ -35,13 +35,13 @@ function extractJson(raw: string): unknown {
   try {
     return JSON.parse(trimmed);
   } catch {
-    // procura o primeiro { e o Ãºltimo } e tenta o miolo
+    // procura o primeiro { e o último } e tenta o miolo
     const start = trimmed.indexOf("{");
     const end = trimmed.lastIndexOf("}");
     if (start !== -1 && end !== -1 && end > start) {
       return JSON.parse(trimmed.slice(start, end + 1));
     }
-    throw new Error("Resposta da IA nÃ£o contÃ©m JSON vÃ¡lido");
+    throw new Error("Resposta da IA não contém JSON válido");
   }
 }
 
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     const markdown: unknown = body?.markdown;
 
     if (typeof markdown !== "string" || markdown.trim().length === 0) {
-      return NextResponse.json({ error: "markdown obrigatÃ³rio e nÃ£o vazio" }, { status: 400 });
+      return NextResponse.json({ error: "markdown obrigatório e não vazio" }, { status: 400 });
     }
 
     const { orgId } = await requireAuth();
@@ -63,9 +63,9 @@ export async function POST(request: NextRequest) {
     try {
       parsed = extractJson(raw);
     } catch (err) {
-      console.error(`[briefing/parse] JSON invÃ¡lido da IA: ${err instanceof Error ? err.message : err}. Trecho: ${raw.slice(0, 200)}`);
+      console.error(`[briefing/parse] JSON inválido da IA: ${err instanceof Error ? err.message : err}. Trecho: ${raw.slice(0, 200)}`);
       return NextResponse.json(
-        { error: "A IA nÃ£o retornou um JSON vÃ¡lido. Tente novamente ou ajuste o briefing." },
+        { error: "A IA não retornou um JSON válido. Tente novamente ou ajuste o briefing." },
         { status: 502 },
       );
     }
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       .map((it, idx): BriefingItem | null => {
         const o = it as Record<string, unknown>;
         const direcao = typeof o.direcao_visual === "string" ? o.direcao_visual.trim() : "";
-        if (!direcao) return null; // direcao_visual Ã© obrigatÃ³ria
+        if (!direcao) return null; // direcao_visual é obrigatória
         const str = (v: unknown) => (typeof v === "string" && v.trim().length > 0 ? v.trim() : undefined);
         return {
           id: str(o.id) ?? `item-${idx + 1}`,

@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, whitelist } from "@/lib/api-auth";
 
 export async function GET(request: NextRequest) {
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { data, error } = await supabase
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       ),
     ];
 
-    // 1 round-trip no bucket primÃ¡rio "logos" pra todos os logos.
+    // 1 round-trip no bucket primário "logos" pra todos os logos.
     const urlByPath = new Map<string, string>();
     if (logoPaths.length > 0) {
       const { data: signedList } = await supabase.storage
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       for (const s of signedList || []) {
         if (s.path && s.signedUrl) urlByPath.set(s.path, s.signedUrl);
       }
-      // Fallback legado "brand-assets" sÃ³ pros que nÃ£o resolveram no primÃ¡rio.
+      // Fallback legado "brand-assets" só pros que não resolveram no primário.
       const missing = logoPaths.filter((p) => !urlByPath.has(p));
       if (missing.length > 0) {
         const { data: legacyList } = await supabase.storage
@@ -93,7 +93,7 @@ export async function PATCH(request: NextRequest) {
     const { supabase } = await requireAuth(orgId || org_id);
 
     if (!id) {
-      return NextResponse.json({ error: "id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
     }
 
     const safeUpdates = whitelist(rest, [
@@ -123,11 +123,11 @@ export async function DELETE(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!id) {
-      return NextResponse.json({ error: "id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
     }
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { error } = await supabase

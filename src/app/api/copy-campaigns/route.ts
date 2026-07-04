@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, whitelist } from "@/lib/api-auth";
 
 /**
@@ -11,11 +11,11 @@ export async function GET(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
-    // PaginaÃ§Ã£o: a biblioteca pode acumular muitas campanhas. Limita Ã s 50 mais
-    // recentes (ajustÃ¡vel via ?limit=). copies jÃ¡ vÃªm como count agregado.
+    // Paginação: a biblioteca pode acumular muitas campanhas. Limita às 50 mais
+    // recentes (ajustável via ?limit=). copies já vêm como count agregado.
     const limitParam = Number(request.nextUrl.searchParams.get("limit"));
     const limit = Number.isFinite(limitParam) && limitParam > 0 ? Math.min(limitParam, 200) : 50;
 
@@ -56,13 +56,13 @@ export async function POST(request: NextRequest) {
     const { supabase } = await requireAuth(resolvedOrgId);
 
     if (!resolvedOrgId) {
-      return NextResponse.json({ error: "org_id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "org_id obrigatório" }, { status: 400 });
     }
 
     const safeFields = whitelist(body, ["name", "product", "description"]);
 
     if (!safeFields.name) {
-      return NextResponse.json({ error: "name obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "name obrigatório" }, { status: 400 });
     }
 
     const { data, error } = await supabase

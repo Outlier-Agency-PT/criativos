@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useCallback, useRef, useEffect } from "react";
@@ -117,7 +117,7 @@ export function StepReviewGenerate() {
         if (cancelled) return;
         const kit = (data.brandKits ?? []).find((k: { id: string }) => k.id === brandKitId);
         if (!kit) return;
-        // logo_url jÃ¡ vem assinada do storage pela API de brand-kits.
+        // logo_url já vem assinada do storage pela API de brand-kits.
         setBrandKitDetails({ colors: kit.colors, logoUrl: kit.logo_url ?? null });
       } catch {
         // silent
@@ -187,7 +187,7 @@ export function StepReviewGenerate() {
   // Template URLs frescas
   const [templateUrls, setTemplateUrls] = useState<Record<string, string>>({});
 
-  // Modal de visualizaÃ§Ã£o ampliada do template (clicar no thumbnail abre grande)
+  // Modal de visualização ampliada do template (clicar no thumbnail abre grande)
   const [previewTemplate, setPreviewTemplate] = useState<{ url: string; name: string } | null>(null);
 
   // Modal para editar copy
@@ -412,7 +412,7 @@ export function StepReviewGenerate() {
     });
   }
 
-  // --- Buscar URL da imagem gerada (com retry/backoff p/ consistÃªncia do Storage) ---
+  // --- Buscar URL da imagem gerada (com retry/backoff p/ consistência do Storage) ---
   async function fetchCreativeImageUrl(creativeId: string, attempts = 5): Promise<string | null> {
     const delays = [0, 250, 500, 1000, 1500];
     for (let i = 0; i < attempts; i++) {
@@ -428,11 +428,11 @@ export function StepReviewGenerate() {
     return null;
   }
 
-  // IDs jÃ¡ em hidrataÃ§Ã£o (nÃ£o cancelar quando estado muda)
+  // IDs já em hidratação (não cancelar quando estado muda)
   const hydratingIdsRef = useRef<Set<string>>(new Set());
 
-  // HidrataÃ§Ã£o de URLs apenas como fallback (ex: restauraÃ§Ã£o de criativos ao recarregar a pÃ¡gina).
-  // Durante a geraÃ§Ã£o ativa, a URL Ã© buscada diretamente em processCreative.
+  // Hidratação de URLs apenas como fallback (ex: restauração de criativos ao recarregar a página).
+  // Durante a geração ativa, a URL é buscada diretamente em processCreative.
   useEffect(() => {
     if (!projectId || generatedCreatives.length === 0 || generating) return;
 
@@ -583,7 +583,7 @@ export function StepReviewGenerate() {
         const unit = executionUnits[index];
         const unitLabel = unit
           ? unit.generationMode === "matrix" && unit.templateName
-            ? `Template ${unit.templateIndex}/${unit.templateTotal} Â· Copy ${unit.copyIndex}`
+            ? `Template ${unit.templateIndex}/${unit.templateTotal} · Copy ${unit.copyIndex}`
             : `Copy ${unit.copyIndex}`
           : `Criativo ${index + 1}`;
 
@@ -600,8 +600,8 @@ export function StepReviewGenerate() {
           const res = await fetch("/api/generate/one", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            // VariaÃ§Ã£o ligada: NÃƒO manda promptOverride (senÃ£o o backend ignora o
-            // buildPrompt e o bloco de variaÃ§Ã£o nunca entra). Manda forceVariation
+            // Variação ligada: NÃO manda promptOverride (senão o backend ignora o
+            // buildPrompt e o bloco de variação nunca entra). Manda forceVariation
             // pra cada criativo ser remontado com fundo/roupa/pose diferentes.
             body: JSON.stringify(
               variationEnabled
@@ -618,11 +618,11 @@ export function StepReviewGenerate() {
             const genTime = formatMs(data.generationTime);
             const dlTime = formatMs(data.downloadTime);
             addLog(
-              `${unitLabel} OK â€” ${genTime} (download: ${dlTime}) via ${data.provider}/${data.model}${data.fallbackUsed ? " [fallback]" : ""}`,
+              `${unitLabel} OK — ${genTime} (download: ${dlTime}) via ${data.provider}/${data.model}${data.fallbackUsed ? " [fallback]" : ""}`,
               "success"
             );
 
-            // Buscar a signed URL imediatamente apÃ³s geraÃ§Ã£o bem-sucedida
+            // Buscar a signed URL imediatamente após geração bem-sucedida
             const imageUrl = await fetchCreativeImageUrl(cid);
             setGeneratedCreatives((prev) => prev.map((c) => c.id === cid ? { ...c, status: "completed", imageUrl } : c));
           } else {
@@ -697,7 +697,7 @@ export function StepReviewGenerate() {
   const estimatedCostEUR = plannedCount * costPerImageUSD * USD_TO_EUR;
   const fmtEUR = (v: number) => v.toLocaleString("pt-PT", { style: "currency", currency: "EUR" });
 
-  // PÃ­lulas de cores do brand kit (atÃ© 5)
+  // Pílulas de cores do brand kit (até 5)
   const colorPills: Array<{ key: string; hex: string }> = brandKitDetails.colors
     ? Object.entries(brandKitDetails.colors)
         .filter(([, hex]) => typeof hex === "string" && /^#[0-9a-fA-F]{3,8}$/.test(hex))
@@ -707,13 +707,13 @@ export function StepReviewGenerate() {
 
   const checklistItems: Array<{ label: string; value: string; ok: boolean }> = [
     { label: "Projeto", value: projectName || "(sem nome)", ok: !!projectName },
-    { label: "Persona", value: personaName || "â€”", ok: !!personaName },
+    { label: "Persona", value: personaName || "—", ok: !!personaName },
     { label: "Formato", value: typeof format?.label === "string" ? format.label : `${format?.width}x${format?.height}`, ok: !!format?.width },
-    { label: "Brand kit", value: brandKitName || "â€”", ok: !!brandKitName },
+    { label: "Brand kit", value: brandKitName || "—", ok: !!brandKitName },
     { label: "Templates", value: `${selectedTemplates.length}`, ok: selectedTemplates.length > 0 },
     { label: "Copies", value: `${copies.length}`, ok: copies.length > 0 },
     { label: "Fotos do expert", value: `${selectedPhotos.length}`, ok: true },
-    { label: "Logo", value: showLogo ? (brandKitDetails.logoUrl ? "Sim, vinculado" : "Ligado mas sem ficheiro") : "NÃ£o", ok: !showLogo || !!brandKitDetails.logoUrl },
+    { label: "Logo", value: showLogo ? (brandKitDetails.logoUrl ? "Sim, vinculado" : "Ligado mas sem ficheiro") : "Não", ok: !showLogo || !!brandKitDetails.logoUrl },
   ];
 
   return (
@@ -723,7 +723,7 @@ export function StepReviewGenerate() {
       <div className="theme-panel rounded-[26px] p-4 lg:p-5">
         <div className="mb-3 flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-text-primary">Checklist da geraÃ§Ã£o</p>
+            <p className="text-sm font-semibold text-text-primary">Checklist da geração</p>
             <p className="text-xs text-text-muted">Confira tudo antes de gerar em lote.</p>
           </div>
           <span className="px-2 py-1 rounded-full bg-accent-champagne/15 text-accent-champagne text-[11px] font-semibold">
@@ -780,7 +780,7 @@ export function StepReviewGenerate() {
             <Sparkles className="w-4 h-4 text-accent-champagne" />
             <div>
               <p className="text-sm font-semibold text-text-primary">Visual selecionado</p>
-              <p className="text-xs text-text-muted">Templates, fotos do expert e modo de combinaÃ§Ã£o.</p>
+              <p className="text-xs text-text-muted">Templates, fotos do expert e modo de combinação.</p>
             </div>
           </div>
 
@@ -868,7 +868,7 @@ export function StepReviewGenerate() {
                 <p className="text-xs font-medium text-text-primary">Modo Matrix</p>
                 <p className="text-[10px] text-text-muted">
                   {effectiveMatrixMode
-                    ? `${selectedTemplates.length} templates Ã— ${selectedCount} copies = ${plannedCount} criativos`
+                    ? `${selectedTemplates.length} templates × ${selectedCount} copies = ${plannedCount} criativos`
                     : `${selectedCount} criativo${selectedCount !== 1 ? "s" : ""} com referencias visuais compartilhadas`}
                 </p>
               </div>
@@ -935,7 +935,7 @@ export function StepReviewGenerate() {
                       )}
                       {copy.content.list_items && isFieldActive(copy.id, "list_items") && (
                         <p className="mt-0.5 line-clamp-1 text-[10px] text-text-muted">
-                          {copy.content.list_items.split("\n").filter(Boolean).slice(0, 3).join(" Â· ")}
+                          {copy.content.list_items.split("\n").filter(Boolean).slice(0, 3).join(" · ")}
                         </p>
                       )}
                       {copy.content.cta && (
@@ -1007,7 +1007,7 @@ export function StepReviewGenerate() {
                 </span>
               </div>
               <p className="mt-1 text-[10px] leading-relaxed text-text-muted">
-                Cada cartÃ£o mostra a unidade de geraÃ§Ã£o com a copy associada e os templates usados como contexto visual.
+                Cada cartão mostra a unidade de geração com a copy associada e os templates usados como contexto visual.
               </p>
             </div>
           </div>
@@ -1105,15 +1105,15 @@ export function StepReviewGenerate() {
             {/* Aviso de custo antes de gerar */}
             {plannedCount > 0 && (
               <div className="theme-panel rounded-[18px] px-4 py-3 mb-2 flex items-start gap-3">
-                <span className="text-lg leading-none mt-0.5">ðŸ’°</span>
+                <span className="text-lg leading-none mt-0.5">💰</span>
                 <div className="flex-1 text-xs">
                   <p className="text-text-primary font-semibold">
-                    {plannedCount} imagem{plannedCount !== 1 ? "ns" : ""} Â· custo estimado {fmtEUR(estimatedCostEUR)}
+                    {plannedCount} imagem{plannedCount !== 1 ? "ns" : ""} · custo estimado {fmtEUR(estimatedCostEUR)}
                   </p>
                   <p className="text-text-muted mt-0.5">
                     ~{fmtEUR(costPerImageUSD * USD_TO_EUR)} por imagem ({modelInfo.name}).
                     {formatsCount > 1 && (
-                      <span className="text-amber-500"> VocÃª estÃ¡ gerando em {formatsCount} formatos, o que multiplica o custo por {formatsCount}.</span>
+                      <span className="text-amber-500"> Você está gerando em {formatsCount} formatos, o que multiplica o custo por {formatsCount}.</span>
                     )}
                   </p>
                 </div>

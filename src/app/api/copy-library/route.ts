@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, whitelist } from "@/lib/api-auth";
 
 function buildRawText(fields: {
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const offset = (page - 1) * limit;
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // OrdenaÃ§Ã£o
+    // Ordenação
     const sortField = ["created_at", "times_used", "last_used_at"].includes(sort) ? sort : "created_at";
     query = query.order(sortField, { ascending: false });
 
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
     const { supabase, user } = await requireAuth(resolvedOrgId);
 
     if (!resolvedOrgId) {
-      return NextResponse.json({ error: "org_id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "org_id obrigatório" }, { status: 400 });
     }
 
     const safeFields = whitelist(body, [

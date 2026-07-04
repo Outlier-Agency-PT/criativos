@@ -1,4 +1,4 @@
-﻿import { createServerClient } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { decryptKey } from "./crypto";
 import * as gemini from "./gemini";
@@ -13,8 +13,8 @@ import { ENDPOINTS } from "@/lib/config/endpoints";
 import type { GenerateCreativeInput, GenerateCreativeResult } from "./gemini";
 
 const ERROR_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutos
-const MAX_RETRIES_PER_KEY = 2; // Reduzido de 3 para 2 â€” falhar rÃ¡pido e tentar prÃ³xima key
-const BASE_DELAY_MS = 500; // Reduzido de 1000 â€” backoff mais rÃ¡pido
+const MAX_RETRIES_PER_KEY = 2; // Reduzido de 3 para 2 — falhar rápido e tentar próxima key
+const BASE_DELAY_MS = 500; // Reduzido de 1000 — backoff mais rápido
 
 interface ApiKeyRecord {
   id: string;
@@ -56,7 +56,7 @@ function isKeyInCooldown(record: ApiKeyRecord): boolean {
 }
 
 /**
- * Busca a prÃ³xima API key disponÃ­vel para uma organizaÃ§Ã£o.
+ * Busca a próxima API key disponível para uma organização.
  * Pula keys com erro recente (<5 min).
  */
 export async function getNextAvailableKey(orgId: string): Promise<AvailableKey | null> {
@@ -126,8 +126,8 @@ function sleep(ms: number): Promise<void> {
 }
 
 /**
- * Carrega a cadeia de modelos de texto configurada para a org (primÃ¡rio + fallbacks).
- * Se nÃ£o houver config, usa DEFAULT_TEXT_MODEL_CHAIN (Haiku â†’ GPT-4o mini â†’ Gemini 2.5 Flash).
+ * Carrega a cadeia de modelos de texto configurada para a org (primário + fallbacks).
+ * Se não houver config, usa DEFAULT_TEXT_MODEL_CHAIN (Haiku → GPT-4o mini → Gemini 2.5 Flash).
  */
 async function getTextModelChain(orgId: string): Promise<string[]> {
   const supabase = await getSupabase();
@@ -145,8 +145,8 @@ async function getTextModelChain(orgId: string): Promise<string[]> {
 }
 
 /**
- * Gera texto via WisGate/OpenRouter (APIs compatÃ­veis com OpenAI) usando uma key relay.
- * `textModelId` Ã© o modelo Gemini de texto desejado (ex: gemini-2.5-flash).
+ * Gera texto via WisGate/OpenRouter (APIs compatíveis com OpenAI) usando uma key relay.
+ * `textModelId` é o modelo Gemini de texto desejado (ex: gemini-2.5-flash).
  */
 async function generateTextViaRelay(
   provider: "wisgate" | "openrouter",
@@ -216,10 +216,10 @@ async function generateTextViaGemini(
 /**
  * Gera texto (copy) respeitando a cadeia de modelos configurada pela org.
  *
- * Para cada modelo na cadeia (em ordem de preferÃªncia):
+ * Para cada modelo na cadeia (em ordem de preferência):
  *   - descobre o provider do modelo (anthropic/openai/gemini)
- *   - acha uma key ATIVA compatÃ­vel com esse provider
- *   - tenta gerar; sucesso â†’ retorna; falha â†’ prÃ³ximo modelo da cadeia
+ *   - acha uma key ATIVA compatível com esse provider
+ *   - tenta gerar; sucesso → retorna; falha → próximo modelo da cadeia
  *
  * Modelos "gemini" aceitam tanto key Gemini direta quanto relay WisGate/OpenRouter.
  * Usado em persona-generate, copy-generate, template-analyze.
@@ -239,7 +239,7 @@ export async function generateTextWithRotation(
     .order("priority", { ascending: true });
 
   if (!keys?.length) {
-    throw new Error("Nenhuma API key configurada. Acesse ConfiguraÃ§Ãµes > API Keys.");
+    throw new Error("Nenhuma API key configurada. Acesse Configurações > API Keys.");
   }
 
   const records = keys as ApiKeyRecord[];
@@ -305,12 +305,12 @@ export async function generateTextWithRotation(
         // 3. erro definitivo -> marca e segue
         if (isOutOfCredit(message, status)) {
           await markKeyError(record.id, message);
-          errors.push(`${textModel.name}/${record.provider} (${record.id.slice(0, 8)}): sem crÃ©dito/billing â€” ${message.slice(0, 140)}`);
+          errors.push(`${textModel.name}/${record.provider} (${record.id.slice(0, 8)}): sem crédito/billing — ${message.slice(0, 140)}`);
           continue;
         }
         if (isRateLimit(message, status)) {
           await markKeyError(record.id, message);
-          errors.push(`${textModel.name}/${record.provider} (${record.id.slice(0, 8)}): rate-limit â€” ${message.slice(0, 140)}`);
+          errors.push(`${textModel.name}/${record.provider} (${record.id.slice(0, 8)}): rate-limit — ${message.slice(0, 140)}`);
           continue;
         }
         await markKeyError(record.id, message);
@@ -321,7 +321,7 @@ export async function generateTextWithRotation(
   }
 
   throw new Error(
-    `NÃ£o foi possÃ­vel gerar a copy. Verifique se hÃ¡ key do provider do modelo escolhido (ConfiguraÃ§Ãµes > Modelo de texto).\n${errors.map((e) => `â€¢ ${e}`).join("\n")}`
+    `Não foi possível gerar a copy. Verifique se há key do provider do modelo escolhido (Configurações > Modelo de texto).\n${errors.map((e) => `• ${e}`).join("\n")}`
   );
 }
 
@@ -336,11 +336,11 @@ function getClient(provider: string, model: string) {
 }
 
 /**
- * EP08 S08.8: Gera um criativo com rotaÃ§Ã£o de keys e suporte a modelo preferido.
+ * EP08 S08.8: Gera um criativo com rotação de keys e suporte a modelo preferido.
  * Prioridade de fallback:
  *   1. Keys com modelo preferido (por prioridade)
  *   2. Keys com outros modelos Gemini (fallback)
- *   3. Keys OpenRouter (Ãºltimo recurso)
+ *   3. Keys OpenRouter (último recurso)
  */
 export async function generateWithRotation(
   orgId: string,
@@ -358,7 +358,7 @@ export async function generateWithRotation(
     .order("priority", { ascending: true });
 
   if (error || !keys?.length) {
-    throw new Error("Nenhuma API key configurada. Acesse ConfiguraÃ§Ãµes > API Keys.");
+    throw new Error("Nenhuma API key configurada. Acesse Configurações > API Keys.");
   }
 
   // Ordenar: keys com modelo preferido primeiro, depois outros
@@ -366,15 +366,15 @@ export async function generateWithRotation(
     options?.requireImageInput ? !isImagenModel(record.model) : true
   );
 
-  // BLOQUEIO DE QUALIDADE (decisÃ£o do usuÃ¡rio 2026-06-02): geraÃ§Ã£o de imagem
-  // SÃ“ com Gemini 3. Outros modelos entregam qualidade inferior e ficam de fora.
+  // BLOQUEIO DE QUALIDADE (decisão do usuário 2026-06-02): geração de imagem
+  // SÓ com Gemini 3. Outros modelos entregam qualidade inferior e ficam de fora.
   if (REQUIRE_GEMINI3_FOR_IMAGE) {
     const g3 = allKeys.filter((record) => isGemini3ImageModel(record.model));
     if (g3.length === 0) {
       throw new Error(
-        "Nenhuma API key com modelo Gemini 3 de imagem estÃ¡ configurada. " +
-        "O sistema estÃ¡ bloqueado para usar APENAS Gemini 3 (gemini-3-pro-image-preview ou gemini-3.1-flash-image-preview) na geraÃ§Ã£o. " +
-        "Cadastre/ative uma key Gemini 3 funcional em ConfiguraÃ§Ãµes > API Keys."
+        "Nenhuma API key com modelo Gemini 3 de imagem está configurada. " +
+        "O sistema está bloqueado para usar APENAS Gemini 3 (gemini-3-pro-image-preview ou gemini-3.1-flash-image-preview) na geração. " +
+        "Cadastre/ative uma key Gemini 3 funcional em Configurações > API Keys."
       );
     }
     allKeys = g3;
@@ -428,18 +428,18 @@ export async function generateWithRotation(
         console.error(`[key-rotator] Falha tentativa ${attempt + 1}: ${message.slice(0, 200)}`);
         const status = parseStatusFromMessage(message);
 
-        // SEM CRÃ‰DITO / BILLING ESGOTADO: diferente de rate-limit. Rate-limit passa
-        // com o tempo; sem crÃ©dito NÃƒO passa â€” insistir Ã© desperdÃ­cio. Quando a key
-        // estÃ¡ sem saldo, pulamos IMEDIATAMENTE pra prÃ³xima key (sem retry) e marcamos
-        // erro pra ela entrar em cooldown e nÃ£o ser tentada de novo jÃ¡ a seguir.
+        // SEM CRÉDITO / BILLING ESGOTADO: diferente de rate-limit. Rate-limit passa
+        // com o tempo; sem crédito NÃO passa — insistir é desperdício. Quando a key
+        // está sem saldo, pulamos IMEDIATAMENTE pra próxima key (sem retry) e marcamos
+        // erro pra ela entrar em cooldown e não ser tentada de novo já a seguir.
         if (isOutOfCredit(message, status)) {
-          console.log(`[key-rotator] Key ${record.id.slice(0, 8)} sem crÃ©dito/billing â€” pulando imediatamente pra prÃ³xima.`);
+          console.log(`[key-rotator] Key ${record.id.slice(0, 8)} sem crédito/billing — pulando imediatamente pra próxima.`);
           await markKeyError(record.id, message);
-          errors.push(`${record.model} (${record.id.slice(0, 8)}): sem crÃ©dito/billing â€” ${message.slice(0, 120)}`);
+          errors.push(`${record.model} (${record.id.slice(0, 8)}): sem crédito/billing — ${message.slice(0, 120)}`);
           break;
         }
 
-        // Rate-limit temporÃ¡rio ou erro de servidor (500/503): vale a pena retentar a MESMA key.
+        // Rate-limit temporário ou erro de servidor (500/503): vale a pena retentar a MESMA key.
         const isServerError = status === 500 || status === 503;
         if (isRateLimit(message, status) || isServerError) {
           const delay = BASE_DELAY_MS * Math.pow(2, attempt);
@@ -456,12 +456,12 @@ export async function generateWithRotation(
 
     if (lastError && !errors.some((e) => e.includes(record.id.slice(0, 8)))) {
       await markKeyError(record.id, lastError);
-      errors.push(`${record.model} (${record.id.slice(0, 8)}): ${lastError} (apÃ³s ${MAX_RETRIES_PER_KEY} tentativas)`);
+      errors.push(`${record.model} (${record.id.slice(0, 8)}): ${lastError} (após ${MAX_RETRIES_PER_KEY} tentativas)`);
     }
   }
 
   throw new Error(
-    `Todas as API keys falharam.\n\nDiagnÃ³stico:\n${errors.map((e) => `â€¢ ${e}`).join("\n")}`
+    `Todas as API keys falharam.\n\nDiagnóstico:\n${errors.map((e) => `• ${e}`).join("\n")}`
   );
 }
 

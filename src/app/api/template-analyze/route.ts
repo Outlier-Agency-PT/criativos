@@ -1,29 +1,29 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { generateTextWithRotation } from "@/lib/api-key-rotator";
 
-// Permitir atÃ© 60s para Vision
+// Permitir até 60s para Vision
 export const maxDuration = 60;
 
-const ANALYZE_PROMPT = `VocÃª Ã© um analista visual especialista em criativos publicitÃ¡rios. Analise a imagem do template anexada e retorne um JSON ESTRUTURADO com TODOS os detalhes necessÃ¡rios para recriar variaÃ§Ãµes PIXEL-PERFECT deste template.
+const ANALYZE_PROMPT = `Você é um analista visual especialista em criativos publicitários. Analise a imagem do template anexada e retorne um JSON ESTRUTURADO com TODOS os detalhes necessários para recriar variações PIXEL-PERFECT deste template.
 
-Retorne APENAS um JSON vÃ¡lido, sem markdown, sem comentÃ¡rios, neste formato exato:
+Retorne APENAS um JSON válido, sem markdown, sem comentários, neste formato exato:
 
 {
-  "mini_prompt": "Blueprint COMPLETO do layout em 4-8 frases. Descreva: (1) fundo â€” tipo exato, cores, gradiente, textura ou foto; (2) grid â€” use terÃ§os (ex: 'pessoa ocupa terÃ§o direito, texto nos 2/3 esquerdos'); (3) hierarquia de texto â€” posiÃ§Ã£o, tamanho relativo ao quadro (ex: 'headline ocupa ~15% da altura, centralizado no terÃ§o superior'), espaÃ§amento entre blocos; (4) pessoa â€” enquadramento (busto/meio-corpo/corpo-inteiro), posiÃ§Ã£o no grid, direÃ§Ã£o do olhar; (5) elementos decorativos â€” linhas, formas, Ã­cones, selos, badges. Seja PRECISO e REPRODUZÃVEL.",
+  "mini_prompt": "Blueprint COMPLETO do layout em 4-8 frases. Descreva: (1) fundo — tipo exato, cores, gradiente, textura ou foto; (2) grid — use terços (ex: 'pessoa ocupa terço direito, texto nos 2/3 esquerdos'); (3) hierarquia de texto — posição, tamanho relativo ao quadro (ex: 'headline ocupa ~15% da altura, centralizado no terço superior'), espaçamento entre blocos; (4) pessoa — enquadramento (busto/meio-corpo/corpo-inteiro), posição no grid, direção do olhar; (5) elementos decorativos — linhas, formas, ícones, selos, badges. Seja PRECISO e REPRODUZÍVEL.",
 
   "background": {
     "type": "solid|gradient|photo|texture|pattern|blur",
-    "description": "DescriÃ§Ã£o detalhada: 'gradiente diagonal do azul-escuro (#1a2744) no topo-esquerda para preto (#0a0a0a) no rodapÃ©-direita' ou 'foto desfocada de escritÃ³rio com overlay escuro a 60% de opacidade'",
+    "description": "Descrição detalhada: 'gradiente diagonal do azul-escuro (#1a2744) no topo-esquerda para preto (#0a0a0a) no rodapé-direita' ou 'foto desfocada de escritório com overlay escuro a 60% de opacidade'",
     "colors": ["#hex1", "#hex2"]
   },
 
   "text_layout": [
     {
       "role": "headline|subheadline|mini_copy|list_items|cta|badge|other",
-      "text_found": "texto exato visÃ­vel na imagem",
-      "position": "topo-centro|centro-esquerda|rodapÃ©-centro|etc",
-      "grid_area": "terÃ§o superior|metade inferior|terÃ§o esquerdo|etc",
+      "text_found": "texto exato visível na imagem",
+      "position": "topo-centro|centro-esquerda|rodapé-centro|etc",
+      "grid_area": "terço superior|metade inferior|terço esquerdo|etc",
       "size_pct": 12,
       "style": "sans-serif bold uppercase tracking-wide|serif italic lowercase|etc",
       "color": "#hex da cor do texto",
@@ -32,26 +32,26 @@ Retorne APENAS um JSON vÃ¡lido, sem markdown, sem comentÃ¡rios, neste format
   ],
 
   "elements": [
-    { "type": "headline|mini_copy|list_items|cta|subtitle|quote|badge|other", "text_found": "texto exato visÃ­vel", "position": "topo|centro|rodapÃ©|topo-esquerda|etc" }
+    { "type": "headline|mini_copy|list_items|cta|subtitle|quote|badge|other", "text_found": "texto exato visível", "position": "topo|centro|rodapé|topo-esquerda|etc" }
   ],
 
   "person": {
     "present": true,
     "framing": "busto|meio-corpo|corpo-inteiro|rosto-close",
-    "grid_position": "terÃ§o direito|centro|terÃ§o esquerdo|metade direita|etc",
+    "grid_position": "terço direito|centro|terço esquerdo|metade direita|etc",
     "coverage_pct": 40,
-    "pose": "DescriÃ§Ã£o detalhada: direÃ§Ã£o do corpo, Ã¢ngulo da cÃ¢mera, posiÃ§Ã£o das mÃ£os, expressÃ£o facial, direÃ§Ã£o do olhar",
-    "clothing": "DescriÃ§Ã£o da vestimenta visÃ­vel",
-    "expression": "sorrindo|sÃ©rio|confiante|animado|neutro|etc",
-    "gaze_direction": "olhando para cÃ¢mera|olhando para esquerda|olhando para baixo|etc"
+    "pose": "Descrição detalhada: direção do corpo, ângulo da câmera, posição das mãos, expressão facial, direção do olhar",
+    "clothing": "Descrição da vestimenta visível",
+    "expression": "sorrindo|sério|confiante|animado|neutro|etc",
+    "gaze_direction": "olhando para câmera|olhando para esquerda|olhando para baixo|etc"
   },
 
   "has_logo": true,
-  "logo_position": "topo-esquerda|rodapÃ©-centro|null se nÃ£o tiver",
+  "logo_position": "topo-esquerda|rodapé-centro|null se não tiver",
   "logo_size_pct": 5,
 
   "has_person": true,
-  "person_pose": "DescriÃ§Ã£o completa da pose para face-swap (mesma info de person.pose mas em frase Ãºnica)",
+  "person_pose": "Descrição completa da pose para face-swap (mesma info de person.pose mas em frase única)",
 
   "dominant_colors": ["#rrggbb", "#rrggbb", "#rrggbb"],
   "visual_style": "dark|clean|foto_texto|prova_social|minimalista|colorido|gradiente|etc",
@@ -63,19 +63,19 @@ Retorne APENAS um JSON vÃ¡lido, sem markdown, sem comentÃ¡rios, neste format
   }
 }
 
-REGRAS CRÃTICAS:
-- mini_prompt: 4-8 frases RICAS. AlguÃ©m deve conseguir recriar o layout EXATO sÃ³ lendo isso.
-- background: SEMPRE preencha. Se for foto, descreva a cena. Se for cor sÃ³lida, dÃª o hex exato.
-- text_layout: para CADA bloco de texto visÃ­vel, estime size_pct (% da altura total do quadro que o texto ocupa). Headline geralmente 8-15%, mini_copy 4-8%, CTA 3-6%.
-- person: se has_person=true, coverage_pct Ã© a % da Ã¡rea total do quadro que a pessoa ocupa. framing e pose sÃ£o ESSENCIAIS para face-swap.
-- person.expression e person.gaze_direction: OBRIGATÃ“RIOS se has_person=true â€” serÃ£o usados para reproduzir a mesma energia na variaÃ§Ã£o.
+REGRAS CRÍTICAS:
+- mini_prompt: 4-8 frases RICAS. Alguém deve conseguir recriar o layout EXATO só lendo isso.
+- background: SEMPRE preencha. Se for foto, descreva a cena. Se for cor sólida, dê o hex exato.
+- text_layout: para CADA bloco de texto visível, estime size_pct (% da altura total do quadro que o texto ocupa). Headline geralmente 8-15%, mini_copy 4-8%, CTA 3-6%.
+- person: se has_person=true, coverage_pct é a % da área total do quadro que a pessoa ocupa. framing e pose são ESSENCIAIS para face-swap.
+- person.expression e person.gaze_direction: OBRIGATÓRIOS se has_person=true — serão usados para reproduzir a mesma energia na variação.
 - logo_size_pct: % da largura do quadro que o logo ocupa.
 - spacing: descreva a densidade visual geral.
-- elements: extraia TODO texto visÃ­vel na imagem, sem exceÃ§Ã£o.
-- has_logo: true SOMENTE se existir um logotipo de marca claro (texto puro de nome de pessoa NÃƒO conta).
+- elements: extraia TODO texto visível na imagem, sem exceção.
+- has_logo: true SOMENTE se existir um logotipo de marca claro (texto puro de nome de pessoa NÃO conta).
 - dominant_colors: 3 a 5 cores mais usadas (em hex).
-- Se um campo nÃ£o se aplica (ex: person quando nÃ£o hÃ¡ pessoa), use null para objetos e false para booleanos.
-- Retorne APENAS o JSON. Sem explicaÃ§Ã£o, sem markdown, sem cercas \`\`\`.`;
+- Se um campo não se aplica (ex: person quando não há pessoa), use null para objetos e false para booleanos.
+- Retorne APENAS o JSON. Sem explicação, sem markdown, sem cercas \`\`\`.`;
 
 interface TextLayoutItem {
   role: string;
@@ -145,7 +145,7 @@ const EMPTY: AnalysisResult = {
 
 function parseAnalysis(text: string): AnalysisResult {
   if (!text) return EMPTY;
-  // Remove cercas de cÃ³digo se vierem
+  // Remove cercas de código se vierem
   const cleaned = text.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim();
   const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
   if (!jsonMatch) return EMPTY;
@@ -209,7 +209,7 @@ export async function POST(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!filePath || !orgId) {
-      return NextResponse.json({ error: "filePath e orgId obrigatÃ³rios" }, { status: 400 });
+      return NextResponse.json({ error: "filePath e orgId obrigatórios" }, { status: 400 });
     }
 
     const { data: fileData, error: downloadError } = await supabase.storage

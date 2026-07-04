@@ -1,9 +1,9 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, createServiceSupabase } from "@/lib/api-auth";
 
 /**
  * GET /api/org-limits
- * Retorna o limite mensal de geraÃ§Ã£o da org (NULL = ilimitado).
+ * Retorna o limite mensal de geração da org (NULL = ilimitado).
  */
 export async function GET(_request: NextRequest) {
   try {
@@ -25,7 +25,7 @@ export async function GET(_request: NextRequest) {
 
 /**
  * PUT /api/org-limits
- * Define o limite mensal de geraÃ§Ã£o da org. Admin/owner apenas.
+ * Define o limite mensal de geração da org. Admin/owner apenas.
  * Body: { monthlyGenerationLimit: number | null }
  *   null  -> ilimitado
  *   >= 0  -> teto mensal de criativos
@@ -54,12 +54,12 @@ export async function PUT(request: NextRequest) {
     } else {
       const n = Number(raw);
       if (!Number.isFinite(n) || n < 0) {
-        return NextResponse.json({ error: "Limite invÃ¡lido. Use um inteiro >= 0 ou vazio para ilimitado." }, { status: 400 });
+        return NextResponse.json({ error: "Limite inválido. Use um inteiro >= 0 ou vazio para ilimitado." }, { status: 400 });
       }
       limit = Math.floor(n);
     }
 
-    // Upsert via service key (RLS jÃ¡ validada acima por membership + role).
+    // Upsert via service key (RLS já validada acima por membership + role).
     const service = await createServiceSupabase();
     const { error } = await service
       .from("criativos_org_limits")

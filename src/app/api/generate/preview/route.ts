@@ -1,12 +1,12 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { createServiceSupabase } from "@/lib/api-auth";
 import { buildPrompt } from "@/lib/prompt-builder";
 
 /**
  * POST /api/generate/preview
- * Retorna o prompt final que seria enviado Ã  API de geraÃ§Ã£o.
- * Permite visualizar e ajustar antes de gastar crÃ©ditos.
+ * Retorna o prompt final que seria enviado à API de geração.
+ * Permite visualizar e ajustar antes de gastar créditos.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       .filter(Boolean)
       .join("\n");
 
-    // Chat refinement â€” apenas mensagens do USUÃRIO (nÃ£o confirmaÃ§Ãµes do bot)
+    // Chat refinement — apenas mensagens do USUÁRIO (não confirmações do bot)
     const userMessages = (chatHistory || []).filter((m: { role: string }) => m.role === "user");
     const chatRefinement = userMessages.length > 0
       ? userMessages.map((m: { content: string }) => m.content).join("\n")

@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import JSZip from "jszip";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 
@@ -13,7 +13,7 @@ export const maxDuration = 120;
 export async function GET(request: NextRequest) {
   try {
     const projectId = request.nextUrl.searchParams.get("projectId");
-    // Download em massa por seleÃ§Ã£o: ?ids=id1,id2,id3 (criativos da galeria).
+    // Download em massa por seleção: ?ids=id1,id2,id3 (criativos da galeria).
     const idsParam = request.nextUrl.searchParams.get("ids");
     const selectedIds = idsParam ? idsParam.split(",").map((s) => s.trim()).filter(Boolean) : [];
 
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const { supabase, orgId } = await requireAuth();
 
     // Validar ownership: pega os project_ids do org pra garantir que os criativos
-    // selecionados pertencem ao usuÃ¡rio.
+    // selecionados pertencem ao usuário.
     const { data: orgProjects } = await supabase
       .from("criativos_generation_projects")
       .select("id")
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
       : query.eq("project_id", projectId!);
 
     const { data: creativesRaw, error: creativesError } = await query;
-    // Em modo seleÃ§Ã£o, filtra sÃ³ os que pertencem a projetos do org (seguranÃ§a).
+    // Em modo seleção, filtra só os que pertencem a projetos do org (segurança).
     const creatives = (creativesRaw ?? []).filter((c) => orgProjectIds.has(c.project_id));
 
     if (creativesError) {

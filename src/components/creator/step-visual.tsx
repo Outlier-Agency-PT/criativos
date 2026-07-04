@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -85,7 +85,7 @@ export function StepVisual() {
   const [dragOver, setDragOver] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
 
-  // Background (imagem de fundo prÃ³pria) state
+  // Background (imagem de fundo própria) state
   const [uploadingBackgrounds, setUploadingBackgrounds] = useState(false);
   const backgroundInputRef = useRef<HTMLInputElement>(null);
 
@@ -110,10 +110,10 @@ export function StepVisual() {
     setTimeout(() => setToast(null), 3000);
   }
 
-  // PersistÃªncia confiÃ¡vel da seleÃ§Ã£o de fotos/fundos no PROJETO real (nÃ£o sÃ³ no
-  // draft). O debounce do creator-context sÃ³ grava em /api/creator-draft; sem isto,
+  // Persistência confiável da seleção de fotos/fundos no PROJETO real (não só no
+  // draft). O debounce do creator-context só grava em /api/creator-draft; sem isto,
   // ao reabrir o projeto (?regenerate=) as fotos/fundos voltavam vazios. Grava com
-  // debounce curto, sem disparar no load inicial e sÃ³ quando hÃ¡ projeto real.
+  // debounce curto, sem disparar no load inicial e só quando há projeto real.
   const visualPersistKey = `${selectedPhotos.map((p) => p.id).join(",")}|${selectedBackgrounds
     .map((b) => b.id)
     .join(",")}`;
@@ -129,7 +129,7 @@ export function StepVisual() {
       saveProgressToDb().catch(() => {});
     }, 700);
     return () => clearTimeout(t);
-    // visualPersistKey Ã© a fingerprint da seleÃ§Ã£o (ids de fotos + fundos).
+    // visualPersistKey é a fingerprint da seleção (ids de fotos + fundos).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visualPersistKey, projectId, draftLoading]);
 
@@ -220,7 +220,7 @@ export function StepVisual() {
 
   async function deletePhoto(photo: PhotoItem, e: React.MouseEvent) {
     e.stopPropagation();
-    const ok = window.confirm(`Apagar a foto "${photo.file_name}" da biblioteca? (nÃ£o dÃ¡ pra desfazer)`);
+    const ok = window.confirm(`Apagar a foto "${photo.file_name}" da biblioteca? (não dá pra desfazer)`);
     if (!ok) return;
     try {
       const res = await fetch(`/api/photos?id=${photo.id}&orgId=${orgId}`, { method: "DELETE" });
@@ -228,7 +228,7 @@ export function StepVisual() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || "Falha ao apagar foto");
       }
-      // Remove da seleÃ§Ã£o se estava selecionada
+      // Remove da seleção se estava selecionada
       if (selectedPhotos.some((p) => p.id === photo.id)) {
         updateProject({ selectedPhotos: selectedPhotos.filter((p) => p.id !== photo.id) });
       }
@@ -349,7 +349,7 @@ export function StepVisual() {
     }
   }, [handlePhotoUpload]);
 
-  // ====== BACKGROUND (IMAGEM DE FUNDO PRÃ“PRIA) HANDLERS ======
+  // ====== BACKGROUND (IMAGEM DE FUNDO PRÓPRIA) HANDLERS ======
 
   function handleToggleUseBackground() {
     updateProject({ useCustomBackground: !useCustomBackground });
@@ -460,7 +460,7 @@ export function StepVisual() {
       return;
     }
     if (file.size > MAX_LOGO_SIZE) {
-      showToast("Logo deve ter no mÃ¡ximo 2MB", "error");
+      showToast("Logo deve ter no máximo 2MB", "error");
       return;
     }
 
@@ -489,13 +489,13 @@ export function StepVisual() {
   const selectedBrandKit = brandKits.find((k) => k.id === brandKitId);
 
   // Cores do bloco (split-top): paleta do brand kit, deduplicada por hex normalizado.
-  // No ZÃ© Coxinha vÃ¡rias cores sÃ£o o mesmo amarelo (#FBBF24) â€” sÃ³ mostramos uma vez.
+  // No Zé Coxinha várias cores são o mesmo amarelo (#FBBF24) — só mostramos uma vez.
   const blockColorOptions = (() => {
     const c = selectedBrandKit?.colors;
     if (!c) return [] as { hex: string; label: string }[];
     const candidates: { hex: string | undefined; label: string }[] = [
-      { hex: c.primary, label: "PrimÃ¡ria" },
-      { hex: c.secondary, label: "SecundÃ¡ria" },
+      { hex: c.primary, label: "Primária" },
+      { hex: c.secondary, label: "Secundária" },
       { hex: c.accent, label: "Accent" },
       { hex: c.background, label: "Fundo" },
     ];
@@ -690,7 +690,7 @@ export function StepVisual() {
           <div>
             <h3 className="text-lg font-bold text-text-primary mb-1">Imagem de fundo (opcional)</h3>
             <p className="text-xs text-text-muted">
-              A foto de fundo Ã© preservada e o texto do template Ã© aplicado por cima.
+              A foto de fundo é preservada e o texto do template é aplicado por cima.
             </p>
           </div>
 
@@ -718,11 +718,11 @@ export function StepVisual() {
               />
             </div>
             <div className="text-left">
-              <p className="text-sm font-medium text-text-primary">Usar foto de fundo prÃ³pria</p>
+              <p className="text-sm font-medium text-text-primary">Usar foto de fundo própria</p>
               <p className="text-xs text-text-muted">
                 {useCustomBackground
-                  ? "O fundo enviado Ã© mantido e a variaÃ§Ã£o de cenÃ¡rio Ã© ignorada"
-                  : "O fundo virÃ¡ do template e da marca"}
+                  ? "O fundo enviado é mantido e a variação de cenário é ignorada"
+                  : "O fundo virá do template e da marca"}
               </p>
             </div>
             <ImageIcon className={cn("w-5 h-5 ml-auto", useCustomBackground ? "text-accent-champagne" : "text-text-muted")} />
@@ -730,7 +730,7 @@ export function StepVisual() {
 
           {useCustomBackground && (
             <>
-              {/* Seletor de layout do fundo prÃ³prio */}
+              {/* Seletor de layout do fundo próprio */}
               <div>
                 <p className="text-xs font-medium text-text-secondary mb-2">Layout do fundo</p>
                 <div className="grid grid-cols-3 gap-2">
@@ -815,7 +815,7 @@ export function StepVisual() {
                         })}
                       </div>
                       <p className="text-[11px] text-text-muted mt-2 leading-snug">
-                        Escolha uma ou mais cores para o bloco. Com mais de uma, a cor varia entre os criativos (rodÃ­zio).
+                        Escolha uma ou mais cores para o bloco. Com mais de uma, a cor varia entre os criativos (rodízio).
                       </p>
                     </>
                   )}
@@ -874,7 +874,7 @@ export function StepVisual() {
               </div>
 
               <p className="text-[10px] text-text-muted">
-                Ao ligar o fundo prÃ³prio, a variaÃ§Ã£o de cenÃ¡rio entre criativos Ã© ignorada (sÃ£o mutuamente exclusivos).
+                Ao ligar o fundo próprio, a variação de cenário entre criativos é ignorada (são mutuamente exclusivos).
               </p>
             </>
           )}
@@ -886,7 +886,7 @@ export function StepVisual() {
             <div>
               <h3 className="text-lg font-bold text-text-primary mb-1">Variar entre os criativos</h3>
               <p className="text-xs text-text-muted">
-                Cada criativo sai com fundo/cenÃ¡rio, pose e enquadramento diferentes. A roupa sÃ³ varia se vocÃª ligar o toggle dedicado abaixo.
+                Cada criativo sai com fundo/cenário, pose e enquadramento diferentes. A roupa só varia se você ligar o toggle dedicado abaixo.
               </p>
             </div>
             <button
@@ -921,21 +921,21 @@ export function StepVisual() {
               </div>
               <div>
                 <p className="text-sm font-medium text-text-primary">
-                  {variationEnabled && !useCustomBackground ? "VariaÃ§Ã£o ligada" : "Variar entre os criativos"}
+                  {variationEnabled && !useCustomBackground ? "Variação ligada" : "Variar entre os criativos"}
                 </p>
                 <p className="text-xs text-text-muted">
                   O rosto do expert, o layout, as cores da marca e a copy continuam iguais.
-                  {selectedPhotos.length === 1 && " Com 1 foto, o rosto Ã© o mesmo e sÃ³ o entorno muda."}
+                  {selectedPhotos.length === 1 && " Com 1 foto, o rosto é o mesmo e só o entorno muda."}
                 </p>
               </div>
             </button>
             {useCustomBackground && (
               <p className="text-[11px] text-accent-champagne leading-snug">
-                Desligue a foto de fundo prÃ³pria para variar o cenÃ¡rio.
+                Desligue a foto de fundo própria para variar o cenário.
               </p>
             )}
 
-            {/* Toggle dedicado: variar a ROUPA. Por padrÃ£o a roupa do template Ã© mantida. */}
+            {/* Toggle dedicado: variar a ROUPA. Por padrão a roupa do template é mantida. */}
             <button
               type="button"
               onClick={() => {
@@ -971,7 +971,7 @@ export function StepVisual() {
                   {varyClothing && !useCustomBackground ? "Roupa variando" : "Variar roupa entre criativos"}
                 </p>
                 <p className="text-xs text-text-muted">
-                  Desligado, a pessoa usa o mesmo tipo de roupa do template em todos os criativos. Ligado, a roupa varia (sempre do mesmo tipo de peÃ§a).
+                  Desligado, a pessoa usa o mesmo tipo de roupa do template em todos os criativos. Ligado, a roupa varia (sempre do mesmo tipo de peça).
                 </p>
               </div>
             </button>
@@ -982,7 +982,7 @@ export function StepVisual() {
       {/* === COLUNA DIREITA: BRAND KIT + LOGO === */}
       <div className="space-y-8">
 
-      {/* Divider sÃ³ em telas pequenas (em xl as colunas jÃ¡ se separam) */}
+      {/* Divider só em telas pequenas (em xl as colunas já se separam) */}
       <div className="border-t border-border-subtle xl:hidden" />
 
       {/* === BRAND KIT === */}
@@ -1017,7 +1017,7 @@ export function StepVisual() {
             <Palette className="w-8 h-8 text-text-muted mx-auto" />
             <p className="text-sm text-text-muted">Nenhum brand kit cadastrado.</p>
             <p className="text-xs text-text-muted">
-              Clique em &quot;Criar Brand Kit&quot; acima para comeÃ§ar.
+              Clique em &quot;Criar Brand Kit&quot; acima para começar.
             </p>
           </div>
         ) : (
@@ -1125,7 +1125,7 @@ export function StepVisual() {
           <div className="text-left">
             <p className="text-sm font-medium text-text-primary">Usar logo no criativo</p>
             <p className="text-xs text-text-muted">
-              {showLogo ? "Logo serÃ¡ incluÃ­do no criativo" : "Criativo sem logo"}
+              {showLogo ? "Logo será incluído no criativo" : "Criativo sem logo"}
             </p>
           </div>
           <ImageIcon className={cn("w-5 h-5 ml-auto", showLogo ? "text-accent-champagne" : "text-text-muted")} />
@@ -1218,7 +1218,7 @@ export function StepVisual() {
             )}
 
             <p className="text-[10px] text-text-muted">
-              Fundo transparente recomendado. PNG ou SVG, mÃ¡ximo 2MB.
+              Fundo transparente recomendado. PNG ou SVG, máximo 2MB.
             </p>
 
             {/* Logo status */}
@@ -1246,58 +1246,58 @@ export function StepVisual() {
 export const EXPERT_ADJUSTMENT_PRESETS: { id: string; label: string; instruction: string }[] = [
   {
     id: "no-glasses",
-    label: "Sem Ã³culos",
-    instruction: "NÃ£o desenhar Ã³culos na pessoa, mesmo se o template mostrar Ã³culos.",
+    label: "Sem óculos",
+    instruction: "Não desenhar óculos na pessoa, mesmo se o template mostrar óculos.",
   },
   {
     id: "no-tie",
     label: "Sem gravata",
-    instruction: "NÃ£o desenhar gravata, mesmo se o template mostrar gravata.",
+    instruction: "Não desenhar gravata, mesmo se o template mostrar gravata.",
   },
   {
     id: "no-beard",
     label: "Sem barba",
-    instruction: "NÃ£o desenhar barba, mesmo se o template mostrar pessoa com barba.",
+    instruction: "Não desenhar barba, mesmo se o template mostrar pessoa com barba.",
   },
   {
     id: "no-hat",
-    label: "Sem chapÃ©u ou bonÃ©",
-    instruction: "NÃ£o desenhar chapÃ©u, bonÃ© ou qualquer acessÃ³rio de cabeÃ§a.",
+    label: "Sem chapéu ou boné",
+    instruction: "Não desenhar chapéu, boné ou qualquer acessório de cabeça.",
   },
   {
     id: "neutral-expression",
-    label: "ExpressÃ£o neutra ou sÃ©ria",
-    instruction: "Manter expressÃ£o neutra ou sÃ©ria. NÃ£o fazer a pessoa sorrir, mesmo se o template tiver sorriso.",
+    label: "Expressão neutra ou séria",
+    instruction: "Manter expressão neutra ou séria. Não fazer a pessoa sorrir, mesmo se o template tiver sorriso.",
   },
   {
     id: "use-expert-clothing",
     label: "Usar roupa das fotos do expert",
-    instruction: "Usar a roupa que aparece nas fotos do expert, nÃ£o a roupa do template. Se o template tem terno mas as fotos mostram camisa social, usar camisa social.",
+    instruction: "Usar a roupa que aparece nas fotos do expert, não a roupa do template. Se o template tem terno mas as fotos mostram camisa social, usar camisa social.",
   },
   {
     id: "preserve-hair",
     label: "Preservar cabelo do expert",
-    instruction: "Manter cor, comprimento e estilo do cabelo exatamente como nas fotos do expert. NÃ£o trocar pelo cabelo do template.",
+    instruction: "Manter cor, comprimento e estilo do cabelo exatamente como nas fotos do expert. Não trocar pelo cabelo do template.",
   },
   {
     id: "preserve-age",
     label: "Preservar idade real do expert",
-    instruction: "Manter a idade aparente do expert das fotos. NÃ£o rejuvenescer nem envelhecer.",
+    instruction: "Manter a idade aparente do expert das fotos. Não rejuvenescer nem envelhecer.",
   },
   {
     id: "force-brand-colors",
-    label: "ForÃ§ar paleta da marca",
-    instruction: "OBRIGATÃ“RIO: TODA a paleta visÃ­vel na arte final (fundo, textos, formas, gradientes, overlays, badges, destaques, sombras coloridas, tints, divisores, Ã­cones decorativos) DEVE estar dentro da paleta de cores da marca configurada no brand kit. JAMAIS use cores do template original â€” elas servem sÃ³ pra indicar ONDE vai cada cor, nÃ£o QUAL. Onde o template usa cor escura/principal â†’ usar PrimÃ¡ria da marca. Onde usa cor de destaque â†’ usar Accent. Onde usa cor de fundo â†’ usar Fundo (ou PrimÃ¡ria). Onde usa cor clara â†’ manter clara mas dentro da paleta.",
+    label: "Forçar paleta da marca",
+    instruction: "OBRIGATÓRIO: TODA a paleta visível na arte final (fundo, textos, formas, gradientes, overlays, badges, destaques, sombras coloridas, tints, divisores, ícones decorativos) DEVE estar dentro da paleta de cores da marca configurada no brand kit. JAMAIS use cores do template original — elas servem só pra indicar ONDE vai cada cor, não QUAL. Onde o template usa cor escura/principal → usar Primária da marca. Onde usa cor de destaque → usar Accent. Onde usa cor de fundo → usar Fundo (ou Primária). Onde usa cor clara → manter clara mas dentro da paleta.",
   },
   {
     id: "force-brand-logo",
-    label: "ForÃ§ar logo da marca",
-    instruction: "OBRIGATÃ“RIO: o ÃšNICO logo, selo ou assinatura visual permitido na arte final Ã© o logo da marca anexado. Qualquer outro logo, marca d'Ã¡gua, sÃ­mbolo de empresa ou assinatura que apareÃ§a no template original DEVE SUMIR completamente. Se o template tem logo de outra empresa, REMOVE e substitui pelo logo da marca configurada (mesma posiÃ§Ã£o e tamanho relativo).",
+    label: "Forçar logo da marca",
+    instruction: "OBRIGATÓRIO: o ÚNICO logo, selo ou assinatura visual permitido na arte final é o logo da marca anexado. Qualquer outro logo, marca d'água, símbolo de empresa ou assinatura que apareça no template original DEVE SUMIR completamente. Se o template tem logo de outra empresa, REMOVE e substitui pelo logo da marca configurada (mesma posição e tamanho relativo).",
   },
   {
     id: "force-brand-typography",
-    label: "ForÃ§ar tipografia da marca",
-    instruction: "OBRIGATÃ“RIO: usar APENAS as fontes configuradas no brand kit da marca para todos os textos da arte final. TÃ­tulos na fonte de heading da marca, corpo na fonte body da marca. JAMAIS usar a fonte original do template.",
+    label: "Forçar tipografia da marca",
+    instruction: "OBRIGATÓRIO: usar APENAS as fontes configuradas no brand kit da marca para todos os textos da arte final. Títulos na fonte de heading da marca, corpo na fonte body da marca. JAMAIS usar a fonte original do template.",
   },
 ];
 
@@ -1325,7 +1325,7 @@ function ExpertAdjustmentsSection({
       <div>
         <h4 className="text-sm font-semibold text-text-primary">Ajustes do expert</h4>
         <p className="text-[11px] text-text-muted mt-0.5">
-          Marque as particularidades do seu expert que nÃ£o devem ser puxadas do template.
+          Marque as particularidades do seu expert que não devem ser puxadas do template.
         </p>
       </div>
 
@@ -1357,17 +1357,17 @@ function ExpertAdjustmentsSection({
 
       <div>
         <label className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-          Particularidades e variaÃ§Ã£o (opcional)
+          Particularidades e variação (opcional)
         </label>
         <textarea
           value={value.notes}
           onChange={(e) => onChange({ ...value, notes: e.target.value })}
           rows={3}
-          placeholder="Ex.: o expert tem sardas, pele clara. Para variar: 'varie o cenÃ¡rio simulando um consultÃ³rio, cada criativo com um fundo diferente'."
+          placeholder="Ex.: o expert tem sardas, pele clara. Para variar: 'varie o cenário simulando um consultório, cada criativo com um fundo diferente'."
           className="mt-1 w-full resize-none rounded-lg border border-border-subtle bg-surface-000 px-3 py-2 text-xs text-text-primary outline-none focus:border-accent-champagne"
         />
         <p className="mt-1 text-[10px] text-text-muted">
-          Dica: peÃ§a variaÃ§Ã£o de cenÃ¡rio aqui (ex: &quot;varie o fundo&quot;) e suba vÃ¡rias fotos do expert â€” cada criativo usarÃ¡ uma foto e um fundo diferente.
+          Dica: peça variação de cenário aqui (ex: &quot;varie o fundo&quot;) e suba várias fotos do expert — cada criativo usará uma foto e um fundo diferente.
         </p>
       </div>
     </div>

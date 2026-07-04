@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect } from "react";
@@ -238,7 +238,7 @@ export function StepResult() {
               setStep(3);
             }}
             className="flex items-center gap-2 px-3 py-2 rounded-lg bg-accent-champagne text-surface-000 text-sm font-semibold hover:bg-accent-champagne/90"
-            title="Volta pra tela de gerar e ACRESCENTA novos criativos (os atuais sÃ£o mantidos)"
+            title="Volta pra tela de gerar e ACRESCENTA novos criativos (os atuais são mantidos)"
           >
             <RotateCcw className="w-4 h-4" />
             Gerar mais

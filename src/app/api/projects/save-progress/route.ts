@@ -1,13 +1,13 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 
 /**
  * POST /api/projects/save-progress
  * Cria ou atualiza um projeto incrementalmente.
- * Chamado a cada mudanÃ§a de step no wizard para persistir progresso.
+ * Chamado a cada mudança de step no wizard para persistir progresso.
  *
  * Se projectId fornecido: atualiza o projeto existente.
- * Se nÃ£o: cria novo projeto com status 'incomplete'.
+ * Se não: cria novo projeto com status 'incomplete'.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -55,10 +55,10 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (!existing) {
-        return NextResponse.json({ error: "Projeto nÃ£o encontrado" }, { status: 404 });
+        return NextResponse.json({ error: "Projeto não encontrado" }, { status: 404 });
       }
 
-      // NÃ£o atualizar projetos jÃ¡ completos
+      // Não atualizar projetos já completos
       if (existing.status === "complete") {
         return NextResponse.json({ projectId, status: "complete" });
       }
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       const resolvedStatus = shouldPreserveExistingStatus ? existing.status : progressStatus;
 
       // Atualizar dados do projeto
-      // (current_step e preferred_model: colunas pendentes de migration â€” escritas omitidas pra evitar 500)
+      // (current_step e preferred_model: colunas pendentes de migration — escritas omitidas pra evitar 500)
       void currentStep;
       const updateData: Record<string, unknown> = {
         updated_at: new Date().toISOString(),
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
           notes: typeof expertAdjustments?.notes === "string" ? expertAdjustments.notes : "",
         };
       }
-      // BLOCO A/B â€” padrÃ£o de copy + campos ativos (nÃ­vel projeto)
+      // BLOCO A/B — padrão de copy + campos ativos (nível projeto)
       if (copyPattern === "estatico" || copyPattern === "mini_copy") {
         updateData.copy_pattern = copyPattern;
       }
@@ -190,7 +190,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Atualizar fundos prÃ³prios (delete + insert, com dedupe por file_path)
+      // Atualizar fundos próprios (delete + insert, com dedupe por file_path)
       if (selectedBackgrounds !== undefined) {
         await supabase
           .from("criativos_project_backgrounds")
@@ -292,7 +292,7 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    // Inserir fundos prÃ³prios (dedupe por file_path)
+    // Inserir fundos próprios (dedupe por file_path)
     const newBackgroundRows = buildBackgroundRows(selectedBackgrounds, newProjectId);
     if (newBackgroundRows.length > 0) {
       await supabase.from("criativos_project_backgrounds").insert(newBackgroundRows);

@@ -1,13 +1,13 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { generateTextWithRotation } from "@/lib/api-key-rotator";
 import { buildCopyPrompt, buildTemplateAwareCopyPrompt } from "@/lib/prompt-builder";
 
 /**
  * POST /api/copy-generate
- * Gera N versÃµes de copy usando Gemini (texto, nÃ£o imagem).
+ * Gera N versões de copy usando Gemini (texto, não imagem).
  * Suporta dois modos:
- *   1. Modo bÃ¡sico: direction + elements (legado)
+ *   1. Modo básico: direction + elements (legado)
  *   2. Modo template-aware: productName + salesArguments + templateIds (EP-02.07)
  */
 export async function POST(request: NextRequest) {
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     if (!orgId) {
       return NextResponse.json(
-        { error: "orgId Ã© obrigatÃ³rio" },
+        { error: "orgId é obrigatório" },
         { status: 400 }
       );
     }
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const validCount = Math.min(Math.max(body.count || 3, 1), 10);
 
     // Buscar persona (opcional)
-    let personaSummary = "PÃºblico geral";
+    let personaSummary = "Público geral";
     if (personaId) {
       const { data: persona } = await supabase
         .from("criativos_personas")
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Filtrar templates que tÃªm copy_elements
+      // Filtrar templates que têm copy_elements
       const templatesWithElements = templates
         .filter((t) => t.copy_elements?.length)
         .map((t) => ({
@@ -85,9 +85,9 @@ export async function POST(request: NextRequest) {
         }));
 
       if (templatesWithElements.length === 0) {
-        // Fallback: elementos do PADRÃƒO ativo (estatico â†’ headline/subheadline/ponte/cta;
-        // mini_copy â†’ headline/mini_copy/list_items/cta). Sem isto, a IA gerava sempre
-        // em mini_copy, ignorando o padrÃ£o EstÃ¡tico selecionado no projeto.
+        // Fallback: elementos do PADRÃO ativo (estatico → headline/subheadline/ponte/cta;
+        // mini_copy → headline/mini_copy/list_items/cta). Sem isto, a IA gerava sempre
+        // em mini_copy, ignorando o padrão Estático selecionado no projeto.
         const defaultElements = body.copyPattern === "estatico"
           ? ["headline", "subheadline", "ponte", "cta"]
           : ["headline", "mini_copy", "list_items", "cta"];
@@ -107,12 +107,12 @@ export async function POST(request: NextRequest) {
         });
       }
     } else {
-      // Modo bÃ¡sico (legado)
+      // Modo básico (legado)
       const { elements, direction } = body;
 
       if (!elements?.length || !direction) {
         return NextResponse.json(
-          { error: "elements, direction e orgId sÃ£o obrigatÃ³rios" },
+          { error: "elements, direction e orgId são obrigatórios" },
           { status: 400 }
         );
       }
@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ copies, count: copies.length });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      return NextResponse.json({ error: `Falha na geraÃ§Ã£o: ${message}` }, { status: 500 });
+      return NextResponse.json({ error: `Falha na geração: ${message}` }, { status: 500 });
     }
   } catch (err) {
     return handleAuthError(err);

@@ -1,4 +1,4 @@
-﻿import { CONTRAST, BRAND_FALLBACK } from "@/lib/config/contrast";
+import { CONTRAST, BRAND_FALLBACK } from "@/lib/config/contrast";
 
 export interface ExtractedBrand {
   colors: {
@@ -31,9 +31,9 @@ const BG_KEYS = ["background", "bg", "surface"];
 const FG_KEYS = ["foreground", "text", "fg", "content"];
 const NOISE_KEYS = ["destructive", "danger", "error", "success", "warning", "info", "ring", "muted"];
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
 // Normalizadores
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
 
 function hslToHex(h: number, s: number, l: number): string {
   s /= 100;
@@ -74,9 +74,9 @@ function normalizeColor(raw: string): string | null {
   return null;
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Filtros de ruÃ­do
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
+// Filtros de ruído
+// ─────────────────────────────────────────────────────────
 
 function isNoiseColor(hex: string): boolean {
   if (!/^#[0-9a-f]{6}$/i.test(hex)) return true;
@@ -86,7 +86,7 @@ function isNoiseColor(hex: string): boolean {
   // Branco puro / preto puro
   if (r > 248 && g > 248 && b > 248) return true;
   if (r < 8 && g < 8 && b < 8) return true;
-  // Cinzas neutros (variaÃ§Ã£o <12 entre canais E luminÃ¢ncia mÃ©dia)
+  // Cinzas neutros (variação <12 entre canais E luminância média)
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   if (max - min < 12 && max > 32 && max < 224) return true;
@@ -94,16 +94,16 @@ function isNoiseColor(hex: string): boolean {
 }
 
 function looksLikeErrorRed(hex: string): boolean {
-  // Vermelho de erro padrÃ£o: #ef4444, #dc2626, #ff5722
+  // Vermelho de erro padrão: #ef4444, #dc2626, #ff5722
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return r > 200 && g < 90 && b < 90;
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
 // Parsers de CSS
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
 
 interface CssVars {
   [name: string]: string; // HEX normalizado
@@ -174,9 +174,9 @@ function extractFontsFromCSS(css: string): string[] {
   return [...new Set(fonts)];
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
 // Logo + CSS externo
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
 
 function extractLogoUrl(html: string, baseUrl: string): string | null {
   const ogMatch = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i);
@@ -233,11 +233,11 @@ function extractStylesheetUrls(html: string, baseUrl: string): string[] {
   return urls.slice(0, MAX_CSS_FILES);
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// API pÃºblica
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────
+// API pública
+// ─────────────────────────────────────────────────────────
 
-// fallback de ultimo recurso â€” use cores reais do brand kit sempre.
+// fallback de ultimo recurso — use cores reais do brand kit sempre.
 // Estas cores genericas so entram quando a extracao de brand falha por completo.
 const DEFAULT_FALLBACK: ExtractedBrand = {
   colors: {
@@ -257,7 +257,7 @@ const DEFAULT_FALLBACK: ExtractedBrand = {
 export async function extractBrand(url: string): Promise<ExtractedBrand> {
   const { isPublicUrl } = await import("./api-auth");
   if (!isPublicUrl(url)) {
-    throw new Error("URL nÃ£o permitida: apenas URLs pÃºblicas sÃ£o aceitas");
+    throw new Error("URL não permitida: apenas URLs públicas são aceitas");
   }
 
   const html = await fetchWithTimeout(url, FETCH_TIMEOUT_MS);
@@ -275,14 +275,14 @@ export async function extractBrand(url: string): Promise<ExtractedBrand> {
 
   const allCSS = [styleBlocks, inlineStyles, ...externalCss].join("\n");
 
-  // 1) Tenta extrair por CSS variables semÃ¢nticas (mais confiÃ¡vel)
+  // 1) Tenta extrair por CSS variables semânticas (mais confiável)
   const vars = parseCssVars(allCSS);
   const primaryFromVar = matchVarByKeywords(vars, PRIMARY_KEYS, NOISE_KEYS);
   const accentFromVar = matchVarByKeywords(vars, ACCENT_KEYS, NOISE_KEYS);
   const bgFromVar = matchVarByKeywords(vars, BG_KEYS, NOISE_KEYS);
   const fgFromVar = matchVarByKeywords(vars, FG_KEYS, NOISE_KEYS);
 
-  // 2) Fallback / complemento: ranking de frequÃªncia
+  // 2) Fallback / complemento: ranking de frequência
   const ranked = rankColors(allCSS);
   const rankedNoError = ranked.filter((c) => !looksLikeErrorRed(c.hex));
 

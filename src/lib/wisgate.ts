@@ -1,4 +1,4 @@
-﻿import type { GenerateCreativeInput, GenerateCreativeResult } from "./gemini";
+import type { GenerateCreativeInput, GenerateCreativeResult } from "./gemini";
 import { getTimeout, isGemini3ImageModel } from "./models";
 import { ENDPOINTS } from "@/lib/config/endpoints";
 
@@ -25,9 +25,9 @@ interface WisGateResponse {
 /**
  * Gera imagem via endpoint NATIVO Gemini do WisGate (/v1beta/models/{model}:generateContent).
  *
- * IMPORTANTE: os modelos gemini-3-*-image do WisGate dÃ£o `model_price_error`
+ * IMPORTANTE: os modelos gemini-3-*-image do WisGate dão `model_price_error`
  * ("System busy") no endpoint OpenAI-compat (/v1/chat/completions), mas FUNCIONAM
- * no endpoint Gemini-compat. Por isso Gemini 3 Ã© roteado por aqui.
+ * no endpoint Gemini-compat. Por isso Gemini 3 é roteado por aqui.
  */
 async function generateCreativeViaGemini(
   apiKey: string,
@@ -37,7 +37,7 @@ async function generateCreativeViaGemini(
   const parts: Array<Record<string, unknown>> = [{ text: input.prompt }];
   const pushImg = (buf: Buffer) =>
     parts.push({ inlineData: { mimeType: "image/png", data: buf.toString("base64") } });
-  // Modo composiÃ§Ã£o: a foto de fundo entra como PRIMEIRA imagem (a "cena final").
+  // Modo composição: a foto de fundo entra como PRIMEIRA imagem (a "cena final").
   if (input.background) pushImg(input.background);
   input.templates.forEach(pushImg);
   (input.expertPhotos ?? []).forEach(pushImg);
@@ -83,7 +83,7 @@ async function generateCreativeViaGemini(
   }
 
   if (!image) {
-    throw new Error("WisGate (Gemini) nÃ£o retornou imagem na resposta.");
+    throw new Error("WisGate (Gemini) não retornou imagem na resposta.");
   }
 
   return { image, mimeType, text };
@@ -98,14 +98,14 @@ export async function generateCreative(
   input: GenerateCreativeInput,
   model: string = "gemini-2.5-flash"
 ): Promise<GenerateCreativeResult> {
-  // Gemini 3 de imagem sÃ³ funciona no endpoint nativo Gemini do WisGate.
+  // Gemini 3 de imagem só funciona no endpoint nativo Gemini do WisGate.
   if (isGemini3ImageModel(model)) {
     return generateCreativeViaGemini(apiKey, input, model);
   }
 
   const content: Array<Record<string, unknown>> = [
     { type: "text", text: input.prompt },
-    // Modo composiÃ§Ã£o: a foto de fundo entra como PRIMEIRA imagem (a "cena final").
+    // Modo composição: a foto de fundo entra como PRIMEIRA imagem (a "cena final").
     ...(input.background
       ? [{ type: "image_url", image_url: { url: `data:image/png;base64,${input.background.toString("base64")}` } }]
       : []),
@@ -157,7 +157,7 @@ export async function generateCreative(
   }
 
   if (!data.choices?.length) {
-    throw new Error("WisGate nÃ£o retornou choices na resposta");
+    throw new Error("WisGate não retornou choices na resposta");
   }
 
   const messageContent = data.choices[0].message.content;
@@ -178,7 +178,7 @@ export async function generateCreative(
         image = Buffer.from(dataUrlMatch[2], "base64");
       }
     }
-    // TambÃ©m checar data URL direta (sem markdown)
+    // Também checar data URL direta (sem markdown)
     if (!image) {
       const directMatch = messageContent.match(/data:(image\/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=]+)/);
       if (directMatch) {
@@ -206,7 +206,7 @@ export async function generateCreative(
 
   if (!image) {
     throw new Error(
-      "WisGate nÃ£o retornou imagem na resposta."
+      "WisGate não retornou imagem na resposta."
     );
   }
 
@@ -214,7 +214,7 @@ export async function generateCreative(
 }
 
 /**
- * Testa conexÃ£o com WisGate.
+ * Testa conexão com WisGate.
  */
 export async function testConnection(apiKey: string, model: string = "gemini-2.5-flash"): Promise<boolean> {
   try {

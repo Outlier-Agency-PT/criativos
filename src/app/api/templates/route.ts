@@ -1,17 +1,17 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { requireAuth, handleAuthError, whitelist, createServiceSupabase } from "@/lib/api-auth";
 
-// Client direto com service key â€” usado APENAS para storage (signed URLs)
+// Client direto com service key — usado APENAS para storage (signed URLs)
 const storageClient = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
 );
 
 /**
- * Verifica se a org do usuÃ¡rio Ã© Super Admin (curadoria de templates globais).
- * Fonte canÃ´nica Ãºnica: criativos_org_limits.is_super_admin (EP-14.01).
- * SÃ³ o Super Admin pode marcar/editar is_global=TRUE; cliente comum nunca.
+ * Verifica se a org do usuário é Super Admin (curadoria de templates globais).
+ * Fonte canônica única: criativos_org_limits.is_super_admin (EP-14.01).
+ * Só o Super Admin pode marcar/editar is_global=TRUE; cliente comum nunca.
  */
 async function isSuperAdminOrg(
   supabase: SupabaseClient,
@@ -27,7 +27,7 @@ async function isSuperAdminOrg(
 
 /**
  * GET /api/templates?orgId=xxx&category=xxx
- * Lista templates da organizaÃ§Ã£o.
+ * Lista templates da organização.
  */
 export async function GET(request: NextRequest) {
   try {
@@ -37,11 +37,11 @@ export async function GET(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
-    // Templates globais (swipe file padrÃ£o do admin, is_global=true) aparecem
-    // pra TODAS as orgs; os demais sÃ³ pra org dona. (is_global OR org_id = orgId)
+    // Templates globais (swipe file padrão do admin, is_global=true) aparecem
+    // pra TODAS as orgs; os demais só pra org dona. (is_global OR org_id = orgId)
     let query = supabase
       .from("criativos_templates")
       .select("*")
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Gerar signed URLs EM LOTE (1 round-trip) com service key (client direto).
-    // createSignedUrls evita N chamadas de rede quando hÃ¡ muitos templates.
+    // createSignedUrls evita N chamadas de rede quando há muitos templates.
     const rows = data || [];
     const paths = rows
       .map((t: Record<string, unknown>) =>
@@ -109,11 +109,11 @@ export async function POST(request: NextRequest) {
     const { supabase } = await requireAuth(org_id);
 
     if (!name || !category || !file_path || !org_id) {
-      return NextResponse.json({ error: "name, category, file_path e org_id obrigatÃ³rios" }, { status: 400 });
+      return NextResponse.json({ error: "name, category, file_path e org_id obrigatórios" }, { status: 400 });
     }
 
-    // Guard de mutaÃ§Ã£o global (FR-014b): sÃ³ o Super Admin pode criar template
-    // is_global=TRUE. Cliente comum que tentar promover leva 403 explÃ­cito.
+    // Guard de mutação global (FR-014b): só o Super Admin pode criar template
+    // is_global=TRUE. Cliente comum que tentar promover leva 403 explícito.
     // Cliente criando template normal (sem is_global ou is_global=false) segue igual.
     const wantsGlobal = is_global === true;
     let writeClient = supabase;
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
           { status: 403 }
         );
       }
-      // PromoÃ§Ã£o a global Ã© mutaÃ§Ã£o privilegiada: usa service key no backend.
+      // Promoção a global é mutação privilegiada: usa service key no backend.
       writeClient = await createServiceSupabase();
     }
 
@@ -168,8 +168,8 @@ export async function POST(request: NextRequest) {
         spacing: spacing || null,
         analyzed_at: analyzed_at || null,
         org_id,
-        // is_global sÃ³ vai pra TRUE quando o Super Admin promove (jÃ¡ validado acima).
-        // Cliente comum nunca chega aqui com wantsGlobal=true, entÃ£o cai pra FALSE.
+        // is_global só vai pra TRUE quando o Super Admin promove (já validado acima).
+        // Cliente comum nunca chega aqui com wantsGlobal=true, então cai pra FALSE.
         is_global: wantsGlobal,
         is_system: false,
         is_active: true,
@@ -195,18 +195,18 @@ export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
     const { id, orgId, org_id, ...rest } = body;
-    // requireAuth resolve a org efetiva (se nÃ£o veio no body, pega a do usuÃ¡rio).
+    // requireAuth resolve a org efetiva (se não veio no body, pega a do usuário).
     const { supabase, orgId: resolvedOrgId } = await requireAuth(orgId || org_id);
 
     if (!id) {
-      return NextResponse.json({ error: "id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
     }
 
-    // Guard de mutaÃ§Ã£o global (FR-014b): PROMOVER um template a is_global=TRUE
-    // sÃ³ Ã© permitido pro Super Admin. O gatilho do 403 espelha o POST: sÃ³ dispara
-    // quando is_global === true (promoÃ§Ã£o real), nÃ£o quando a chave simplesmente
+    // Guard de mutação global (FR-014b): PROMOVER um template a is_global=TRUE
+    // só é permitido pro Super Admin. O gatilho do 403 espelha o POST: só dispara
+    // quando is_global === true (promoção real), não quando a chave simplesmente
     // aparece no body. Assim um cliente que mande is_global:false (idempotente,
-    // ex: PATCH de campos prÃ³prios) NÃƒO toma 403 indevido.
+    // ex: PATCH de campos próprios) NÃO toma 403 indevido.
     const wantsPromoteGlobal = rest.is_global === true;
     let isAdmin = false;
     let writeClient = supabase;
@@ -218,13 +218,13 @@ export async function PATCH(request: NextRequest) {
           { status: 403 }
         );
       }
-      // PromoÃ§Ã£o a global Ã© mutaÃ§Ã£o privilegiada: usa service key no backend.
+      // Promoção a global é mutação privilegiada: usa service key no backend.
       writeClient = await createServiceSupabase();
     }
 
-    // is_global entra na whitelist SÃ“ pro Super Admin promovendo (jÃ¡ validado acima).
-    // Pro cliente comum, o campo Ã© removido do update mesmo que venha no body
-    // (is_global:false nÃ£o promove nada, e nÃ£o deixamos cliente rebaixar global).
+    // is_global entra na whitelist SÓ pro Super Admin promovendo (já validado acima).
+    // Pro cliente comum, o campo é removido do update mesmo que venha no body
+    // (is_global:false não promove nada, e não deixamos cliente rebaixar global).
     const allowedFields = [
       "name", "category", "tags", "copy_elements", "mini_prompt", "is_active", "is_favorite",
       "rating", "quality_status", "file_path", "thumbnail_path",

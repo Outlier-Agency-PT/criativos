@@ -1,22 +1,22 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { generateTextWithRotation } from "@/lib/api-key-rotator";
 
 const MAX_TEXTS = 20;
 
-const ANALYSIS_PROMPT = `VocÃª Ã© um copywriter especialista. Analise cada texto de copy a seguir e extraia os elementos estruturados.
+const ANALYSIS_PROMPT = `Você é um copywriter especialista. Analise cada texto de copy a seguir e extraia os elementos estruturados.
 
-Para cada texto, identifique 4 elementos obrigatÃ³rios:
-- **headline**: a frase principal de impacto que chama atenÃ§Ã£o
-- **mini_copy**: subtÃ­tulo de apoio que complementa a headline
-- **list_items**: lista de tÃ³picos/benefÃ­cios, um por linha (separados por \\n)
-- **cta**: call-to-action (aÃ§Ã£o que o leitor deve tomar)
+Para cada texto, identifique 4 elementos obrigatórios:
+- **headline**: a frase principal de impacto que chama atenção
+- **mini_copy**: subtítulo de apoio que complementa a headline
+- **list_items**: lista de tópicos/benefícios, um por linha (separados por \\n)
+- **cta**: call-to-action (ação que o leitor deve tomar)
 - **body**: restante do texto (se houver)
 
-Se nÃ£o encontrar algum elemento explicitamente, derive-o do conteÃºdo.
-Se nÃ£o houver lista clara, extraia os principais pontos do texto.
+Se não encontrar algum elemento explicitamente, derive-o do conteúdo.
+Se não houver lista clara, extraia os principais pontos do texto.
 
-IMPORTANTE: Retorne APENAS um JSON vÃ¡lido, sem markdown, sem backticks, sem texto adicional.
+IMPORTANTE: Retorne APENAS um JSON válido, sem markdown, sem backticks, sem texto adicional.
 
 Formato de resposta:
 [
@@ -24,7 +24,7 @@ Formato de resposta:
   ...
 ]
 
-Textos para anÃ¡lise:
+Textos para análise:
 `;
 
 /**
@@ -40,15 +40,15 @@ export async function POST(request: NextRequest) {
     await requireAuth(resolvedOrgId);
 
     if (!resolvedOrgId) {
-      return NextResponse.json({ error: "org_id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "org_id obrigatório" }, { status: 400 });
     }
 
     if (!texts || !Array.isArray(texts) || texts.length === 0) {
-      return NextResponse.json({ error: "texts obrigatÃ³rio (array de strings)" }, { status: 400 });
+      return NextResponse.json({ error: "texts obrigatório (array de strings)" }, { status: 400 });
     }
 
     if (texts.length > MAX_TEXTS) {
-      return NextResponse.json({ error: `MÃ¡ximo ${MAX_TEXTS} textos por chamada` }, { status: 400 });
+      return NextResponse.json({ error: `Máximo ${MAX_TEXTS} textos por chamada` }, { status: 400 });
     }
 
     // Construir prompt com textos numerados
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     try {
       // Tentar extrair JSON da resposta (pode ter texto extra)
       const jsonMatch = response.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) throw new Error("JSON nÃ£o encontrado na resposta");
+      if (!jsonMatch) throw new Error("JSON não encontrado na resposta");
       results = JSON.parse(jsonMatch[0]);
     } catch {
       // Fallback: cada texto vira headline inteira

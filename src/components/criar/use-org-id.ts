@@ -1,11 +1,11 @@
-﻿"use client";
+"use client";
 
 
 import { useState, useEffect } from "react";
 import { createBrowserSupabase } from "@/lib/supabase-browser";
 
 /**
- * Carrega o org_id do usuÃ¡rio logado (primeira membership).
+ * Carrega o org_id do usuário logado (primeira membership).
  * Compartilhado pelas rotas /criar, /criar/novo e /criar/[projectId].
  */
 export function useOrgId(): { orgId: string | null; loading: boolean } {

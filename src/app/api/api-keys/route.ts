@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { encryptKey } from "@/lib/crypto";
 import { requireAuth, handleAuthError, whitelist } from "@/lib/api-auth";
 import * as gemini from "@/lib/gemini";
@@ -9,7 +9,7 @@ import * as anthropic from "@/lib/anthropic";
 import * as openaiText from "@/lib/openai-text";
 import { isImagenModel, AI_MODELS, TEXT_MODELS } from "@/lib/models";
 
-/** Testa conexÃ£o de uma key escolhendo o client certo pelo provider/modelo. */
+/** Testa conexão de uma key escolhendo o client certo pelo provider/modelo. */
 async function testKeyConnection(provider: string, key: string, model: string): Promise<boolean> {
   if (provider === "anthropic") return anthropic.testConnection(key, model);
   if (provider === "openai") return openaiText.testConnection(key, model);
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { data, error } = await supabase
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!key || !provider || !orgId) {
-      return NextResponse.json({ error: "key, provider e orgId obrigatÃ³rios" }, { status: 400 });
+      return NextResponse.json({ error: "key, provider e orgId obrigatórios" }, { status: 400 });
     }
 
     const encrypted = encryptKey(key);
@@ -128,7 +128,7 @@ export async function PUT(request: NextRequest) {
         .single();
 
       if (error || !keyRow) {
-        return NextResponse.json({ ok: false, message: "Key nÃ£o encontrada" }, { status: 404 });
+        return NextResponse.json({ ok: false, message: "Key não encontrada" }, { status: 404 });
       }
 
       const { decryptKey } = await import("@/lib/crypto");
@@ -136,18 +136,18 @@ export async function PUT(request: NextRequest) {
       const model = keyRow.model || "gemini-2.5-flash";
 
       const ok = await testKeyConnection(keyRow.provider, plain, model);
-      return NextResponse.json({ ok, message: ok ? "ConexÃ£o OK" : "Falha na conexÃ£o" });
+      return NextResponse.json({ ok, message: ok ? "Conexão OK" : "Falha na conexão" });
     }
 
     // Teste de key avulsa
     const { key, provider, model } = body;
 
     if (!key || !provider) {
-      return NextResponse.json({ error: "key e provider obrigatÃ³rios" }, { status: 400 });
+      return NextResponse.json({ error: "key e provider obrigatórios" }, { status: 400 });
     }
 
     const ok = await testKeyConnection(provider, key, model || "gemini-2.5-flash");
-    return NextResponse.json({ ok, message: ok ? "ConexÃ£o OK" : "Falha na conexÃ£o" });
+    return NextResponse.json({ ok, message: ok ? "Conexão OK" : "Falha na conexão" });
   } catch (err) {
     return handleAuthError(err);
   }
@@ -165,7 +165,7 @@ export async function PATCH(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!id) {
-      return NextResponse.json({ error: "id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
     }
 
     const safeUpdates: Record<string, unknown> = whitelist(rest, ["label", "priority", "is_active", "model"]);
@@ -174,7 +174,7 @@ export async function PATCH(request: NextRequest) {
     if (safeUpdates.model) {
       const validModelIds = [...AI_MODELS.map((m) => m.id), ...TEXT_MODELS.map((m) => m.id)];
       if (!validModelIds.includes(safeUpdates.model as string)) {
-        return NextResponse.json({ error: `Modelo invÃ¡lido: ${safeUpdates.model}` }, { status: 400 });
+        return NextResponse.json({ error: `Modelo inválido: ${safeUpdates.model}` }, { status: 400 });
       }
     }
 
@@ -212,11 +212,11 @@ export async function DELETE(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!id) {
-      return NextResponse.json({ error: "id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
     }
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { error } = await supabase

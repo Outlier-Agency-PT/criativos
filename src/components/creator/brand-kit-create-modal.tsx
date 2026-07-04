@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState } from "react";
@@ -81,7 +81,7 @@ export function BrandKitCreateModal({ orgId, onClose, onCreated }: BrandKitCreat
       if (data.fonts?.heading) setHeadingFont(typeof data.fonts.heading === "object" ? data.fonts.heading.family : data.fonts.heading);
       if (data.fonts?.body) setBodyFont(typeof data.fonts.body === "object" ? data.fonts.body.family : data.fonts.body);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Falha na extraÃ§Ã£o");
+      setError(err instanceof Error ? err.message : "Falha na extração");
     } finally {
       setExtracting(false);
     }
@@ -91,7 +91,7 @@ export function BrandKitCreateModal({ orgId, onClose, onCreated }: BrandKitCreat
     setError(null);
 
     if (!name.trim()) {
-      setError("Nome obrigatÃ³rio");
+      setError("Nome obrigatório");
       return;
     }
     if (!isValidHex(primary) || !isValidHex(secondary) || !isValidHex(accent)) {
@@ -155,8 +155,8 @@ export function BrandKitCreateModal({ orgId, onClose, onCreated }: BrandKitCreat
           <div className="space-y-2">
             <p className="text-xs font-medium text-text-secondary">Cores *</p>
             <div className="grid grid-cols-3 gap-3">
-              <ColorInput label="PrimÃ¡ria" value={primary} onChange={setPrimary} />
-              <ColorInput label="SecundÃ¡ria" value={secondary} onChange={setSecondary} />
+              <ColorInput label="Primária" value={primary} onChange={setPrimary} />
+              <ColorInput label="Secundária" value={secondary} onChange={setSecondary} />
               <ColorInput label="Accent" value={accent} onChange={setAccent} />
             </div>
           </div>

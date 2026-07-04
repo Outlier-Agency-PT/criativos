@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
@@ -35,7 +35,7 @@ function parseBlocks(content: string): ParsedBlock[] {
       let headline = lines[0] || text;
       let body: string | null = null;
 
-      // Se comeÃ§a com ## header, usar como headline
+      // Se começa com ## header, usar como headline
       if (headline.startsWith("## ") || headline.startsWith("### ")) {
         headline = headline.replace(/^#{2,3}\s+/, "");
         body = lines.slice(1).join("\n") || null;
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
   try {
     const contentType = request.headers.get("content-type") || "";
 
-    // Modo 1: Upload de ficheiro (FormData) â€” retorna blocos parseados
+    // Modo 1: Upload de ficheiro (FormData) — retorna blocos parseados
     if (contentType.includes("multipart/form-data")) {
       const formData = await request.formData();
       const file = formData.get("file") as File | null;
@@ -65,18 +65,18 @@ export async function POST(request: NextRequest) {
       await requireAuth(orgId);
 
       if (!file) {
-        return NextResponse.json({ error: "file obrigatÃ³rio" }, { status: 400 });
+        return NextResponse.json({ error: "file obrigatório" }, { status: 400 });
       }
 
-      // Validar extensÃ£o
+      // Validar extensão
       const ext = "." + (file.name.split(".").pop()?.toLowerCase() || "");
       if (!ALLOWED_EXTENSIONS.includes(ext)) {
-        return NextResponse.json({ error: "Formato nÃ£o suportado. Aceitos: .txt, .md" }, { status: 400 });
+        return NextResponse.json({ error: "Formato não suportado. Aceitos: .txt, .md" }, { status: 400 });
       }
 
       // Validar tamanho
       if (file.size > MAX_FILE_SIZE) {
-        return NextResponse.json({ error: "Ficheiro muito grande. MÃ¡ximo: 1MB" }, { status: 400 });
+        return NextResponse.json({ error: "Ficheiro muito grande. Máximo: 1MB" }, { status: 400 });
       }
 
       const content = await file.text();
@@ -93,11 +93,11 @@ export async function POST(request: NextRequest) {
     const { supabase, user } = await requireAuth(resolvedOrgId);
 
     if (!resolvedOrgId) {
-      return NextResponse.json({ error: "org_id obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "org_id obrigatório" }, { status: 400 });
     }
 
     if (!blocks || !Array.isArray(blocks) || blocks.length === 0) {
-      return NextResponse.json({ error: "blocks obrigatÃ³rio (array)" }, { status: 400 });
+      return NextResponse.json({ error: "blocks obrigatório (array)" }, { status: 400 });
     }
 
     // Batch insert

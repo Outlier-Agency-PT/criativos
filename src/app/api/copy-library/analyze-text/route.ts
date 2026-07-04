@@ -1,8 +1,8 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { generateTextWithRotation } from "@/lib/api-key-rotator";
 
-// PadrÃ£o "mini_copy": headline / mini_copy / list_items / cta (+ body)
+// Padrão "mini_copy": headline / mini_copy / list_items / cta (+ body)
 const PROMPT_MINI_COPY = `Voce e um especialista em extrair anuncios e copies de textos de copywriting.
 
 Leia o texto e extraia CADA ANUNCIO/CRIATIVO como um objeto separado. Ignore metadados.
@@ -16,10 +16,10 @@ CADA COPY TEM 5 CAMPOS:
 
 FORMATOS COMUNS:
 1. Criativos completos (HEADLINE + MINI COPY/SUB + CTA + NOTA VISUAL):
-   - MINI COPY (Redline) / SUB / texto corrido â†’ mini_copy
-   - MINI COPY (Lista) / ITENS / bullets â†’ list_items
-   - NOTA VISUAL / observacao â†’ body
-2. Headlines isoladas â†’ headline preenchida, demais ""
+   - MINI COPY (Redline) / SUB / texto corrido → mini_copy
+   - MINI COPY (Lista) / ITENS / bullets → list_items
+   - NOTA VISUAL / observacao → body
+2. Headlines isoladas → headline preenchida, demais ""
 3. Ads com versao A (texto) + B (lista): ambos preenchidos
 
 O QUE IGNORAR:
@@ -29,9 +29,9 @@ O QUE IGNORAR:
 - Titulos de angulo/categoria
 
 REGRAS:
-- Extraia FIELMENTE â€” NAO reescreva, NAO melhore, NAO invente
+- Extraia FIELMENTE — NAO reescreva, NAO melhore, NAO invente
 - Bullets: remova marcadores e coloque um por linha em list_items
-- Redline (texto corrido) â†’ mini_copy. Lista â†’ list_items
+- Redline (texto corrido) → mini_copy. Lista → list_items
 - Campo inexistente = ""
 - Sem limite de caracteres
 
@@ -45,7 +45,7 @@ Formato:
 TEXTO:
 `;
 
-// PadrÃ£o "estatico" (anuncio estatico): headline / subheadline / ponte / cta (+ body)
+// Padrão "estatico" (anuncio estatico): headline / subheadline / ponte / cta (+ body)
 const PROMPT_ESTATICO = `Voce e um especialista em extrair anuncios e copies de textos de copywriting.
 
 Leia o texto e extraia CADA ANUNCIO/CRIATIVO como um objeto separado. Ignore metadados.
@@ -59,10 +59,10 @@ CADA COPY TEM 5 CAMPOS:
 
 FORMATOS COMUNS:
 1. Criativos completos (HEADLINE + SUB + PONTE/CORPO + CTA + NOTA VISUAL):
-   - SUB / subheadline / segunda linha de apoio â†’ subheadline
-   - CORPO / texto corrido que leva ao CTA / ponte â†’ ponte
-   - NOTA VISUAL / observacao â†’ body
-2. Headlines isoladas â†’ headline preenchida, demais ""
+   - SUB / subheadline / segunda linha de apoio → subheadline
+   - CORPO / texto corrido que leva ao CTA / ponte → ponte
+   - NOTA VISUAL / observacao → body
+2. Headlines isoladas → headline preenchida, demais ""
 
 O QUE IGNORAR:
 - Titulo do doc, data, cliente, especialista, status
@@ -71,7 +71,7 @@ O QUE IGNORAR:
 - Titulos de angulo/categoria
 
 REGRAS:
-- Extraia FIELMENTE â€” NAO reescreva, NAO melhore, NAO invente
+- Extraia FIELMENTE — NAO reescreva, NAO melhore, NAO invente
 - Campo inexistente = ""
 - Sem limite de caracteres
 
@@ -88,7 +88,7 @@ TEXTO:
 /**
  * POST /api/copy-library/analyze-text
  * Recebe texto colado pelo usuario e usa IA para organizar em copies estruturadas.
- * A IA NAO cria conteúdo novo â€” apenas organiza o que ja existe.
+ * A IA NAO cria conteúdo novo — apenas organiza o que ja existe.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -119,20 +119,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Montar prompt com texto do usuario (padrÃ£o ativo define os campos)
+    // Montar prompt com texto do usuario (padrão ativo define os campos)
     const fullPrompt = (pattern === "estatico" ? PROMPT_ESTATICO : PROMPT_MINI_COPY) + text.trim();
 
     // Chamar IA via key rotation
     const response = await generateTextWithRotation(orgId, fullPrompt);
 
-    // Parse JSON da resposta â€” campos dependem do padrÃ£o
+    // Parse JSON da resposta — campos dependem do padrão
     let copies: Array<Record<string, string>>;
     try {
       const jsonMatch = response.match(/\[[\s\S]*\]/);
       if (!jsonMatch) throw new Error("JSON nao encontrado na resposta da IA");
       const parsed = JSON.parse(jsonMatch[0]) as Array<Record<string, string>>;
 
-      // Validar estrutura de cada copy conforme o padrÃ£o
+      // Validar estrutura de cada copy conforme o padrão
       copies = parsed
         .map((c): Record<string, string> =>
           pattern === "estatico"

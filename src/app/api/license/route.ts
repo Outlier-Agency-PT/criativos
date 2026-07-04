@@ -1,20 +1,20 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createAuthSupabase, AuthError, handleAuthError } from "@/lib/api-auth";
 
-// VersÃ£o vigente do Termo de LicenÃ§a e Confidencialidade.
+// Versão vigente do Termo de Licença e Confidencialidade.
 const LICENSE_VERSION = "v1";
 
 /**
  * GET /api/license
- * Retorna { accepted: boolean } indicando se o usuÃ¡rio logado jÃ¡ aceitou
- * a versÃ£o vigente da licenÃ§a. NÃ£o exige organizaÃ§Ã£o (o aceite Ã© por usuÃ¡rio).
+ * Retorna { accepted: boolean } indicando se o usuário logado já aceitou
+ * a versão vigente da licença. Não exige organização (o aceite é por usuário).
  */
 export async function GET() {
   try {
     const supabase = await createAuthSupabase();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (!user || authError) {
-      throw new AuthError("NÃ£o autenticado", 401);
+      throw new AuthError("Não autenticado", 401);
     }
 
     const { data, error } = await supabase
@@ -36,7 +36,7 @@ export async function GET() {
 
 /**
  * POST /api/license
- * Registra o aceite da licenÃ§a vigente para o usuÃ¡rio logado.
+ * Registra o aceite da licença vigente para o usuário logado.
  * Idempotente: ON CONFLICT (user_id, license_version) DO NOTHING.
  * Retorna { ok: true }.
  */
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createAuthSupabase();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (!user || authError) {
-      throw new AuthError("NÃ£o autenticado", 401);
+      throw new AuthError("Não autenticado", 401);
     }
 
     const userAgent = request.headers.get("user-agent");

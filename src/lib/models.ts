@@ -1,6 +1,6 @@
-﻿/**
- * DefiniÃ§Ã£o dos modelos de IA suportados para geraÃ§Ã£o de criativos.
- * Fonte Ãºnica de verdade â€” usada na UI (seletor), API, e rotaÃ§Ã£o de keys.
+/**
+ * Definição dos modelos de IA suportados para geração de criativos.
+ * Fonte única de verdade — usada na UI (seletor), API, e rotação de keys.
  */
 import { REQUIRED_IMAGE_MODEL } from "@/lib/config/image-models";
 
@@ -24,12 +24,12 @@ export const AI_MODELS: AIModel[] = [
     name: "Nano Banana Pro",
     provider: "gemini",
     // Custo REAL cobrado pela WisGate (fatura 05/06/2026): $0.096/imagem (1K).
-    // NÃ£o Ã© o preÃ§o oficial do Google ($0.039) â€” Ã© o que a WisGate cobra de fato.
+    // Não é o preço oficial do Google ($0.039) — é o que a WisGate cobra de fato.
     costPerImage: 0.096,
     maxResolution: "1K",
     imageSize: "1K",
     freeTier: null,
-    description: "O mais avanÃ§ado â€” atÃ© 4K, Google Search em tempo real",
+    description: "O mais avançado — até 4K, Google Search em tempo real",
     recommended: true,
     supportsImageInput: true,
     timeout: 90000,
@@ -42,7 +42,7 @@ export const AI_MODELS: AIModel[] = [
     maxResolution: "1K",
     imageSize: "1K",
     freeTier: null,
-    description: "Bom custo-benefÃ­cio, rÃ¡pido",
+    description: "Bom custo-benefício, rápido",
     recommended: false,
     supportsImageInput: true,
     timeout: 90000,
@@ -54,8 +54,8 @@ export const AI_MODELS: AIModel[] = [
     costPerImage: 0.039,
     maxResolution: "1K",
     imageSize: "1K",
-    freeTier: "GrÃ¡tis (quota limitada)",
-    description: "Modelo anterior, quota gratuita disponÃ­vel",
+    freeTier: "Grátis (quota limitada)",
+    description: "Modelo anterior, quota gratuita disponível",
     recommended: false,
     supportsImageInput: true,
     timeout: 60000,
@@ -68,7 +68,7 @@ export const AI_MODELS: AIModel[] = [
     maxResolution: "1K",
     imageSize: "1K",
     freeTier: null,
-    description: "Mais barato por imagem (sem referÃªncia visual)",
+    description: "Mais barato por imagem (sem referência visual)",
     recommended: false,
     supportsImageInput: false,
     timeout: 60000,
@@ -81,7 +81,7 @@ export const AI_MODELS: AIModel[] = [
     maxResolution: "1K",
     imageSize: "1K",
     freeTier: null,
-    description: "EquilÃ­brio qualidade/custo (sem referÃªncia visual)",
+    description: "Equilíbrio qualidade/custo (sem referência visual)",
     recommended: false,
     supportsImageInput: false,
     timeout: 60000,
@@ -94,7 +94,7 @@ export const AI_MODELS: AIModel[] = [
     maxResolution: "1K",
     imageSize: "1K",
     freeTier: null,
-    description: "Maior resoluÃ§Ã£o Imagen (sem referÃªncia visual)",
+    description: "Maior resolução Imagen (sem referência visual)",
     recommended: false,
     supportsImageInput: false,
     timeout: 90000,
@@ -114,18 +114,18 @@ export function isImagenModel(modelId: string): boolean {
 }
 
 /**
- * Modelos Gemini 3 de geraÃ§Ã£o de imagem (ex: gemini-3-pro-image-preview,
- * gemini-3.1-flash-image-preview). SÃ£o os ÃšNICOS aceitos para geraÃ§Ã£o de imagem
- * â€” os demais (Gemini 2.x, Imagen) entregam qualidade inferior.
+ * Modelos Gemini 3 de geração de imagem (ex: gemini-3-pro-image-preview,
+ * gemini-3.1-flash-image-preview). São os ÚNICOS aceitos para geração de imagem
+ * — os demais (Gemini 2.x, Imagen) entregam qualidade inferior.
  */
 export function isGemini3ImageModel(modelId: string): boolean {
   return /^gemini-3(\.\d+)?-.*image/i.test(modelId);
 }
 
 /**
- * Bloqueio de qualidade: se true, a geraÃ§Ã£o de imagem SÃ“ aceita modelos Gemini 3.
- * Keys com outros modelos sÃ£o ignoradas na rotaÃ§Ã£o de geraÃ§Ã£o de imagem.
- * Ligado por decisÃ£o do usuÃ¡rio (2026-06-02): "se nÃ£o for Gemini 3, nÃ£o usar".
+ * Bloqueio de qualidade: se true, a geração de imagem SÓ aceita modelos Gemini 3.
+ * Keys com outros modelos são ignoradas na rotação de geração de imagem.
+ * Ligado por decisão do usuário (2026-06-02): "se não for Gemini 3, não usar".
  */
 export const REQUIRE_GEMINI3_FOR_IMAGE = true;
 
@@ -134,9 +134,9 @@ export function getImageSize(modelId: string): "1K" | "2K" | "4K" {
 }
 
 /**
- * Custo estimado (USD) por imagem de um modelo, a partir do catÃ¡logo AI_MODELS.
+ * Custo estimado (USD) por imagem de um modelo, a partir do catálogo AI_MODELS.
  * Usado para gravar `cost_usd` nos logs de uso (base de billing). Fallback no
- * custo do modelo default (Nano Banana Pro) quando o id nÃ£o estÃ¡ no catÃ¡logo â€”
+ * custo do modelo default (Nano Banana Pro) quando o id não está no catálogo —
  * evita registrar custo zero pra um modelo desconhecido.
  */
 export function getImageCost(modelId: string | null | undefined): number {
@@ -151,24 +151,24 @@ export function getTimeout(modelId: string): number {
   return getModelById(modelId)?.timeout ?? 60000;
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
- * MODELOS DE TEXTO (geraÃ§Ã£o de COPY dos criativos)
+/* ────────────────────────────────────────────────────────────────────────
+ * MODELOS DE TEXTO (geração de COPY dos criativos)
  *
- * Separados dos modelos de imagem (AI_MODELS). A copy NÃƒO usa Gemini 3 de
- * imagem â€” usa um LLM de texto barato. O usuÃ¡rio escolhe o primÃ¡rio e a
- * ordem de fallback nas ConfiguraÃ§Ãµes. Default: Haiku â†’ GPT-4o mini â†’ Gemini 2.5 Flash.
+ * Separados dos modelos de imagem (AI_MODELS). A copy NÃO usa Gemini 3 de
+ * imagem — usa um LLM de texto barato. O usuário escolhe o primário e a
+ * ordem de fallback nas Configurações. Default: Haiku → GPT-4o mini → Gemini 2.5 Flash.
  *
  * `provider` aqui aponta pro provider da API key que sabe falar com esse modelo:
- *   - anthropic â†’ key Anthropic (Messages API)
- *   - openai    â†’ key OpenAI (Chat Completions)
- *   - gemini    â†’ key Google Gemini (genai SDK) OU WisGate (relay OpenAI-compat)
- * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+ *   - anthropic → key Anthropic (Messages API)
+ *   - openai    → key OpenAI (Chat Completions)
+ *   - gemini    → key Google Gemini (genai SDK) OU WisGate (relay OpenAI-compat)
+ * ──────────────────────────────────────────────────────────────────────── */
 
 export interface TextModel {
   id: string;
   name: string;
   provider: "anthropic" | "openai" | "gemini";
-  /** Custo aproximado por 1M tokens de saÃ­da (USD), sÃ³ pra exibir referÃªncia. */
+  /** Custo aproximado por 1M tokens de saída (USD), só pra exibir referência. */
   costPer1MOut: number;
   description: string;
   recommended: boolean;
@@ -180,7 +180,7 @@ export const TEXT_MODELS: TextModel[] = [
     name: "Claude Haiku 4.5",
     provider: "anthropic",
     costPer1MOut: 4,
-    description: "RÃ¡pido e barato, Ã³timo pra copy. Recomendado.",
+    description: "Rápido e barato, ótimo pra copy. Recomendado.",
     recommended: true,
   },
   {
@@ -201,7 +201,7 @@ export const TEXT_MODELS: TextModel[] = [
   },
 ];
 
-/** Ordem de fallback padrÃ£o de modelos de texto (ids). */
+/** Ordem de fallback padrão de modelos de texto (ids). */
 export const DEFAULT_TEXT_MODEL_CHAIN: string[] = [
   "claude-haiku-4-5-20251001",
   "gpt-4o-mini",

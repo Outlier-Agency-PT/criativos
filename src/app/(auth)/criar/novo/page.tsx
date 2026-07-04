@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState } from "react";
@@ -13,7 +13,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
-// Tela de escolha do tipo de criaÃ§Ã£o (Template vs Briefing).
+// Tela de escolha do tipo de criação (Template vs Briefing).
 function CreativeModeChooser({
   onBack,
   onTemplate,
@@ -34,7 +34,7 @@ function CreativeModeChooser({
           Voltar
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Como vocÃª quer criar?</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Como você quer criar?</h1>
           <p className="text-sm text-text-muted mt-1">
             Escolha o ponto de partida dos seus criativos.
           </p>
@@ -56,11 +56,11 @@ function CreativeModeChooser({
           <div className="flex-1">
             <h2 className="text-lg font-semibold text-text-primary">Por Template</h2>
             <p className="text-sm text-text-muted mt-1.5">
-              Escolha um ou mais templates da biblioteca e gere criativos seguindo o layout deles. Ideal pra manter um padrÃ£o visual.
+              Escolha um ou mais templates da biblioteca e gere criativos seguindo o layout deles. Ideal pra manter um padrão visual.
             </p>
           </div>
           <span className="inline-flex items-center gap-1.5 text-sm font-medium text-accent-champagne">
-            ComeÃ§ar <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            Começar <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </span>
         </button>
 
@@ -78,11 +78,11 @@ function CreativeModeChooser({
           <div className="flex-1">
             <h2 className="text-lg font-semibold text-text-primary">Por Briefing</h2>
             <p className="text-sm text-text-muted mt-1.5">
-              Cole um briefing com vÃ¡rios criativos (ideia, copy e direÃ§Ã£o visual). A IA monta os prompts e gera todos em lote, sem template.
+              Cole um briefing com vários criativos (ideia, copy e direção visual). A IA monta os prompts e gera todos em lote, sem template.
             </p>
           </div>
           <span className="inline-flex items-center gap-1.5 text-sm font-medium text-accent-champagne">
-            ComeÃ§ar <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            Começar <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </span>
         </button>
       </div>
@@ -91,12 +91,12 @@ function CreativeModeChooser({
 }
 
 /**
- * /criar/novo â€” fluxo de criaÃ§Ã£o de um projeto novo.
+ * /criar/novo — fluxo de criação de um projeto novo.
  *
  * Etapas internas (estado local, mesma rota):
- *  - "choose"   â†’ escolha Template vs Briefing
- *  - "template" â†’ wizard padrÃ£o (WizardShell startFresh)
- *  - "briefing" â†’ modo lote por briefing
+ *  - "choose"   → escolha Template vs Briefing
+ *  - "template" → wizard padrão (WizardShell startFresh)
+ *  - "briefing" → modo lote por briefing
  *
  * ?briefing=true pula direto pro modo briefing (backward compat).
  */

@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, createServiceSupabase } from "@/lib/api-auth";
 import { buildPromptFromBriefingItem, buildBriefingImageReferenceRule } from "@/lib/prompt-builder";
 import type { BriefingItem, BriefingFormat, BriefingPrompt } from "@/lib/briefing-types";
@@ -8,7 +8,7 @@ export const maxDuration = 60;
 /**
  * POST /api/briefing/build-prompts
  * Recebe os itens do briefing + brandKitId + formatos.
- * Gera 1 prompt por item Ã— formato (sem template, brand kit como restriÃ§Ã£o).
+ * Gera 1 prompt por item × formato (sem template, brand kit como restrição).
  */
 export async function POST(request: NextRequest) {
   const started = Date.now();
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const items: BriefingItem[] = Array.isArray(body?.items) ? body.items : [];
     const formats: BriefingFormat[] = Array.isArray(body?.formats) ? body.formats : [];
     const brandKitId: unknown = body?.brandKitId;
-    // Imagens de referÃªncia do lote (rodÃ­zio): instruÃ§Ã£o do que fazer com elas.
+    // Imagens de referência do lote (rodízio): instrução do que fazer com elas.
     const hasReferenceImages = body?.hasReferenceImages === true;
     const imageInstruction: string =
       hasReferenceImages && typeof body?.imageInstruction === "string"
@@ -25,13 +25,13 @@ export async function POST(request: NextRequest) {
         : "";
 
     if (items.length === 0) {
-      return NextResponse.json({ error: "items obrigatÃ³rio (lista nÃ£o vazia)" }, { status: 400 });
+      return NextResponse.json({ error: "items obrigatório (lista não vazia)" }, { status: 400 });
     }
     if (formats.length === 0) {
-      return NextResponse.json({ error: "formats obrigatÃ³rio (lista nÃ£o vazia)" }, { status: 400 });
+      return NextResponse.json({ error: "formats obrigatório (lista não vazia)" }, { status: 400 });
     }
     if (typeof brandKitId !== "string" || !brandKitId) {
-      return NextResponse.json({ error: "brandKitId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "brandKitId obrigatório" }, { status: 400 });
     }
 
     const { orgId } = await requireAuth();
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (bkError || !brandKit) {
-      return NextResponse.json({ error: "Brand kit nÃ£o encontrado" }, { status: 404 });
+      return NextResponse.json({ error: "Brand kit não encontrado" }, { status: 404 });
     }
 
     const brand = {
@@ -59,12 +59,12 @@ export async function POST(request: NextRequest) {
     for (const item of items) {
       if (!item?.direcao_visual && !item?.prompt_pronto) continue;
       for (const fmt of formats) {
-        // Se o briefing jÃ¡ traz um prompt pronto, usa ELE direto (exato como escrito).
-        // SenÃ£o, monta o prompt a partir da direÃ§Ã£o visual + brand kit.
+        // Se o briefing já traz um prompt pronto, usa ELE direto (exato como escrito).
+        // Senão, monta o prompt a partir da direção visual + brand kit.
         let prompt: string;
         if (item.prompt_pronto && item.prompt_pronto.trim().length > 0) {
           prompt = item.prompt_pronto.trim();
-          // Prompt pronto nÃ£o passa pelo builder: anexamos a regra da imagem aqui.
+          // Prompt pronto não passa pelo builder: anexamos a regra da imagem aqui.
           if (hasReferenceImages) {
             prompt = `${prompt}\n\n${buildBriefingImageReferenceRule(imageInstruction)}`;
           }

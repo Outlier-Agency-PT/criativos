@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { TEXT_MODELS, DEFAULT_TEXT_MODEL_CHAIN } from "@/lib/models";
 
@@ -7,7 +7,7 @@ const VALID_TEXT_MODEL_IDS = TEXT_MODELS.map((m) => m.id);
 /**
  * GET /api/text-model-config?orgId=xxx
  * Retorna a cadeia ordenada de modelos de texto (copy) da org.
- * Se nÃ£o houver config salva, devolve o default.
+ * Se não houver config salva, devolve o default.
  */
 export async function GET(request: NextRequest) {
   try {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     const { data } = await supabase
@@ -45,16 +45,16 @@ export async function PUT(request: NextRequest) {
     const { supabase } = await requireAuth(orgId);
 
     if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
     }
 
     if (!Array.isArray(modelChain) || modelChain.length === 0) {
-      return NextResponse.json({ error: "modelChain deve ser uma lista nÃ£o vazia" }, { status: 400 });
+      return NextResponse.json({ error: "modelChain deve ser uma lista não vazia" }, { status: 400 });
     }
 
     const invalid = modelChain.filter((m) => !VALID_TEXT_MODEL_IDS.includes(m));
     if (invalid.length > 0) {
-      return NextResponse.json({ error: `Modelo(s) de texto invÃ¡lido(s): ${invalid.join(", ")}` }, { status: 400 });
+      return NextResponse.json({ error: `Modelo(s) de texto inválido(s): ${invalid.join(", ")}` }, { status: 400 });
     }
 
     // Dedup preservando ordem

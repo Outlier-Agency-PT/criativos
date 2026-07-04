@@ -1,9 +1,9 @@
-﻿/**
+/**
  * Constantes de contraste para escolha de cor de texto sobre fundo.
- * Centraliza o threshold de luminÃ¢ncia e as cores neutras de texto.
+ * Centraliza o threshold de luminância e as cores neutras de texto.
  */
 export const CONTRAST = {
-  /** Acima deste valor de luminÃ¢ncia (0-1) o fundo Ã© considerado claro. */
+  /** Acima deste valor de luminância (0-1) o fundo é considerado claro. */
   threshold: 0.55,
   /** Texto escuro neutro (usado sobre fundo claro). */
   dark: "#1a1a1a",
@@ -12,9 +12,9 @@ export const CONTRAST = {
 } as const;
 
 /**
- * Fallback de marca de ÃšLTIMO RECURSO â€” sÃ³ entra em cena quando a extraÃ§Ã£o
+ * Fallback de marca de ÚLTIMO RECURSO — só entra em cena quando a extração
  * de brand falha completamente. SEMPRE prefira as cores reais do brand kit;
- * estas cores sÃ£o genÃ©ricas e existem apenas para nÃ£o quebrar a geraÃ§Ã£o.
+ * estas cores são genéricas e existem apenas para não quebrar a geração.
  */
 export const BRAND_FALLBACK = {
   primary: "#1a237e",

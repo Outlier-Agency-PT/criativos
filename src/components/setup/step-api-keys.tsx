@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState } from "react";
@@ -19,9 +19,9 @@ interface StepApiKeysProps {
 
 export function StepApiKeys({ orgId, onComplete }: StepApiKeysProps) {
   const [keys, setKeys] = useState<KeyEntry[]>([
-    { value: "", provider: "gemini", label: "Google Gemini â€” Conta 1", priority: 0, status: "idle" },
-    { value: "", provider: "gemini", label: "Google Gemini â€” Conta 2", priority: 1, status: "idle" },
-    { value: "", provider: "gemini", label: "Google Gemini â€” Conta 3", priority: 2, status: "idle" },
+    { value: "", provider: "gemini", label: "Google Gemini — Conta 1", priority: 0, status: "idle" },
+    { value: "", provider: "gemini", label: "Google Gemini — Conta 2", priority: 1, status: "idle" },
+    { value: "", provider: "gemini", label: "Google Gemini — Conta 3", priority: 2, status: "idle" },
     { value: "", provider: "openrouter", label: "OpenRouter (fallback)", priority: 3, status: "idle" },
   ]);
   const [saving, setSaving] = useState(false);
@@ -100,8 +100,8 @@ export function StepApiKeys({ orgId, onComplete }: StepApiKeysProps) {
   return (
     <div className="space-y-5">
       <div className="bg-surface-050 rounded-lg p-3 text-xs text-text-muted">
-        <strong className="text-text-secondary">Por que 3 contas?</strong> O Gemini tem limite de requisiÃ§Ãµes por conta.
-        Com 3 contas + OpenRouter, vocÃª nunca para no meio de uma geraÃ§Ã£o.
+        <strong className="text-text-secondary">Por que 3 contas?</strong> O Gemini tem limite de requisições por conta.
+        Com 3 contas + OpenRouter, você nunca para no meio de uma geração.
       </div>
 
       {/* Gemini Keys */}
@@ -112,7 +112,7 @@ export function StepApiKeys({ orgId, onComplete }: StepApiKeysProps) {
         {keys.filter((k) => k.provider === "gemini").map((key, i) => (
           <div key={i} className="space-y-1">
             <label className="text-xs text-text-muted">
-              {key.label} {i === 0 && <span className="text-accent-champagne">â˜… obrigatÃ³ria</span>}
+              {key.label} {i === 0 && <span className="text-accent-champagne">★ obrigatória</span>}
             </label>
             <div className="flex gap-2">
               <div className="relative flex-1">
@@ -190,10 +190,10 @@ export function StepApiKeys({ orgId, onComplete }: StepApiKeysProps) {
         {showTutorial === "openrouter" && (
           <div className="bg-surface-050 rounded-lg p-3 text-xs text-text-muted space-y-1">
             <p>1. Acesse <span className="text-text-secondary">openrouter.ai</span></p>
-            <p>2. Crie uma conta ou faÃ§a login</p>
-            <p>3. VÃ¡ em "Keys" no menu</p>
+            <p>2. Crie uma conta ou faça login</p>
+            <p>3. Vá em "Keys" no menu</p>
             <p>4. Crie uma nova API key</p>
-            <p>5. Adicione crÃ©ditos (a partir de $5)</p>
+            <p>5. Adicione créditos (a partir de $5)</p>
           </div>
         )}
       </div>

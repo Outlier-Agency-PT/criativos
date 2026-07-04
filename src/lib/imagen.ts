@@ -1,11 +1,11 @@
-﻿import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import type { GenerateCreativeInput, GenerateCreativeResult } from "./gemini";
 import { getTimeout } from "./models";
 
 /**
  * EP08 S08.4: Client para modelos Imagen 4.
- * Imagen usa generateImages (nÃ£o generateContent).
- * NÃƒO suporta input de imagens â€” somente textoâ†’imagem.
+ * Imagen usa generateImages (não generateContent).
+ * NÃO suporta input de imagens — somente texto→imagem.
  */
 export async function generateCreative(
   apiKey: string,
@@ -16,7 +16,7 @@ export async function generateCreative(
 
   const timeout = getTimeout(model);
   const timeoutPromise = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error(`Timeout: Imagen nÃ£o respondeu em ${timeout / 1000}s`)), timeout)
+    setTimeout(() => reject(new Error(`Timeout: Imagen não respondeu em ${timeout / 1000}s`)), timeout)
   );
 
   // Imagen aceita aspectRatio no config
@@ -36,7 +36,7 @@ export async function generateCreative(
 
   const images = response.generatedImages;
   if (!images || images.length === 0) {
-    throw new Error("Imagen nÃ£o retornou imagens na resposta");
+    throw new Error("Imagen não retornou imagens na resposta");
   }
 
   const imageData = images[0].image;
@@ -54,7 +54,7 @@ export async function generateCreative(
 }
 
 /**
- * Testa conexÃ£o com Imagen 4.
+ * Testa conexão com Imagen 4.
  */
 export async function testConnection(apiKey: string, model: string = "imagen-4-fast"): Promise<boolean> {
   try {

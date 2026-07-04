@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 
 import { useState } from "react";
@@ -71,7 +71,7 @@ export function CreativeDetailModal({ creative, onClose, onStatusChange }: Creat
         </div>
 
         <div className="flex flex-col gap-6 p-6">
-          {/* Imagem â€” grande, centralizada */}
+          {/* Imagem — grande, centralizada */}
           <div className="w-full flex justify-center bg-surface-050 p-4">
             {creative.signed_url ? (
               <img
@@ -86,7 +86,7 @@ export function CreativeDetailModal({ creative, onClose, onStatusChange }: Creat
             )}
           </div>
 
-          {/* Metadata â€” abaixo da imagem, em grid */}
+          {/* Metadata — abaixo da imagem, em grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {creative.project_name && (
               <div>

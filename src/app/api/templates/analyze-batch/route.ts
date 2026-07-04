@@ -1,27 +1,27 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { generateTextWithRotation } from "@/lib/api-key-rotator";
 
 export const maxDuration = 300;
 
-const ANALYZE_PROMPT = `VocÃª Ã© um analista visual de criativos publicitÃ¡rios. Analise a imagem do template anexada e retorne um JSON ESTRUTURADO descrevendo TUDO que serÃ¡ usado para recriar variaÃ§Ãµes fiÃ©is deste template.
+const ANALYZE_PROMPT = `Você é um analista visual de criativos publicitários. Analise a imagem do template anexada e retorne um JSON ESTRUTURADO descrevendo TUDO que será usado para recriar variações fiéis deste template.
 
-Retorne APENAS um JSON vÃ¡lido, sem markdown:
+Retorne APENAS um JSON válido, sem markdown:
 
 {
-  "mini_prompt": "DescriÃ§Ã£o em prosa do LAYOUT como blueprint reproduzÃ­vel: posiÃ§Ã£o, tamanho relativo, peso visual, hierarquia, alinhamento, espaÃ§amentos, estilo tipogrÃ¡fico, enquadramento de pessoa (se houver), fundo, e estilo geral.",
-  "elements": [{ "type": "headline|mini_copy|list_items|cta|subtitle|quote|other", "text_found": "texto exato", "position": "topo|centro|rodapÃ©|etc" }],
+  "mini_prompt": "Descrição em prosa do LAYOUT como blueprint reproduzível: posição, tamanho relativo, peso visual, hierarquia, alinhamento, espaçamentos, estilo tipográfico, enquadramento de pessoa (se houver), fundo, e estilo geral.",
+  "elements": [{ "type": "headline|mini_copy|list_items|cta|subtitle|quote|other", "text_found": "texto exato", "position": "topo|centro|rodapé|etc" }],
   "has_logo": true|false,
   "logo_position": "topo-esquerda|null",
   "has_person": true|false,
-  "person_pose": "DescriÃ§Ã£o precisa da pose, enquadramento, Ã¢ngulo, expressÃ£o, vestimenta. null se nÃ£o tiver pessoa.",
+  "person_pose": "Descrição precisa da pose, enquadramento, ângulo, expressão, vestimenta. null se não tiver pessoa.",
   "dominant_colors": ["#rrggbb"],
   "visual_style": "dark|clean|foto_texto|etc"
 }
 
 REGRAS:
-- mini_prompt deve ter 2-5 frases ricas em detalhe espacial e tipogrÃ¡fico.
-- elements: extraia TODO texto visÃ­vel.
+- mini_prompt deve ter 2-5 frases ricas em detalhe espacial e tipográfico.
+- elements: extraia TODO texto visível.
 - has_logo: true SOMENTE se existir um logotipo de marca claro.
 - person_pose: deve permitir face-swap preservando a pose original.
 - Retorne APENAS o JSON.`;
@@ -61,15 +61,15 @@ function parse(text: string): ParsedAnalysis | null {
 
 /**
  * POST /api/templates/analyze-batch
- * Roda anÃ¡lise visual em todos os templates da org que ainda nÃ£o foram analisados.
- * Body: { orgId, force?: boolean (re-analisa mesmo os jÃ¡ feitos), limit?: number }
+ * Roda análise visual em todos os templates da org que ainda não foram analisados.
+ * Body: { orgId, force?: boolean (re-analisa mesmo os já feitos), limit?: number }
  */
 export async function POST(request: NextRequest) {
   try {
     const { orgId, force = false, limit = 30 } = await request.json();
     const { supabase } = await requireAuth(orgId);
 
-    if (!orgId) return NextResponse.json({ error: "orgId obrigatÃ³rio" }, { status: 400 });
+    if (!orgId) return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
 
     let query = supabase
       .from("criativos_templates")
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
     const results: { id: string; ok: boolean; error?: string }[] = [];
 
-    // Roda em sÃ©rie pra nÃ£o estourar quota da Vision API
+    // Roda em série pra não estourar quota da Vision API
     for (const t of templates) {
       try {
         const { data: fileData } = await supabase.storage.from("templates").download(t.file_path);

@@ -1,4 +1,4 @@
-﻿export type ThemeId = "cyan" | "torriani-blue" | "classic-blue" | "verde-premium";
+export type ThemeId = "cyan" | "torriani-blue" | "classic-blue" | "verde-premium";
 
 export interface ThemeDefinition {
   id: ThemeId;
@@ -160,19 +160,19 @@ export function getThemeCSSVars(theme: ThemeDefinition): Record<string, string> 
     "--accent-dark": theme.accentDark,
     "--accent-rgb": theme.accentRgb,
 
-    // Surfaces â€” each theme variant gets its own tint
+    // Surfaces — each theme variant gets its own tint
     "--surface-000": theme.surface000,
     "--surface-050": theme.surface050,
     "--surface-100": theme.surface100,
     "--surface-150": theme.surface150,
     "--surface-200": theme.surface200,
 
-    // Borders â€” white neutral
+    // Borders — white neutral
     "--border-subtle": "rgba(255,255,255,0.08)",
     "--border-default": "rgba(255,255,255,0.12)",
     "--border-accent": theme.accent,
 
-    // Text â€” cool gray, zero warm
+    // Text — cool gray, zero warm
     "--text-primary": theme.textPrimary,
     "--text-secondary": theme.textSecondary,
     "--text-muted": theme.textMuted,
