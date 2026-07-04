@@ -224,6 +224,27 @@ export default function SwipeFilePage() {
     }
   }
 
+  async function handleDelete(id: string) {
+    if (!orgId) return;
+    if (!window.confirm("Tem a certeza que quer excluir este template? Esta ação não pode ser desfeita.")) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/templates/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orgId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setTemplates((prev) => prev.filter((t) => t.id !== id));
+      setSelectedTemplate((prev) => (prev?.id === id ? null : prev));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao excluir template");
+    }
+  }
+
   async function handleRate(id: string, newRating: number) {
     const ratingValue = newRating === 0 ? null : newRating;
     setTemplates((prev) =>
@@ -463,6 +484,7 @@ export default function SwipeFilePage() {
                     onClick={() => setSelectedTemplate(t)}
                     onToggleFavorite={handleToggleFavorite}
                     onRate={handleRate}
+                    onDelete={t.is_system ? undefined : handleDelete}
                   />
                 ))}
               </div>
@@ -498,6 +520,7 @@ export default function SwipeFilePage() {
                     onClick={() => setSelectedTemplate(t)}
                     onToggleFavorite={handleToggleFavorite}
                     onRate={handleRate}
+                    onDelete={t.is_system ? undefined : handleDelete}
                   />
                 ))}
               </div>
@@ -529,6 +552,7 @@ export default function SwipeFilePage() {
                     onClick={() => setSelectedTemplate(t)}
                     onToggleFavorite={handleToggleFavorite}
                     onRate={handleRate}
+                    onDelete={t.is_system ? undefined : handleDelete}
                   />
                 ))}
               </div>
@@ -549,6 +573,7 @@ export default function SwipeFilePage() {
             onToggleActive={handleToggleActive}
             onRate={handleRate}
             onReplaceImage={handleReplaceImage}
+            onDelete={selectedTemplate.is_system ? undefined : handleDelete}
             isAdmin={isAdmin}
             currentIndex={idx >= 0 ? idx : undefined}
             totalCount={allVisible.length}

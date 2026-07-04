@@ -865,14 +865,15 @@ export function StepCopy() {
           {/* Preview de copies geradas pela IA */}
           {generatedCopies.length > 0 && (
             <div className="space-y-3 border-t border-border-subtle pt-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm font-medium text-text-primary">
-                  {generatedCopies.length} copies geradas. Revise antes de adicionar:
+                  {generatedCopies.length} copies geradas. Revise as copies abaixo e aprove para continuar.
                 </p>
                 <button
                   onClick={() => approveAllAnalyzed("ai")}
-                  className="text-xs text-accent-champagne hover:underline"
+                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-accent-champagne text-surface-000 text-sm font-semibold shadow-sm hover:bg-accent-champagne/90 transition-colors"
                 >
+                  <Check className="w-4 h-4" />
                   Aprovar todas
                 </button>
               </div>

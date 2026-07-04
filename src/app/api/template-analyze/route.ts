@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
-import { generateTextWithRotation } from "@/lib/api-key-rotator";
+import { generateVisionText } from "@/lib/api-key-rotator";
 
 // Permitir até 60s para Vision
 export const maxDuration = 60;
@@ -223,7 +223,7 @@ export async function POST(request: NextRequest) {
     const imageBuffer = Buffer.from(await fileData.arrayBuffer());
 
     try {
-      const text = await generateTextWithRotation(orgId, ANALYZE_PROMPT, {
+      const text = await generateVisionText(orgId, ANALYZE_PROMPT, {
         mimeType: "image/png",
         data: imageBuffer.toString("base64"),
       });

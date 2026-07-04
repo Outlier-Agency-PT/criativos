@@ -2,7 +2,7 @@
 
 
 import { cn } from "@/lib/utils";
-import { Eye, EyeOff, Star } from "lucide-react";
+import { Eye, EyeOff, Star, Trash2 } from "lucide-react";
 
 interface TemplateCardProps {
   id: string;
@@ -22,6 +22,7 @@ interface TemplateCardProps {
   onClick: () => void;
   onToggleFavorite?: (id: string, favorite: boolean) => void;
   onRate?: (id: string, rating: number) => void;
+  onDelete?: (id: string) => void;
 }
 
 const nicheLabels: Record<string, string> = {
@@ -69,6 +70,7 @@ export function TemplateCard({
   onClick,
   onToggleFavorite,
   onRate,
+  onDelete,
 }: TemplateCardProps) {
   return (
     <div
@@ -133,6 +135,20 @@ export function TemplateCard({
           <Eye className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </button>
+
+      {/* Delete button (top-right, appears on hover) */}
+      {onDelete && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(id);
+          }}
+          className="absolute top-2 right-11 z-10 w-8 h-8 flex items-center justify-center transition-all backdrop-blur-sm bg-black/40 text-white/50 opacity-0 group-hover:opacity-100 hover:text-white hover:bg-accent-red/80"
+          title="Excluir template"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+      )}
 
       {/* Favorite button (top-right, always visible) */}
       {onToggleFavorite && (

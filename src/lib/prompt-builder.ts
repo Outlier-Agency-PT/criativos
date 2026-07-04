@@ -316,6 +316,7 @@ Use o número da versão (${(variationIndex ?? 0) + 1}) como semente criativa pr
   const hardBullets: string[] = [];
   if (hasExpertPhotos) {
     hardBullets.push("- O ROSTO, traços faciais, pele, cabelo e identidade da pessoa final são SEMPRE os da foto do expert anexada — JAMAIS o rosto do template. Se o template mostra uma pessoa, ela serve só para indicar pose/enquadramento/iluminação.");
+    hardBullets.push("- FOTO DO EXPERT: a imagem do expert fornecida é a ÚNICA referência de pessoa permitida. O ambiente, objectos e elementos visuais ao redor devem ser coerentes com o NICHO DA COPY — não com o template. NÃO adiciones elementos que não condizem com o que foi pedido no briefing (ex: se a copy é sobre tecnologia/infoprodutos, não apareçam halteres, equipamento de fitness ou outros elementos de nichos diferentes).");
   }
   if (hasCustomBackground) {
     hardBullets.push(`- As CORES dos TEXTOS e elementos gráficos desenhados por cima (CTA, badges, overlays de leitura) são as da marca anexada (Primária ${brand.colors.primary}, Secundária ${brand.colors.secondary}, Accent ${brand.colors.accent}${brand.colors.background ? `, Fundo ${brand.colors.background}` : ""}). A FOTO DE FUNDO mantém as cores reais dela — NÃO repintar a cena (ver MODO COMPOSIÇÃO no topo).`);
@@ -884,6 +885,9 @@ REGRAS:
 - Textos curtos e impactantes
 - Adaptados para o público-alvo descrito
 - Cada versão com abordagem/ângulo diferente
+- Escreva em português de Portugal (pt-PT), NUNCA em português do Brasil. Exemplos:
+  "Comece já" (não "COMEÇAR AGORA"), "Saiba mais" (não "SAIBA MAIS"), sem "você" (use "tu"/"o teu"),
+  "garantia de devolução" em vez de "dinheiro de volta"
 - Formato: retorne um JSON array com objetos contendo os campos: ${elements.join(", ")}
 
 Retorne APENAS o JSON, sem markdown ou explicações.`;
@@ -963,6 +967,9 @@ REGRAS:
 - Usar os argumentos de venda fornecidos como base
 - Adaptados para o público-alvo descrito
 - Cada versão com abordagem/ângulo diferente
+- Escreva em português de Portugal (pt-PT), NUNCA em português do Brasil. Exemplos:
+  "Comece já" (não "COMEÇAR AGORA"), "Saiba mais" (não "SAIBA MAIS"), sem "você" (use "tu"/"o teu"),
+  "garantia de devolução" em vez de "dinheiro de volta"
 - Formato: retorne um JSON array com objetos contendo os campos: ${allFields.join(", ")}
 
 Retorne APENAS o JSON, sem markdown ou explicações.`;

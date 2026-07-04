@@ -39,6 +39,7 @@ interface TemplateDetailModalProps {
   onToggleActive: (id: string, active: boolean) => Promise<void>;
   onRate?: (id: string, rating: number) => void;
   onReplaceImage?: (id: string, file: File) => Promise<void>;
+  onDelete?: (id: string) => void;
   isAdmin?: boolean;
   onPrev?: () => void;
   onNext?: () => void;
@@ -53,6 +54,7 @@ export function TemplateDetailModal({
   onToggleActive,
   onRate,
   onReplaceImage,
+  onDelete,
   isAdmin = false,
   onPrev,
   onNext,
@@ -232,6 +234,11 @@ export function TemplateDetailModal({
             <button onClick={() => onToggleActive(template.id, !template.is_active)} className="p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-100 transition-colors" title={template.is_active ? "Desativar" : "Reativar"}>
               {template.is_active ? <ToggleRight className="w-5 h-5 text-green-400" /> : <ToggleLeft className="w-5 h-5" />}
             </button>
+            {onDelete && (
+              <button onClick={() => onDelete(template.id)} className="p-2 rounded-lg text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors" title="Excluir template">
+                <Trash2 className="w-4 h-4" />
+              </button>
+            )}
             <button onClick={onClose} className="p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-100 transition-colors">
               <X className="w-5 h-5" />
             </button>

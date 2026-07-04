@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
-import { generateTextWithRotation } from "@/lib/api-key-rotator";
+import { generateVisionText } from "@/lib/api-key-rotator";
 
 export const maxDuration = 300;
 
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
           continue;
         }
         const buf = Buffer.from(await fileData.arrayBuffer());
-        const text = await generateTextWithRotation(orgId, ANALYZE_PROMPT, {
+        const text = await generateVisionText(orgId, ANALYZE_PROMPT, {
           mimeType: "image/png",
           data: buf.toString("base64"),
         });

@@ -19,6 +19,7 @@ import {
   Plus,
   Upload,
   Trash2,
+  X,
 } from "lucide-react";
 
 interface PhotoItem {
@@ -99,6 +100,7 @@ export function StepVisual() {
   const [logos, setLogos] = useState<LogoItem[]>([]);
   const [logosLoading, setLogosLoading] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [deletingLogoId, setDeletingLogoId] = useState<string | null>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
 
   // Toast state
@@ -482,6 +484,29 @@ export function StepVisual() {
       showToast(err instanceof Error ? err.message : "Erro no upload", "error");
     } finally {
       setUploadingLogo(false);
+    }
+  }
+
+  async function handleLogoDelete(logo: LogoItem) {
+    setDeletingLogoId(logo.id);
+    try {
+      const res = await fetch(`/api/logos/${logo.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orgId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      if (logoId === logo.id) {
+        updateProject({ logoId: null, logoUrl: null });
+      }
+      setLogos((prev) => prev.filter((l) => l.id !== logo.id));
+      showToast("Logo removido");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Erro ao remover logo", "error");
+    } finally {
+      setDeletingLogoId(null);
     }
   }
 
@@ -1164,28 +1189,49 @@ export function StepVisual() {
                 {/* Org logos */}
                 {logos.map((logo) => {
                   const isSelected = logoId === logo.id;
+                  const isDeleting = deletingLogoId === logo.id;
                   return (
-                    <button
-                      key={logo.id}
-                      onClick={() => selectLogo(logo)}
-                      className={cn(
-                        "relative aspect-square rounded-xl overflow-hidden border-2 flex items-center justify-center bg-surface-050 transition-all",
-                        isSelected
-                          ? "border-accent-champagne ring-1 ring-accent-champagne"
-                          : "border-transparent hover:border-border-default"
-                      )}
-                    >
-                      <img
-                        src={logo.url || logo.file_path}
-                        alt={logo.label || "Logo"}
-                        className="w-3/4 h-3/4 object-contain"
-                      />
-                      {logo.label && (
-                        <div className="absolute bottom-0 inset-x-0 bg-surface-100/80 p-1">
-                          <p className="text-[8px] text-text-muted text-center truncate">{logo.label}</p>
-                        </div>
-                      )}
-                    </button>
+                    <div key={logo.id} className="relative group">
+                      <button
+                        onClick={() => selectLogo(logo)}
+                        disabled={isDeleting}
+                        className={cn(
+                          "relative aspect-square w-full rounded-xl overflow-hidden border-2 flex items-center justify-center bg-surface-050 transition-all",
+                          isSelected
+                            ? "border-accent-champagne ring-1 ring-accent-champagne"
+                            : "border-transparent hover:border-border-default",
+                          isDeleting && "opacity-50"
+                        )}
+                      >
+                        <img
+                          src={logo.url || logo.file_path}
+                          alt={logo.label || "Logo"}
+                          className="w-3/4 h-3/4 object-contain"
+                        />
+                        {logo.label && (
+                          <div className="absolute bottom-0 inset-x-0 bg-surface-100/80 p-1">
+                            <p className="text-[8px] text-text-muted text-center truncate">{logo.label}</p>
+                          </div>
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLogoDelete(logo);
+                        }}
+                        disabled={isDeleting}
+                        aria-label="Remover logo"
+                        title="Remover logo"
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-accent-red text-white flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity disabled:opacity-50"
+                      >
+                        {isDeleting ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <X className="w-3 h-3" />
+                        )}
+                      </button>
+                    </div>
                   );
                 })}
 

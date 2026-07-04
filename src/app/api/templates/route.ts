@@ -13,7 +13,7 @@ const storageClient = createClient(
  * Fonte canônica única: criativos_org_limits.is_super_admin (EP-14.01).
  * Só o Super Admin pode marcar/editar is_global=TRUE; cliente comum nunca.
  */
-async function isSuperAdminOrg(
+export async function isSuperAdminOrg(
   supabase: SupabaseClient,
   orgId: string
 ): Promise<boolean> {

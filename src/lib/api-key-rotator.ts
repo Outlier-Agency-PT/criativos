@@ -213,6 +213,73 @@ async function generateTextViaGemini(
   return response.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 }
 
+/** Modelo Gemini usado para tarefas de visão (análise de imagem) fora da cadeia de texto. */
+const VISION_MODEL_ID = "gemini-2.5-flash";
+
+/**
+ * Gera texto a partir de uma imagem usando SEMPRE um modelo Gemini com visão real,
+ * ignorando a cadeia de modelos de texto configurada pela org.
+ *
+ * Existe porque `generateTextWithRotation` pode escolher Claude/GPT como primeira
+ * key da cadeia — e os clients desses providers (anthropic.ts, openai-text.ts) NÃO
+ * aceitam imageData: eles enviam só o prompt em texto puro. Isso fazia o modelo
+ * "alucinar" um JSON de análise plausível sem nunca ver a imagem do template.
+ *
+ * Usa apenas keys com provider "gemini" (SDK direto do Google, aceita imagem via
+ * inlineData). Tenta em ordem de prioridade, pulando keys em cooldown.
+ */
+export async function generateVisionText(
+  orgId: string,
+  prompt: string,
+  imageData: { mimeType: string; data: string },
+): Promise<string> {
+  const supabase = await getSupabase();
+
+  const { data: keys } = await supabase
+    .from("criativos_api_keys")
+    .select("id, provider, model, encrypted_key, priority, is_active, last_error, error_count, last_used_at")
+    .eq("org_id", orgId)
+    .eq("provider", "gemini")
+    .eq("is_active", true)
+    .order("priority", { ascending: true });
+
+  if (!keys?.length) {
+    throw new Error("Nenhuma key Gemini configurada. A análise visual de templates exige uma key Gemini ativa (Configurações > API Keys).");
+  }
+
+  const errors: string[] = [];
+
+  for (const record of keys as ApiKeyRecord[]) {
+    if (isKeyInCooldown(record)) {
+      errors.push(`${record.id.slice(0, 8)}: em cooldown`);
+      continue;
+    }
+
+    let decryptedKey: string;
+    try {
+      decryptedKey = decryptKey(record.encrypted_key);
+    } catch {
+      errors.push(`${record.id.slice(0, 8)}: decrypt falhou`);
+      continue;
+    }
+
+    try {
+      const text = await generateTextViaGemini(decryptedKey, VISION_MODEL_ID, prompt, imageData);
+      if (!text?.trim()) throw new Error("resposta vazia");
+      await markKeySuccess(record.id);
+      return text;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      await markKeyError(record.id, message);
+      errors.push(`${record.id.slice(0, 8)}: ${message.slice(0, 160)}`);
+    }
+  }
+
+  throw new Error(
+    `Não foi possível analisar a imagem com Gemini.\n${errors.map((e) => `• ${e}`).join("\n")}`
+  );
+}
+
 /**
  * Gera texto (copy) respeitando a cadeia de modelos configurada pela org.
  *
@@ -222,7 +289,7 @@ async function generateTextViaGemini(
  *   - tenta gerar; sucesso → retorna; falha → próximo modelo da cadeia
  *
  * Modelos "gemini" aceitam tanto key Gemini direta quanto relay WisGate/OpenRouter.
- * Usado em persona-generate, copy-generate, template-analyze.
+ * Usado em persona-generate, copy-generate.
  */
 export async function generateTextWithRotation(
   orgId: string,
