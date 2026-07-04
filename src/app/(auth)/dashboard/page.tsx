@@ -248,7 +248,7 @@ export default function DashboardPage() {
         </div>
         <div>
           <h1 className="text-3xl font-semibold tracking-[-0.03em] text-text-primary">
-            Bem-vindo ao Criativos, {userName}
+            Bem-vindo ao Outlier Criativos, {userName}
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-text-secondary">
             Gere os primeiros projetos para acompanhar resultados, custo estimado e volume recente em um unico lugar.

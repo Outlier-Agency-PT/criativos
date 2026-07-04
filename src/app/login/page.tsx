@@ -88,8 +88,8 @@ function LoginForm() {
 
         <div className="relative z-10 w-full max-w-lg">
           {/* Logo */}
-          <div className="text-xl font-semibold text-[var(--accent)] mb-6">
-            Criativos
+          <div className="mb-6">
+            <img src="/logooutiliercriativos.png" alt="Outlier Criativos" className="h-8" />
           </div>
 
           {/* Stats â€” no topo, logo abaixo do logo */}
@@ -203,7 +203,7 @@ function LoginForm() {
 
             {/* Mobile-only logo (hidden on desktop since left panel has it) */}
             <div className="text-center space-y-2 mb-8">
-              <h1 className="text-2xl font-semibold text-[var(--text-accent)]">Criativos</h1>
+              <img src="/logooutiliercriativos.png" alt="Outlier Criativos" className="h-8 mx-auto" />
               <p className="text-sm text-[var(--text-muted)]">
                 Faça login para aceder
               </p>

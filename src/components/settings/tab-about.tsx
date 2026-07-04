@@ -13,7 +13,7 @@ export function TabAbout() {
           <h3 className="text-sm font-semibold text-text-primary">Sobre</h3>
         </div>
         <div className="space-y-1">
-          <p className="text-base font-semibold text-text-primary">Criativos</p>
+          <p className="text-base font-semibold text-text-primary">Outlier Criativos</p>
           <p className="text-xs text-text-muted">
             Software proprietário licenciado — uso restrito.
           </p>
@@ -30,7 +30,7 @@ export function TabAbout() {
         </div>
         <div className="space-y-2 text-sm leading-relaxed text-text-secondary">
           <p>
-            O Criativos é licenciado, não vendido. Você pode usá-lo nos seus
+            O Outlier Criativos é licenciado, não vendido. Você pode usá-lo nos seus
             próprios projetos e disponibilizar o acesso aos seus alunos e
             colaboradores, sob sua conta e responsabilidade.
           </p>

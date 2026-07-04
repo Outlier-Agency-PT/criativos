@@ -404,6 +404,8 @@ export async function POST(request: NextRequest) {
     const logoPayload = useRefs ? rgbLogo : undefined;
     const backgroundPayload = useRefs ? activeBackground : undefined;
     console.log(`[generate/one] creative=${creative.id.slice(0,8)} project=${project.id.slice(0,8)} | templates=${templatesPayload.length} (${templatesPayload.map(b=>b.length).join(',')}B) | expertPhotos=${expertPayload?.length || 0} (${expertPayload?.map(b=>b.length).join(',') || '-'}B) | background=${backgroundPayload ? backgroundPayload.length+'B' : 'NONE'} | logo=${logoPayload ? logoPayload.length+'B' : 'NONE'} | model=${preferredModel} | useRefs=${useRefs} | prompt=${prompt.length}chars`);
+    // TODO: remover apÃ³s debug â€” imprime o prompt completo enviado ao Gemini
+    console.log(`[DEBUG PROMPT GEMINI] creative=${creative.id.slice(0,8)} project=${project.id.slice(0,8)}\n${prompt}`);
     const result = await generateWithRotation(
       project.org_id,
       {

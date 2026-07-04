@@ -59,7 +59,7 @@ export default function ConvitePage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-sm space-y-4 text-center">
-        <h1 className="text-2xl font-bold text-text-accent">Criativos</h1>
+        <img src="/logooutiliercriativos.png" alt="Outlier Criativos" className="h-8 mx-auto" />
 
         {state === "loading" && (
           <div className="space-y-3">

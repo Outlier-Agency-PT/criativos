@@ -111,7 +111,7 @@ export function LicenseGate({ children }: LicenseGateProps) {
 
           <div className="space-y-3 text-sm leading-relaxed text-[var(--text-secondary)] max-h-[45vh] overflow-y-auto pr-1">
             <p>
-              O Criativos é um software proprietário, licenciado e
+              O Outlier Criativos é um software proprietário, licenciado e
               não vendido. O acesso é concedido a si de forma pessoal,
               intransferível e revogável, exclusivamente para uso restrito nos
               seus próprios projetos.

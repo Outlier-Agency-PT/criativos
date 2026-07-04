@@ -77,12 +77,12 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
             "font-bold text-text-accent transition-all",
             desktopCollapsed ? "mx-auto flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--accent-alpha-20)] bg-[linear-gradient(135deg,var(--accent-alpha-12),var(--accent-alpha-05))] text-lg shadow-[var(--shadow-accent-glow)]" : "text-lg"
           )}
-          aria-label="Criativos"
+          aria-label="Outlier Criativos"
         >
           {desktopCollapsed ? (
-            <span aria-hidden="true" className="leading-none text-[#2B7DE1]">✓</span>
+            <span aria-hidden="true" className="leading-none text-[#2B9E8F]">✓</span>
           ) : (
-            "Criativos"
+            <img src="/logooutiliercriativos.png" alt="Outlier Criativos" className="h-8 w-auto" />
           )}
         </Link>
         <button
@@ -179,8 +179,8 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
         >
           <Menu className="w-5 h-5" />
         </button>
-        <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="ml-3 text-lg font-bold text-text-accent">
-          Criativos
+        <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="ml-3" aria-label="Outlier Criativos">
+          <img src="/logooutiliercriativos.png" alt="Outlier Criativos" className="h-8 w-auto" />
         </Link>
       </div>
 

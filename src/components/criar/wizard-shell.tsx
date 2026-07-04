@@ -269,7 +269,7 @@ function CreatorContent({ onBackToHistory }: { onBackToHistory: () => void }) {
   } =
     useCreator();
   const footerNavRef = useRef<HTMLDivElement | null>(null);
-  const [showFloatingNav, setShowFloatingNav] = useState(true);
+  const [showFloatingNav, setShowFloatingNav] = useState(false);
   const [downloadingZip, setDownloadingZip] = useState(false);
 
   async function handleDownloadZip() {

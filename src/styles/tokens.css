@@ -18,10 +18,10 @@
   --text-accent: var(--accent, #22d3ee);
 
   /* === ACCENT (set by ThemeProvider, fallback Torriani Blue) === */
-  --accent: #2B7DE1;
-  --accent-light: #5a9ef0;
-  --accent-dark: #003A70;
-  --accent-rgb: 43,125,225;
+  --accent: #2B9E8F;
+  --accent-light: #4db8aa;
+  --accent-dark: #1a6b60;
+  --accent-rgb: 43,158,143;
 
   /* === ACCENT ALPHAS === */
   --accent-alpha-05: rgba(var(--accent-rgb), 0.05);
@@ -72,7 +72,7 @@
   --shadow-accent-glow: 0 0 20px rgba(var(--accent-rgb), 0.15);
 
   /* === TYPOGRAPHY === */
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
   /* === FONT SIZES === */

@@ -22,13 +22,13 @@ export default function RegistroPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-sm space-y-6 text-center">
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-text-accent">Criativos</h1>
+          <img src="/logooutiliercriativos.png" alt="Outlier Criativos" className="h-8 mx-auto" />
           <p className="text-sm text-text-secondary">Acesso por convite</p>
         </div>
 
         <div className="space-y-3 rounded-lg border border-border-subtle bg-surface-100 p-5 text-left">
           <p className="text-text-primary">
-            O registo aberto foi desativado. O acesso ao Criativos agora é feito por convite.
+            O registo aberto foi desativado. O acesso ao Outlier Criativos agora é feito por convite.
           </p>
           <p className="text-text-secondary text-sm">
             Se você recebeu um convite por email, clique no link da mensagem para definir sua palavra-passe

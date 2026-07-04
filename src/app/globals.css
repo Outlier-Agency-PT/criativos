@@ -4,7 +4,6 @@
 @theme inline {
   --color-background: var(--surface-000);
   --color-foreground: var(--text-primary);
-  --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
 
   --color-surface-000: var(--surface-000);

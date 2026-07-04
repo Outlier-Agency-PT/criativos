@@ -112,7 +112,7 @@ export default function SetupPage() {
       <header className="border-b border-border-subtle">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-bold text-text-accent">Criativos</h1>
+            <img src="/logooutiliercriativos.png" alt="Outlier Criativos" className="h-8" />
             <p className="text-xs text-text-muted">ConfiguraÃ§Ã£o inicial</p>
           </div>
           <button
