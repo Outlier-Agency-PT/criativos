@@ -3,6 +3,64 @@ import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { generateTextWithRotation } from "@/lib/api-key-rotator";
 import { buildCopyPrompt, buildTemplateAwareCopyPrompt } from "@/lib/prompt-builder";
 
+// Delimitador pedido ao modelo no prompt para separar cada versão de copy.
+const VERSION_DELIMITER = /-{2,}\s*VERS[AÃ]O\s*-{2,}/gi;
+
+/** Remove markdown residual (negrito, títulos, marcadores) que o modelo às vezes insere. */
+function stripMarkdown(s: string): string {
+  return s
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/^[*-]\s+/gm, "")
+    .replace(/\*/g, "")
+    .trim();
+}
+
+/**
+ * Converte a resposta em texto do modelo (versões separadas por VERSION_DELIMITER,
+ * campos no formato "Campo: texto") num array de objetos { campo: texto }.
+ * Mantém compatibilidade com respostas legadas em JSON array.
+ */
+function parseCopyVersions(text: string): Record<string, string>[] {
+  const trimmed = text.trim();
+
+  // Compatibilidade com respostas legadas em JSON.
+  const jsonMatch = trimmed.match(/^\[[\s\S]*\]$/);
+  if (jsonMatch) {
+    try {
+      const parsed = JSON.parse(jsonMatch[0]);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch {
+      // não é JSON válido, segue para o parsing de texto
+    }
+  }
+
+  const chunks = trimmed
+    .split(VERSION_DELIMITER)
+    .map((c) => stripMarkdown(c))
+    .filter((c) => c.length > 0);
+
+  const versions = (chunks.length > 0 ? chunks : [stripMarkdown(trimmed)]).map((chunk) => {
+    const fields: Record<string, string> = {};
+    const lines = chunk.split("\n").map((l) => l.trim()).filter(Boolean);
+    for (const line of lines) {
+      const m = line.match(/^([a-zA-ZÀ-ÿ_ ]{2,30}?)\s*:\s*(.+)$/);
+      if (m) {
+        const key = m[1]
+          .trim()
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[̀-ͯ]/g, "")
+          .replace(/\s+/g, "_");
+        fields[key] = m[2].trim();
+      }
+    }
+    return Object.keys(fields).length > 0 ? fields : { text: chunk };
+  });
+
+  return versions;
+}
+
 /**
  * POST /api/copy-generate
  * Gera N versões de copy usando Gemini (texto, não imagem).
@@ -127,14 +185,7 @@ export async function POST(request: NextRequest) {
 
     try {
       const text = await generateTextWithRotation(orgId, prompt);
-
-      let copies;
-      try {
-        const jsonMatch = text.match(/\[[\s\S]*\]/);
-        copies = jsonMatch ? JSON.parse(jsonMatch[0]) : [{ text }];
-      } catch {
-        copies = [{ raw: text }];
-      }
+      const copies = parseCopyVersions(text);
 
       return NextResponse.json({ copies, count: copies.length });
     } catch (err) {

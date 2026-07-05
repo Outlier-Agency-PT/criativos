@@ -888,9 +888,13 @@ REGRAS:
 - Escreva em português de Portugal (pt-PT), NUNCA em português do Brasil. Exemplos:
   "Comece já" (não "COMEÇAR AGORA"), "Saiba mais" (não "SAIBA MAIS"), sem "você" (use "tu"/"o teu"),
   "garantia de devolução" em vez de "dinheiro de volta"
-- Formato: retorne um JSON array com objetos contendo os campos: ${elements.join(", ")}
 
-Retorne APENAS o JSON, sem markdown ou explicações.`;
+FORMATO DE RESPOSTA (MUITO IMPORTANTE):
+- NÃO uses markdown, asteriscos ou formatação especial (sem **, #, listas com "-" ou "*"). Responde apenas com texto limpo.
+- NÃO devolvas JSON.
+- Em cada versão, identifica cada campo no formato "Campo: texto" (ex.: "${elements[0]}: ..."), um por linha, com os campos: ${elements.join(", ")}
+- Separa cada versão completa com uma linha contendo exatamente: ---VERSAO---
+- Não escrevas nada antes da primeira versão nem depois da última.`;
 }
 
 interface TemplateAwareCopyInput {
@@ -933,7 +937,7 @@ export function buildTemplateAwareCopyPrompt(input: TemplateAwareCopyInput): str
 
   const allFields = Array.from(elementTypes.keys());
 
-  return `ATENÇÃO: Os copy_elements abaixo são contexto interno de estrutura — NÃO os reproduzas na resposta. A tua resposta deve conter APENAS: headline, subheadline, ponte e CTA em texto limpo, sem JSON, sem badges, sem shapes, sem listas.
+  return `ATENÇÃO: Os copy_elements abaixo são contexto interno de estrutura — NÃO os reproduzas na resposta. A tua resposta deve conter APENAS os campos de copy (${allFields.join(", ")}) em texto limpo, sem JSON, sem badges, sem shapes, sem listas.
 
 Você é um copywriter especialista em anúncios para redes sociais.
 
@@ -972,11 +976,15 @@ REGRAS:
 - Escreva em português de Portugal (pt-PT), NUNCA em português do Brasil. Exemplos:
   "Comece já" (não "COMEÇAR AGORA"), "Saiba mais" (não "SAIBA MAIS"), sem "você" (use "tu"/"o teu"),
   "garantia de devolução" em vez de "dinheiro de volta"
-- Formato: retorne um JSON array com objetos contendo os campos: ${allFields.join(", ")}
 
-Retorne APENAS o JSON, sem markdown ou explicações.
+FORMATO DE RESPOSTA (MUITO IMPORTANTE):
+- NÃO uses markdown, asteriscos ou formatação especial (sem **, #, listas com "-" ou "*"). Responde apenas com texto limpo.
+- NÃO devolvas JSON.
+- Em cada versão, identifica cada campo no formato "Campo: texto" (ex.: "headline: ..."), um por linha, com os campos: ${allFields.join(", ")}
+- Separa cada versão completa com uma linha contendo exatamente: ---VERSAO---
+- Não escrevas nada antes da primeira versão nem depois da última.
 
-Responde APENAS com o texto da copy — headline, subheadline, ponte e CTA. Nada mais.`;
+Responde APENAS com o texto da copy — ${allFields.join(", ")}. Nada mais.`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
