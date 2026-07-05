@@ -933,7 +933,9 @@ export function buildTemplateAwareCopyPrompt(input: TemplateAwareCopyInput): str
 
   const allFields = Array.from(elementTypes.keys());
 
-  return `Você é um copywriter especialista em anúncios para redes sociais.
+  return `ATENÇÃO: Os copy_elements abaixo são contexto interno de estrutura — NÃO os reproduzas na resposta. A tua resposta deve conter APENAS: headline, subheadline, ponte e CTA em texto limpo, sem JSON, sem badges, sem shapes, sem listas.
+
+Você é um copywriter especialista em anúncios para redes sociais.
 
 PERSONA/PÚBLICO-ALVO:
 ${personaSummary}
@@ -972,7 +974,9 @@ REGRAS:
   "garantia de devolução" em vez de "dinheiro de volta"
 - Formato: retorne um JSON array com objetos contendo os campos: ${allFields.join(", ")}
 
-Retorne APENAS o JSON, sem markdown ou explicações.`;
+Retorne APENAS o JSON, sem markdown ou explicações.
+
+Responde APENAS com o texto da copy — headline, subheadline, ponte e CTA. Nada mais.`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

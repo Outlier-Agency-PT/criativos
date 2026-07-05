@@ -57,10 +57,6 @@ function PersonaBadge() {
         if (res.ok) {
           const items: Persona[] = data.personas ?? [];
           setPersonas(items);
-          // Auto-select first persona if none selected
-          if (!personaId && items.length > 0) {
-            updateProject({ personaId: items[0].id, personaName: items[0].name });
-          }
         }
       } catch {
         // silent
@@ -98,7 +94,7 @@ function PersonaBadge() {
       >
         <User className="w-3.5 h-3.5 text-accent-champagne" />
         <span className="text-text-primary font-medium text-xs">
-          {typeof personaName === "string" ? personaName : "Selecionar persona"}
+          {personaId && typeof personaName === "string" ? personaName : "Sem persona"}
         </span>
         <ChevronDown className={cn("w-3.5 h-3.5 text-text-muted transition-transform", open && "rotate-180")} />
       </button>
@@ -107,6 +103,25 @@ function PersonaBadge() {
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="theme-panel absolute right-0 top-full mt-1 z-50 w-64 rounded-xl shadow-lg">
+            <button
+              onClick={() => {
+                updateProject({ personaId: null, personaName: null });
+                setOpen(false);
+              }}
+              className={cn(
+                "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors",
+                !personaId
+                  ? "bg-champagne-alpha-10 text-accent-champagne"
+                  : "hover:bg-surface-100 text-text-secondary"
+              )}
+            >
+              {!personaId ? (
+                <CheckCircle2 className="w-4 h-4 text-accent-champagne flex-shrink-0" />
+              ) : (
+                <div className="w-4 h-4 rounded-full border border-border-subtle flex-shrink-0" />
+              )}
+              <p className="text-sm font-medium truncate">Sem persona</p>
+            </button>
             {personas.map((p) => {
               const isActive = personaId === p.id;
               return (
