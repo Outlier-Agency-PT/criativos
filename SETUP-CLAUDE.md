@@ -1,4 +1,4 @@
-# SETUP-CLAUDE.md — Instruções para o Claude Code conduzir a instalação
+﻿# SETUP-CLAUDE.md — Instruções para o Claude Code conduzir a instalação
 
 > Este arquivo é o roteiro que o **Claude Code** segue para instalar o Criativos no
 > ambiente do usuário. Quem está lendo: se você é o Claude Code, siga estes passos
@@ -79,6 +79,6 @@ Quando estiver pronto, peça os 3 valores da aba API (URL, anon, service_role) e
   não pode revender nem distribuir o código.
 
 ## Notas importantes
-- O sistema é proprietário de **Torriani**, licenciado e não vendido (ver `LICENSE`).
+- O sistema é proprietário de **Outlier Agency**, licenciado e não vendido (ver `LICENSE`).
 - Custos de Supabase e das APIs de IA são do usuário (ele usa as próprias contas/chaves).
 - Porta local padrão: 3028. Em produção a Vercel define a porta automaticamente.

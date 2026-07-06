@@ -10,7 +10,7 @@ import { requireAuth, handleAuthError, createServiceSupabase } from "@/lib/api-a
  * org nova. Substitui o self-signup aberto de registro/page.tsx.
  *
  * DECISAO DE AUTORIZACAO (espelha /api/billing/recharge da EP-14.06):
- *   O caso de uso real e "o admin Torriani convida o cliente de uma org que ele ja provisionou".
+ *   O caso de uso real e "o admin Outlier Agency convida o cliente de uma org que ele ja provisionou".
  *     - Convidar para a PROPRIA org: exige que o ator seja owner/admin (organization_members.role).
  *     - Convidar para uma org DIFERENTE (org de cliente): exige que a org do ATOR seja
  *       is_super_admin = true (fonte canonica criativos_org_limits.is_super_admin, EP-14.01).

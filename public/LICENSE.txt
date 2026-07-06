@@ -1,8 +1,8 @@
-LICENÇA DE USO PROPRIETÁRIA — CRIATIVOS
-Copyright (c) Torriani. Todos os direitos reservados.
+﻿LICENÇA DE USO PROPRIETÁRIA — CRIATIVOS
+Copyright (c) Outlier Agency. Todos os direitos reservados.
 
 Este software ("Criativos", doravante "o Software") é propriedade exclusiva de
-Torriani ("o Licenciante"). O Software é licenciado, NÃO vendido. Ao baixar,
+Outlier Agency ("o Licenciante"). O Software é licenciado, NÃO vendido. Ao baixar,
 instalar, copiar, executar ou de qualquer forma utilizar o Software, você ("o
 Licenciado") concorda integralmente com os termos abaixo. Se você não concorda,
 não instale e não utilize o Software.
@@ -98,6 +98,6 @@ o foro do domicílio do Licenciante para dirimir quaisquer controvérsias.
 ================================================================================
 
 Para concessão de direitos além dos previstos nesta licença (incluindo revenda,
-white-label ou parceria comercial), entre em contato diretamente com Torriani.
+white-label ou parceria comercial), entre em contato diretamente com Outlier Agency.
 
-Torriani — Criativos. Uso autorizado mediante aceite desta licença.
+Outlier Agency — Criativos. Uso autorizado mediante aceite desta licença.

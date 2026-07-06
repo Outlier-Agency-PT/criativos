@@ -1,4 +1,4 @@
-interface CopyContent {
+﻿interface CopyContent {
   /** Riddle Line — chamada principal. */
   headline?: string;
   /** Sub-riddle Line — apoio da headline. */
@@ -212,7 +212,7 @@ export function buildPrompt(project: PromptProject): string {
     chatRefinement, imageRefs, expertAdjustments, activeCopyFields,
   } = project;
 
-  // (c) Torriani — proprietary prompt engine, see LICENSE
+  // (c) Outlier Agency — proprietary prompt engine, see LICENSE
 
   // BLOCO B — quando o projeto define campos ativos, ignorar os campos de copy
   // fora da lista. Mapeamento de aliases legados → campo canônico (mini_copy é

@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   /* === SURFACES (pure black, no warm tints) === */
   --surface-000: #000000;
   --surface-050: #060608;
@@ -17,7 +17,7 @@
   --text-muted: #8b949e;
   --text-accent: var(--accent, #22d3ee);
 
-  /* === ACCENT (set by ThemeProvider, fallback Torriani Blue) === */
+  /* === ACCENT (set by ThemeProvider, fallback Outlier Agency Blue) === */
   --accent: #2B9E8F;
   --accent-light: #4db8aa;
   --accent-dark: #1a6b60;

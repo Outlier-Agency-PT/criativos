@@ -10,7 +10,7 @@ import { requireAuth, handleAuthError, createServiceSupabase } from "@/lib/api-a
  * saldo. A RLS endurecida da EP-14.02 garante que so o service role muta org_limits e adjustments.
  *
  * DECISAO DE AUTORIZACAO (quem pode recarregar qual org):
- *   O caso de uso real e "o admin Torriani recarrega a org de um cliente que pagou". Por isso a regra
+ *   O caso de uso real e "o admin Outlier Agency recarrega a org de um cliente que pagou". Por isso a regra
  *   e baseada em Super Admin, nao apenas em owner/admin da propria org:
  *     - Recarregar a PROPRIA org: exige que o ator seja owner/admin (organization_members.role) da org.
  *     - Recarregar uma org DIFERENTE (org de cliente): exige que a org do ATOR seja is_super_admin = true

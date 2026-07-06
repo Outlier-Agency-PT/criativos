@@ -1,8 +1,8 @@
-# Criativos
+﻿# Criativos
 
 Sistema de geração e edição de criativos para anúncios e redes sociais (Meta Ads, Instagram), com IA generativa de imagem. Stack: **Next.js 16** + **Supabase** + **Tailwind** + **TypeScript**.
 
-> **Software proprietário de Torriani — licenciado, não vendido.** Uso restrito: veja `LICENSE`. Você pode usar e liberar para seus alunos; não pode revender, distribuir o código ou criar assinatura em cima. O código é confidencial (NDA).
+> **Software proprietário de Outlier Agency — licenciado, não vendido.** Uso restrito: veja `LICENSE`. Você pode usar e liberar para seus alunos; não pode revender, distribuir o código ou criar assinatura em cima. O código é confidencial (NDA).
 
 ## Instalação (recomendado: na nuvem, com o Claude Code)
 

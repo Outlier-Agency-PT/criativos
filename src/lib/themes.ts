@@ -1,4 +1,4 @@
-export type ThemeId = "cyan" | "torriani-blue" | "classic-blue" | "verde-premium";
+﻿export type ThemeId = "cyan" | "Outlier Agency-blue" | "classic-blue" | "verde-premium";
 
 export interface ThemeDefinition {
   id: ThemeId;
@@ -61,8 +61,8 @@ export const THEMES: ThemeDefinition[] = [
     panelShadowHover: "0 26px 54px rgba(0,0,0,0.46), 0 0 24px rgba(34,211,238,0.08)",
   },
   {
-    id: "torriani-blue",
-    name: "Torriani Blue",
+    id: "Outlier Agency-blue",
+    name: "Outlier Agency Blue",
     description: "Azul da marca. Vibrante, confiante, profissional",
     accent: "#2B7DE1",
     accentLight: "#5a9ef0",
@@ -92,7 +92,7 @@ export const THEMES: ThemeDefinition[] = [
   {
     id: "classic-blue",
     name: "Classic",
-    description: "Tema padrao com azul Torriani. Solido, premium",
+    description: "Tema padrao com azul Outlier Agency. Solido, premium",
     accent: "#2B7DE1",
     accentLight: "#5a9ef0",
     accentDark: "#003A70",

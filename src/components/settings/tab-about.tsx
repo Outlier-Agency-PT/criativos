@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 
 import { Info, ShieldCheck, FileText } from "lucide-react";

@@ -1,4 +1,4 @@
--- Onda 2: Billing por crédito pré-pago (EP-14.01).
+﻿-- Onda 2: Billing por crédito pré-pago (EP-14.01).
 -- Esta migration PARTE do schema existente (criativos_org_limits, criativos_generation_logs,
 -- criativos_templates.is_global já aplicados) e SÓ adiciona o que falta. NÃO recria nada.
 --
@@ -108,13 +108,13 @@ SELECT
   -- Super Admin: NULL (ilimitado). Cliente: 0 (sem limite legado materializado nesta tabela vazia).
   CASE WHEN o.id = '00000000-0000-0000-0000-000000000000' THEN NULL ELSE 0 END AS credit_balance,
   -- credits_total acompanha o saldo derivado. Nesta tabela vazia o derivado é 0 pra todos
-  -- (Torriani e clientes), o que mantém a reconciliação consistente (resolve Issue #3 do QA).
+  -- (Outlier Agency e clientes), o que mantém a reconciliação consistente (resolve Issue #3 do QA).
   0 AS credits_total,
   now() AS updated_at
 FROM organizations o
 ON CONFLICT (org_id) DO UPDATE
    SET
-     -- is_super_admin é determinístico: sempre reflete a regra (só Torriani true).
+     -- is_super_admin é determinístico: sempre reflete a regra (só Outlier Agency true).
      is_super_admin = EXCLUDED.is_super_admin,
      -- IDEMPOTÊNCIA: nunca sobrescreve saldo já consumido em produção. COALESCE preserva o
      -- credit_balance existente (decrementado por consumo); só aplica o derivado quando a row
