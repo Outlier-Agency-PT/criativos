@@ -292,11 +292,13 @@ export function StepResult() {
                   />
                 </button>
               ) : creative.status === "error" ? (
-                <div className="flex flex-col items-center justify-center w-full h-full gap-2 p-4">
-                  <XCircle className="w-8 h-8 text-accent-red" />
-                  <p className="text-xs text-accent-red text-center">
-                    {creative.error_message || "Erro na geracao"}
-                  </p>
+                <>
+                  <div className="flex flex-col items-center justify-center w-full h-full gap-2 p-4">
+                    <XCircle className="w-8 h-8 text-accent-red" />
+                    <p className="text-xs text-accent-red text-center">
+                      {creative.error_message || "Erro na geracao"}
+                    </p>
+                  </div>
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); void handleDeleteCreative(creative.id); }}
@@ -305,7 +307,7 @@ export function StepResult() {
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
-                </div>
+                </>
               ) : (
                 <div className="flex items-center justify-center w-full h-full">
                   <Loader2 className="w-6 h-6 animate-spin text-text-muted" />
