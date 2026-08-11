@@ -300,10 +300,10 @@ export function StepResult() {
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); void handleDeleteCreative(creative.id); }}
-                    className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-accent-red/10 text-accent-red hover:bg-accent-red/20 transition-colors"
-                    title="Apagar criativo"
+                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-accent-red/30 text-accent-red hover:bg-accent-red/50 transition-colors"
+                    title="Apagar este criativo"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
               ) : (
