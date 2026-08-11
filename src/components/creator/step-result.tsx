@@ -139,6 +139,19 @@ export function StepResult() {
     );
   }
 
+  async function handleDeleteCreative(id: string) {
+    try {
+      const res = await fetch(`/api/creatives/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Erro ao eliminar criativo");
+      }
+      setCreatives((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao eliminar criativo");
+    }
+  }
+
   async function handleDownloadAll() {
     if (!projectId) return;
     setDownloadingAll(true);
@@ -284,6 +297,14 @@ export function StepResult() {
                   <p className="text-xs text-accent-red text-center">
                     {creative.error_message || "Erro na geracao"}
                   </p>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); void handleDeleteCreative(creative.id); }}
+                    className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-accent-red/10 text-accent-red hover:bg-accent-red/20 transition-colors"
+                    title="Apagar criativo"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               ) : (
                 <div className="flex items-center justify-center w-full h-full">
