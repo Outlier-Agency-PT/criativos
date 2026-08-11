@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError } from "@/lib/api-auth";
 import { createServiceSupabase } from "@/lib/api-auth";
 
-const STALE_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutos — items "generating" há mais tempo = orphaned
+const STALE_TIMEOUT_MS = 6 * 60 * 1000; // 6 minutos — items "generating" há mais tempo = orphaned
 
 async function storageObjectExists(
   supabase: Awaited<ReturnType<typeof createServiceSupabase>>,
