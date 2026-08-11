@@ -50,6 +50,7 @@ export default function BibliotecaPage() {
   // orgId é sempre a org Outlier Agency (todos os utilizadores pertencem a ela).
   // Mantemos o estado para compatibilidade com subcomponentes (CopyCard, modals).
   const [orgId] = useState<string>(OUTLIER_ORG_ID);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [copies, setCopies] = useState<LibraryCopy[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
