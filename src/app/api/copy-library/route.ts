@@ -28,13 +28,13 @@ function isMissingListItemsColumn(error: { message?: string } | null) {
 }
 
 /**
- * GET /api/copy-library?orgId=X&campaignId=Y&product=Z&search=Z&tags=a,b&page=1&limit=20&sort=created_at
+ * GET /api/copy-library?campaignId=Y&product=Z&search=Z&tags=a,b&page=1&limit=20&sort=created_at
  * Lista copies paginada com full-text search.
+ * Swipe File é global — não filtra por org. A RLS garante apenas utilizadores autenticados.
  */
 export async function GET(request: NextRequest) {
   try {
     const sp = request.nextUrl.searchParams;
-    const orgId = sp.get("orgId");
     const campaignId = sp.get("campaignId");
     const product = sp.get("product");
     const search = sp.get("search");
@@ -43,18 +43,13 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(parseInt(sp.get("limit") || "20", 10), 100);
     const sort = sp.get("sort") || "created_at";
 
-    const { supabase } = await requireAuth(orgId);
-
-    if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
-    }
+    const { supabase } = await requireAuth();
 
     const offset = (page - 1) * limit;
 
     let query = supabase
       .from("copy_library")
       .select("*, copy_campaigns(name)", { count: "exact" })
-      .eq("org_id", orgId)
       .range(offset, offset + limit - 1);
 
     // Filtro por campanha
@@ -102,21 +97,18 @@ export async function GET(request: NextRequest) {
   }
 }
 
+const OUTLIER_ORG_ID = "6b9e8609-d092-4b60-bc34-b6943eb1ff05";
+
 /**
  * POST /api/copy-library
- * Criar nova copy na biblioteca.
+ * Criar nova copy na biblioteca global.
+ * org_id é sempre a Outlier Agency (FK obrigatória na tabela, mas não afeta visibilidade).
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { org_id, orgId } = body;
-    const resolvedOrgId = org_id || orgId;
 
-    const { supabase, user } = await requireAuth(resolvedOrgId);
-
-    if (!resolvedOrgId) {
-      return NextResponse.json({ error: "org_id obrigatório" }, { status: 400 });
-    }
+    const { supabase, user } = await requireAuth();
 
     const safeFields = whitelist(body, [
       "headline", "mini_copy", "list_items", "cta", "body", "raw_text",
@@ -128,7 +120,7 @@ export async function POST(request: NextRequest) {
     const payload = {
       ...safeFields,
       raw_text: rawText,
-      org_id: resolvedOrgId,
+      org_id: OUTLIER_ORG_ID,
       created_by: user.id,
       source: safeFields.source || "manual",
     };

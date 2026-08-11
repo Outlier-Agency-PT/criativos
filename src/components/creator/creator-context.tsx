@@ -28,6 +28,10 @@ export interface CreatorState {
   projectId: string | null;
   projectName: string;
   orgId: string;
+  /** ID do utilizador cliente dono do projeto. Apenas super admins podem definir. */
+  clientUserId: string | null;
+  /** Nome/email do cliente selecionado (apenas para exibição no wizard). */
+  clientLabel: string | null;
   personaId: string | null;
   personaName: string | null;
   selectedTemplates: SelectedTemplate[];
@@ -177,6 +181,8 @@ function createInitialState(orgId: string): CreatorState {
     projectId: null,
     projectName: "",
     orgId,
+    clientUserId: null,
+    clientLabel: null,
     personaId: null,
     personaName: null,
     selectedTemplates: [],
@@ -451,6 +457,8 @@ export function CreatorProvider({
         projectId,
         projectName: project.name ?? "",
         orgId,
+        clientUserId: null,
+        clientLabel: null,
         personaId: project.personaId ?? null,
         personaName: project.personaName ?? null,
         selectedTemplates: dedupeSelectedTemplates((templates ?? []).map((t: { id: string; name: string; category: string; thumbnailUrl: string | null; copyElements: CopyElement[] | null }) => ({

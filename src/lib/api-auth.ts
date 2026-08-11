@@ -111,6 +111,22 @@ export function handleAuthError(err: unknown) {
 }
 
 /**
+ * Verifica se o utilizador é super admin na sua organização.
+ * Lê criativos_org_limits.is_super_admin para a org do utilizador.
+ */
+export async function checkSuperAdmin(
+  supabase: Awaited<ReturnType<typeof createAuthSupabase>>,
+  orgId: string
+): Promise<boolean> {
+  const { data } = await supabase
+    .from("criativos_org_limits")
+    .select("is_super_admin")
+    .eq("org_id", orgId)
+    .maybeSingle();
+  return data?.is_super_admin === true;
+}
+
+/**
  * Filtra campos permitidos de um objeto (previne mass assignment).
  */
 export function whitelist<T extends Record<string, unknown>>(

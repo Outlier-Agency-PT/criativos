@@ -20,7 +20,6 @@ import { CopyEditModal } from "@/components/library/copy-edit-modal";
 import { ImportFileModal } from "@/components/library/import-file-modal";
 import { LocalDirectoryImport } from "@/components/library/local-directory-import";
 import { CopyPreviewModal } from "@/components/library/copy-preview-modal";
-import { createBrowserSupabase } from "@/lib/supabase-browser";
 import { cn } from "@/lib/utils";
 
 interface LibraryCopy {
@@ -45,10 +44,13 @@ interface Campaign {
   copy_count: number;
 }
 
+const OUTLIER_ORG_ID = "6b9e8609-d092-4b60-bc34-b6943eb1ff05";
+
 export default function BibliotecaPage() {
-  const [orgId, setOrgId] = useState<string | null>(null);
+  // orgId é sempre a org Outlier Agency (todos os utilizadores pertencem a ela).
+  // Mantemos o estado para compatibilidade com subcomponentes (CopyCard, modals).
+  const [orgId] = useState<string>(OUTLIER_ORG_ID);
   const [copies, setCopies] = useState<LibraryCopy[]>([]);
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [searchDebounce, setSearchDebounce] = useState("");
@@ -81,24 +83,6 @@ export default function BibliotecaPage() {
     }
   }, []);
 
-  const supabase = createBrowserSupabase();
-
-  // Get orgId
-  useEffect(() => {
-    async function getOrg() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const { data } = await supabase
-        .from("organization_members")
-        .select("org_id")
-        .eq("user_id", user.id)
-        .limit(1)
-        .single();
-      if (data) setOrgId(data.org_id);
-    }
-    getOrg();
-  }, []);
-
   // Debounce search
   useEffect(() => {
     const timer = setTimeout(() => setSearchDebounce(search), 300);
@@ -107,24 +91,22 @@ export default function BibliotecaPage() {
 
   // Load campaigns
   const loadCampaigns = useCallback(async () => {
-    if (!orgId) return;
     try {
-      const res = await fetch(`/api/copy-campaigns?orgId=${orgId}`);
+      const res = await fetch("/api/copy-campaigns");
       const data = await res.json();
       setCampaigns(data.campaigns || []);
     } catch {
       // silent
     }
-  }, [orgId]);
+  }, []);
 
   useEffect(() => { loadCampaigns(); }, [loadCampaigns]);
 
   // Load distinct products for filter dropdown
   const loadProducts = useCallback(async () => {
-    if (!orgId || !selectedCampaign) return;
+    if (!selectedCampaign) return;
     try {
       const params = new URLSearchParams({
-        orgId,
         page: "1",
         limit: "100",
         sort: "created_at",
@@ -145,15 +127,14 @@ export default function BibliotecaPage() {
     } catch {
       // silent
     }
-  }, [orgId, selectedCampaign]);
+  }, [selectedCampaign]);
 
   // Load copies (only when inside a campaign)
   const loadCopies = useCallback(async () => {
-    if (!orgId || !selectedCampaign) return;
+    if (!selectedCampaign) return;
     setLoading(true);
     try {
       const params = new URLSearchParams({
-        orgId,
         page: String(page),
         limit: "24",
         sort: sortBy,
@@ -173,7 +154,7 @@ export default function BibliotecaPage() {
     } finally {
       setLoading(false);
     }
-  }, [orgId, selectedCampaign, searchDebounce, sortBy, page, productFilter]);
+  }, [selectedCampaign, searchDebounce, sortBy, page, productFilter]);
 
   useEffect(() => {
     if (selectedCampaign) {
@@ -181,12 +162,6 @@ export default function BibliotecaPage() {
       loadProducts();
     }
   }, [loadCopies, selectedCampaign, loadProducts]);
-
-  // Also load "all copies" when viewing all (no campaign filter)
-  const loadAllCopies = useCallback(async () => {
-    if (!orgId || selectedCampaign) return;
-    // We don't load copies in campaign-grid view, only when "Todas" is selected
-  }, [orgId, selectedCampaign]);
 
   function handleFavoriteToggle(id: string, newState: boolean) {
     setCopies((prev) => prev.map((c) => c.id === id ? { ...c, is_favorite: newState } : c));
@@ -217,13 +192,13 @@ export default function BibliotecaPage() {
 
   // Campaign CRUD
   async function handleCreateCampaign() {
-    if (!newCampaignName.trim() || !orgId) return;
+    if (!newCampaignName.trim()) return;
     setSavingCampaign(true);
     try {
       const res = await fetch("/api/copy-campaigns", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orgId, name: newCampaignName.trim() }),
+        body: JSON.stringify({ name: newCampaignName.trim() }),
       });
       if (res.ok) {
         setNewCampaignName("");
@@ -236,13 +211,13 @@ export default function BibliotecaPage() {
   }
 
   async function handleEditCampaign(id: string) {
-    if (!editCampaignName.trim() || !orgId) return;
+    if (!editCampaignName.trim()) return;
     setSavingCampaign(true);
     try {
       const res = await fetch(`/api/copy-campaigns/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orgId, name: editCampaignName.trim() }),
+        body: JSON.stringify({ name: editCampaignName.trim() }),
       });
       if (res.ok) {
         setEditingCampaignId(null);
@@ -254,13 +229,10 @@ export default function BibliotecaPage() {
   }
 
   async function handleDeleteCampaign(id: string) {
-    if (!orgId) return;
     if (!confirm("eliminar esta campanha? As copies dentro nao serao apagadas.")) return;
     try {
       const res = await fetch(`/api/copy-campaigns/${id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orgId }),
       });
       if (res.ok) {
         loadCampaigns();
@@ -269,14 +241,6 @@ export default function BibliotecaPage() {
     } catch {
       // silent
     }
-  }
-
-  if (!orgId) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-text-muted" />
-      </div>
-    );
   }
 
   const totalPages = Math.ceil(total / 24);

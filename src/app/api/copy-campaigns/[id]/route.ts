@@ -3,7 +3,7 @@ import { requireAuth, handleAuthError, whitelist } from "@/lib/api-auth";
 
 /**
  * PUT /api/copy-campaigns/[id]
- * Editar campanha.
+ * Editar campanha global.
  */
 export async function PUT(
   request: NextRequest,
@@ -12,8 +12,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { orgId: resolvedOrgId } = body;
-    const { supabase } = await requireAuth(resolvedOrgId);
+    const { supabase } = await requireAuth();
 
     if (!id) {
       return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
@@ -25,7 +24,6 @@ export async function PUT(
       .from("copy_campaigns")
       .update(safeUpdates)
       .eq("id", id)
-      .eq("org_id", resolvedOrgId)
       .select()
       .single();
 
@@ -41,17 +39,15 @@ export async function PUT(
 
 /**
  * DELETE /api/copy-campaigns/[id]
- * Deletar campanha (só se sem copies associadas).
+ * Deletar campanha global (só se sem copies associadas).
  */
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const body = await request.json();
-    const { orgId: resolvedOrgId } = body;
-    const { supabase } = await requireAuth(resolvedOrgId);
+    const { supabase } = await requireAuth();
 
     if (!id) {
       return NextResponse.json({ error: "id obrigatório" }, { status: 400 });
@@ -73,8 +69,7 @@ export async function DELETE(
     const { error } = await supabase
       .from("copy_campaigns")
       .delete()
-      .eq("id", id)
-      .eq("org_id", resolvedOrgId);
+      .eq("id", id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

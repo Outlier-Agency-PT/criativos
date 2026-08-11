@@ -1,18 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, handleAuthError, whitelist } from "@/lib/api-auth";
 
+const OUTLIER_ORG_ID = "6b9e8609-d092-4b60-bc34-b6943eb1ff05";
+
 /**
- * GET /api/copy-campaigns?orgId=X
- * Lista campanhas com count de copies.
+ * GET /api/copy-campaigns
+ * Lista campanhas globais com count de copies.
+ * Swipe File é global — não filtra por org. RLS garante utilizadores autenticados.
  */
 export async function GET(request: NextRequest) {
   try {
-    const orgId = request.nextUrl.searchParams.get("orgId");
-    const { supabase } = await requireAuth(orgId);
-
-    if (!orgId) {
-      return NextResponse.json({ error: "orgId obrigatório" }, { status: 400 });
-    }
+    const { supabase } = await requireAuth();
 
     // Paginação: a biblioteca pode acumular muitas campanhas. Limita às 50 mais
     // recentes (ajustável via ?limit=). copies já vêm como count agregado.
@@ -22,7 +20,6 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from("copy_campaigns")
       .select("*, copy_library(count)")
-      .eq("org_id", orgId)
       .order("created_at", { ascending: false })
       .limit(limit);
 
@@ -45,19 +42,13 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/copy-campaigns
- * Criar nova campanha.
+ * Criar nova campanha global (org_id = Outlier Agency).
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { org_id, orgId } = body;
-    const resolvedOrgId = org_id || orgId;
 
-    const { supabase } = await requireAuth(resolvedOrgId);
-
-    if (!resolvedOrgId) {
-      return NextResponse.json({ error: "org_id obrigatório" }, { status: 400 });
-    }
+    const { supabase } = await requireAuth();
 
     const safeFields = whitelist(body, ["name", "product", "description"]);
 
@@ -69,7 +60,7 @@ export async function POST(request: NextRequest) {
       .from("copy_campaigns")
       .insert({
         ...safeFields,
-        org_id: resolvedOrgId,
+        org_id: OUTLIER_ORG_ID,
       })
       .select()
       .single();

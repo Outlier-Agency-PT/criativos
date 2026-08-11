@@ -97,6 +97,7 @@ export function StepReviewGenerate() {
     activeCopyFields,
     useCustomBackground,
     selectedBackgrounds,
+    clientUserId,
   } = useCreator();
 
   // Carrega dados completos do brand kit selecionado (cores + logo url) pro checklist visual
@@ -539,7 +540,7 @@ export function StepReviewGenerate() {
         const createRes = await fetch("/api/projects", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: projectName || undefined, personaId, brandKitId, format, selectedFormats, showLogo, selectedTemplates, copies: copies.map((c) => ({ ...c, content: getActiveFields(c.id, c.content) })), selectedPhotos: photos, chatHistory, useCustomBackground, selectedBackgrounds }),
+          body: JSON.stringify({ name: projectName || undefined, personaId, brandKitId, format, selectedFormats, showLogo, selectedTemplates, copies: copies.map((c) => ({ ...c, content: getActiveFields(c.id, c.content) })), selectedPhotos: photos, chatHistory, useCustomBackground, selectedBackgrounds, client_user_id: clientUserId || undefined }),
         });
         const createData = await createRes.json();
         if (!createRes.ok) throw new Error(createData.error);

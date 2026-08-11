@@ -18,6 +18,7 @@ import {
   Loader2,
   RotateCcw,
   User,
+  Users,
   ChevronDown,
   CheckCircle2,
   Maximize2,
@@ -148,6 +149,89 @@ function PersonaBadge() {
                     {p.target_audience && (
                       <p className="text-[10px] text-text-muted truncate">{p.target_audience}</p>
                     )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// --- ClientBadge: selector de cliente para super admins ---
+interface ClientOption {
+  user_id: string;
+  email: string | null;
+  full_name: string | null;
+}
+
+function ClientBadge() {
+  const { clientUserId, clientLabel, updateProject } = useCreator();
+  const [clientes, setClientes] = useState<ClientOption[]>([]);
+  const [open, setOpen] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch("/api/admin/clientes");
+        if (!res.ok) { setChecked(true); return; } // não é super admin
+        const data = await res.json();
+        setClientes(data.clientes ?? []);
+      } catch { /* silent */ } finally {
+        setChecked(true);
+      }
+    }
+    load();
+  }, []);
+
+  if (!checked || clientes.length === 0) return null;
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-100 hover:bg-surface-150 text-sm transition-colors"
+      >
+        <Users className="w-3.5 h-3.5 text-accent-champagne" />
+        <span className="text-text-primary font-medium text-xs max-w-[120px] truncate">
+          {clientUserId && clientLabel ? clientLabel : "Em nome de..."}
+        </span>
+        <ChevronDown className={cn("w-3.5 h-3.5 text-text-muted transition-transform", open && "rotate-180")} />
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="theme-panel absolute right-0 top-full mt-1 z-50 w-64 rounded-xl shadow-lg max-h-72 overflow-y-auto">
+            <button
+              onClick={() => { updateProject({ clientUserId: null, clientLabel: null }); setOpen(false); }}
+              className={cn(
+                "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors",
+                !clientUserId ? "bg-champagne-alpha-10 text-accent-champagne" : "hover:bg-surface-100 text-text-secondary"
+              )}
+            >
+              {!clientUserId ? <CheckCircle2 className="w-4 h-4 flex-shrink-0" /> : <div className="w-4 h-4 rounded-full border border-border-subtle flex-shrink-0" />}
+              <p className="text-sm font-medium">Projeto próprio</p>
+            </button>
+            {clientes.map((c) => {
+              const label = c.full_name || c.email || c.user_id.slice(0, 8);
+              const isActive = clientUserId === c.user_id;
+              return (
+                <button
+                  key={c.user_id}
+                  onClick={() => { updateProject({ clientUserId: c.user_id, clientLabel: label }); setOpen(false); }}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors",
+                    isActive ? "bg-champagne-alpha-10 text-accent-champagne" : "hover:bg-surface-100 text-text-secondary"
+                  )}
+                >
+                  {isActive ? <CheckCircle2 className="w-4 h-4 flex-shrink-0" /> : <div className="w-4 h-4 rounded-full border border-border-subtle flex-shrink-0" />}
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate">{label}</p>
+                    {c.full_name && c.email && <p className="text-[10px] text-text-muted truncate">{c.email}</p>}
                   </div>
                 </button>
               );
@@ -402,6 +486,7 @@ function CreatorContent({ onBackToHistory }: { onBackToHistory: () => void }) {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <ClientBadge />
           <PersonaBadge />
           {loadedCreatives && loadedCreatives.length > 0 && currentStep < RESULT_STEP && (
             <button

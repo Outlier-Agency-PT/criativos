@@ -18,6 +18,7 @@ import {
   X,
   ChevronsLeft,
   ChevronsRight,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { APP_VERSION } from "@/lib/version";
@@ -35,12 +36,17 @@ const navItems = [
   { label: "Uso", href: "/uso", icon: BarChart3 },
 ];
 
+const adminNavItems = [
+  { label: "Clientes", href: "/admin/clientes", icon: Users },
+];
+
 interface SidebarProps {
   userName?: string;
   userEmail?: string;
+  isSuperAdmin?: boolean;
 }
 
-export function Sidebar({ userName, userEmail }: SidebarProps) {
+export function Sidebar({ userName, userEmail, isSuperAdmin = false }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -101,7 +107,7 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 px-3 space-y-1">
+      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           // "Criar" deve SEMPRE voltar pra lista de projetos (/criar), mesmo
@@ -137,6 +143,43 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
             </Link>
           );
         })}
+
+        {isSuperAdmin && (
+          <>
+            {!desktopCollapsed && (
+              <div className="pt-3 pb-1 px-1">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-text-muted/50">
+                  Admin
+                </p>
+              </div>
+            )}
+            {desktopCollapsed && <div className="pt-2 border-t border-border-subtle/50 mx-1" />}
+            {adminNavItems.map((item) => {
+              const isActive = pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    "flex items-center rounded-xl text-sm transition-all",
+                    desktopCollapsed ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5",
+                    isActive
+                      ? "bg-[linear-gradient(135deg,var(--accent-alpha-12),var(--accent-alpha-05))] text-text-accent border border-[var(--accent-alpha-20)] shadow-[var(--shadow-accent-glow)]"
+                      : "text-text-secondary border border-transparent hover:bg-champagne-alpha-10 hover:text-text-primary hover:border-white/5"
+                  )}
+                  title={desktopCollapsed ? item.label : undefined}
+                >
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  {!desktopCollapsed && <span>{item.label}</span>}
+                  {isActive && !desktopCollapsed && (
+                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-accent-champagne" />
+                  )}
+                </Link>
+              );
+            })}
+          </>
+        )}
       </nav>
 
       {/* User */}

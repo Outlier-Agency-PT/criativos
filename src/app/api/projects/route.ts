@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAuth, handleAuthError } from "@/lib/api-auth";
+import { requireAuth, handleAuthError, checkSuperAdmin } from "@/lib/api-auth";
 
 /**
  * POST /api/projects
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       blockColors,
     } = body;
 
-    const { orgId, supabase } = await requireAuth();
+    const { user, orgId, supabase } = await requireAuth();
 
     if (!format?.width || !format?.height) {
       return NextResponse.json({ error: "format (width/height) obrigatório" }, { status: 400 });
@@ -36,11 +36,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Pelo menos 1 copy é necessário" }, { status: 400 });
     }
 
+    // Resolve client_user_id: super admins podem criar em nome de um cliente;
+    // clientes só criam para si próprios.
+    const isSuperAdmin = await checkSuperAdmin(supabase, orgId);
+    const clientUserId: string | null = isSuperAdmin
+      ? (typeof body.client_user_id === "string" && body.client_user_id.trim()
+          ? body.client_user_id.trim()
+          : user.id)
+      : user.id;
+
     // 1. Criar projeto
     const { data: project, error: projError } = await supabase
       .from("criativos_generation_projects")
       .insert({
         org_id: orgId,
+        client_user_id: clientUserId,
         persona_id: personaId || null,
         brand_kit_id: brandKitId || null,
         name: typeof name === "string" && name.trim()
